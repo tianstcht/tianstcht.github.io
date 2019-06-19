@@ -152,16 +152,85 @@
     <div class="outer">
       <section id="main">
   
-    <article   id="post-test" class="article article-type-post" itemscope itemprop="blogPost">
+    <article   id="post-t1an5t的2020" class="article article-type-post" itemscope itemprop="blogPost">
   <div data-scroll-reveal="enter top and over 0.7s"  class="article-meta">
-    <a  href="/test/" class="article-date">
+    <a  href="/t1an5t的2020/" class="article-date">
   <i class="fa fa-calendar"></i>
-  <time  datetime="2022-01-30T05:35:43.000Z" itemprop="datePublished">2022-01-30</time>
+  <time  datetime="2099-01-01T07:13:07.000Z" itemprop="datePublished">2099-01-01</time>
+</a>
+
+    
+
+  </div>
+  <div class="article-inner"  >
+    
+    
+
+      <header class="article-header">
+
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/t1an5t的2020/">
+        <i class="fa fa-pencil-square-o  article-title-icon"></i>t1an5t的2020</a>
+    </h1>
+  
+
+
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="2019-6-2"><a href="#2019-6-2" class="headerlink" title="2019.6.2"></a>2019.6.2</h2><p>总是想写点东西，也总是忘记，希望这次能坚持下去，就算它是第一次了！最近准备回归源码去学习知识，跳出<code>pwn</code>只能玩<code>ctf</code>这个思维去思考，去理解内存，源码，调试这些，这样才能以不变应万变。</p>
+        
+          <p class="article-more-link ">
+            <a href="/t1an5t的2020/#more"><i class="fa fa-coffee" style="padding-right: 2px"></i>Read More</a>
+          </p>
+        
+      
+
+    </div>
+
+
+
+
+
+    <footer class="article-footer">
+      
+        <a data-url="http://tianstcht.github.io/t1an5t的2020/" data-id="cjx2x1kl00004s8vgzdl041qy" class="article-share-link" data-share="baidu" data-title="t1an5t的2020">分享到</a>
+      
+
+      
+        <a href="http://tianstcht.github.io/t1an5t的2020/#gitalk-container" class="article-comment-link">评论</a>
+      
+
+      
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article   id="post-pwntools的使用技巧" class="article article-type-post" itemscope itemprop="blogPost">
+  <div data-scroll-reveal="enter top and over 0.7s"  class="article-meta">
+    <a  href="/pwntools的使用技巧/" class="article-date">
+  <i class="fa fa-calendar"></i>
+  <time  datetime="2019-06-19T07:26:27.000Z" itemprop="datePublished">2019-06-19</time>
 </a>
 
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/pwn1/">pwn1</a>
+    <a class="article-category-link" href="/categories/pwnable/">pwnable</a>
   </div>
 
 
@@ -175,8 +244,8 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/test/">
-        <i class="fa fa-pencil-square-o  article-title-icon"></i>test222</a>
+      <a class="article-title" href="/pwntools的使用技巧/">
+        <i class="fa fa-pencil-square-o  article-title-icon"></i>pwntools的使用技巧</a>
     </h1>
   
 
@@ -186,13 +255,13 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-
-        </br>
-        <span id="busuanzi_container_page_pv">
-          阅读次数<span id="busuanzi_value_page_pv"></span>
-        </span>
-        <p>testetstesakjaksnkasn</p>
-
+        <h2 id="process"><a href="#process" class="headerlink" title="process"></a>process</h2><p>一般本地进行交互的时候，有这么几种写法：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 正常的调用</span></span><br><span class="line">p = process(<span class="string">'./elf'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定libc的调用，当然，如果你本地的ld.so搞不定libc，这种方法也会报错</span></span><br><span class="line">p = process(<span class="string">'./elf'</span>, env=&#123;<span class="string">'LD_PRELOAD'</span>:<span class="string">'./libc.so.6'</span>&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># starctf2019里见到的</span></span><br><span class="line">pwn_file=<span class="string">"./lib/ld-2.29.so --library-path ./lib/ ./babyheap"</span></span><br><span class="line">p = process(pwn_file.split())</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link ">
+            <a href="/pwntools的使用技巧/#more"><i class="fa fa-coffee" style="padding-right: 2px"></i>Read More</a>
+          </p>
+        
       
 
     </div>
@@ -203,15 +272,90 @@
 
     <footer class="article-footer">
       
-        <a data-url="http://tianstcht.github.io/test/" data-id="cjx2vkfz800009gvgvdm6gwqy" class="article-share-link" data-share="baidu" data-title="test222">分享到</a>
+        <a data-url="http://tianstcht.github.io/pwntools的使用技巧/" data-id="cjx2x1kkw0001s8vgpocnua23" class="article-share-link" data-share="baidu" data-title="pwntools的使用技巧">分享到</a>
       
 
       
-        <a href="http://tianstcht.github.io/test/#gitalk-container" class="article-comment-link">评论</a>
+        <a href="http://tianstcht.github.io/pwntools的使用技巧/#gitalk-container" class="article-comment-link">评论</a>
       
 
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tag1/">tag1</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tag2/">tag2</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tag3/">tag3</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwnable/">pwnable</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwntools/">pwntools</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article   id="post-pwnab13-7w" class="article article-type-post" itemscope itemprop="blogPost">
+  <div data-scroll-reveal="enter top and over 0.7s"  class="article-meta">
+    <a  href="/pwnab13-7w/" class="article-date">
+  <i class="fa fa-calendar"></i>
+  <time  datetime="2019-06-19T07:14:30.000Z" itemprop="datePublished">2019-06-19</time>
+</a>
+
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/pwnable/">pwnable</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner"  >
+    
+    
+
+      <header class="article-header">
+
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/pwnab13-7w/">
+        <i class="fa fa-pencil-square-o  article-title-icon"></i>pwnab13.7w</a>
+    </h1>
+  
+
+
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="tcache-tear"><a href="#tcache-tear" class="headerlink" title="tcache tear"></a>tcache tear</h2><h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>有<code>UAF</code>但是没有泄露，<code>libc</code>是<code>2.27</code>的，考虑用<code>tcache</code>打到<code>stdout</code>来造成泄露。然后写<code>free_hook</code></p>
+        
+          <p class="article-more-link ">
+            <a href="/pwnab13-7w/#more"><i class="fa fa-coffee" style="padding-right: 2px"></i>Read More</a>
+          </p>
+        
+      
+
+    </div>
+
+
+
+
+
+    <footer class="article-footer">
+      
+        <a data-url="http://tianstcht.github.io/pwnab13-7w/" data-id="cjx2x1kks0000s8vghm3uozck" class="article-share-link" data-share="baidu" data-title="pwnab13.7w">分享到</a>
+      
+
+      
+        <a href="http://tianstcht.github.io/pwnab13-7w/#gitalk-container" class="article-comment-link">评论</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwnable/">pwnable</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwnable-tw/">pwnable.tw</a></li></ul>
 
 
     </footer>
@@ -242,7 +386,15 @@
       <ul>
         
           <li onclick="javascript:document.getElementById('recentpost_item').click();">
-            <a id="recentpost_item" href="/test/">test222</a>
+            <a id="recentpost_item" href="/t1an5t的2020/">t1an5t的2020</a>
+          </li>
+        
+          <li onclick="javascript:document.getElementById('recentpost_item').click();">
+            <a id="recentpost_item" href="/pwntools的使用技巧/">pwntools的使用技巧</a>
+          </li>
+        
+          <li onclick="javascript:document.getElementById('recentpost_item').click();">
+            <a id="recentpost_item" href="/pwnab13-7w/">pwnab13.7w</a>
           </li>
         
       </ul>
@@ -255,7 +407,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-tasks"></i>分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/pwn1/">pwn1</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/pwnable/">pwnable</a><span class="category-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -271,7 +423,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-cloud"></i>标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/tag1/" style="font-size: 10px;">tag1</a> <a href="/tags/tag2/" style="font-size: 10px;">tag2</a> <a href="/tags/tag3/" style="font-size: 10px;">tag3</a>
+      <a href="/tags/pwnable/" style="font-size: 20px;">pwnable</a> <a href="/tags/pwnable-tw/" style="font-size: 10px;">pwnable.tw</a> <a href="/tags/pwntools/" style="font-size: 10px;">pwntools</a>
     </div>
   </div>
 
@@ -281,8 +433,8 @@
   <div class="widget-wrap">
     <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-archive"></i>归档</h3>
     <div class="widget">
-      <!-- <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">1</span></li></ul> -->
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">2022年01月</a><span class="archive-list-count">1</span></li></ul>
+      <!-- <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2099/01/">一月 2099</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a><span class="archive-list-count">2</span></li></ul> -->
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2099/01/">2099年01月</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">2019年06月</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 

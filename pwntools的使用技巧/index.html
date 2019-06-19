@@ -8,19 +8,21 @@
 
   
 
-  <title>Archives | t1an5t&#39;s Treasure</title>
+  <title>pwntools的使用技巧 | t1an5t&#39;s Treasure</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Pwner and NEUer.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="t1an5t&#39;s Treasure">
-<meta property="og:url" content="http://tianstcht.github.io/archives/index.html">
+  <meta name="description" content="process一般本地进行交互的时候，有这么几种写法： # 正常的调用p = process(&apos;./elf&apos;)# 指定libc的调用，当然，如果你本地的ld.so搞不定libc，这种方法也会报错p = process(&apos;./elf&apos;, env=&amp;#123;&apos;LD_PRELOAD&apos;:&apos;./libc.so.6&apos;&amp;#125;)# starctf2019里见到的pwn_file=&quot;./lib/ld-2.2">
+<meta name="keywords" content="pwnable,pwntools">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pwntools的使用技巧">
+<meta property="og:url" content="http://tianstcht.github.io/pwntools的使用技巧/index.html">
 <meta property="og:site_name" content="t1an5t&#39;s Treasure">
-<meta property="og:description" content="Pwner and NEUer.">
+<meta property="og:description" content="process一般本地进行交互的时候，有这么几种写法： # 正常的调用p = process(&apos;./elf&apos;)# 指定libc的调用，当然，如果你本地的ld.so搞不定libc，这种方法也会报错p = process(&apos;./elf&apos;, env=&amp;#123;&apos;LD_PRELOAD&apos;:&apos;./libc.so.6&apos;&amp;#125;)# starctf2019里见到的pwn_file=&quot;./lib/ld-2.2">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-19T07:29:53.182Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="t1an5t&#39;s Treasure">
-<meta name="twitter:description" content="Pwner and NEUer.">
+<meta name="twitter:title" content="pwntools的使用技巧">
+<meta name="twitter:description" content="process一般本地进行交互的时候，有这么几种写法： # 正常的调用p = process(&apos;./elf&apos;)# 指定libc的调用，当然，如果你本地的ld.so搞不定libc，这种方法也会报错p = process(&apos;./elf&apos;, env=&amp;#123;&apos;LD_PRELOAD&apos;:&apos;./libc.so.6&apos;&amp;#125;)# starctf2019里见到的pwn_file=&quot;./lib/ld-2.2">
 
   
 
@@ -150,102 +152,198 @@
 </header>
 
     <div class="outer">
-      <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap"  data-scroll-reveal="enter left and over 0.7s">
-          <a href="/archives/2099" class="archive-year">2099</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div  class="archive-article-inner">
-    <header class="archive-article-header">
-      <a  href="/t1an5t的2020/" class="archive-article-date">
+      <section id="main"><article   id="post-pwntools的使用技巧" class="article article-type-post" itemscope itemprop="blogPost">
+  <div data-scroll-reveal="enter top and over 0.7s"  class="article-meta">
+    <a  href="/pwntools的使用技巧/" class="article-date">
   <i class="fa fa-calendar"></i>
-  <time  datetime="2099-01-01T07:13:07.000Z" itemprop="datePublished">1月 1</time>
+  <time  datetime="2019-06-19T07:26:27.000Z" itemprop="datePublished">2019-06-19</time>
 </a>
 
-      
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/pwnable/">pwnable</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner"  >
+    
+    
+
+      <header class="article-header">
+
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/t1an5t的2020/">
-        <i class="fa fa-pencil-square-o  article-title-icon"></i>t1an5t的2020</a>
+    <h1 class="article-title" itemprop="name">
+      <i class="fa fa-pencil-square-o  article-title-icon"></i>pwntools的使用技巧
     </h1>
   
 
 
-    </header>
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+        </br>
+        <span id="busuanzi_container_page_pv">
+          阅读次数<span id="busuanzi_value_page_pv"></span>
+        </span>
+        <h2 id="process"><a href="#process" class="headerlink" title="process"></a>process</h2><p>一般本地进行交互的时候，有这么几种写法：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 正常的调用</span></span><br><span class="line">p = process(<span class="string">'./elf'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定libc的调用，当然，如果你本地的ld.so搞不定libc，这种方法也会报错</span></span><br><span class="line">p = process(<span class="string">'./elf'</span>, env=&#123;<span class="string">'LD_PRELOAD'</span>:<span class="string">'./libc.so.6'</span>&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># starctf2019里见到的</span></span><br><span class="line">pwn_file=<span class="string">"./lib/ld-2.29.so --library-path ./lib/ ./babyheap"</span></span><br><span class="line">p = process(pwn_file.split())</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<p>当然即使你所有环境齐全，<code>ld</code>和<code>libc</code>都有了，但是如果你没有配置过一些特殊的魔改<code>gdb</code>环境的话，有的时候依然会调试错误，你在<code>gdb</code>里的行动可能会非常困难，<code>pwndbg</code>里面的<code>heap</code>,<code>got</code>等指令有时候会失效，所以本地调试的时候，建议<strong>只使用第一种交互方式</strong>：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">p</span> = process(<span class="string">'./elf'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>那么只能建议多装几个环境了，一般来说<code>ubuntu1604</code> + <code>ubuntu1804</code>总归是够用了，当然一些魔改的<code>gdb</code>如果你用的习惯也是很好用的。</p>
+<p>而且切记只要你写了<code>p = process()</code>，那么不管接下来你怎么构造利用，怎么写代码，都不要忘记最后一定要有一句:</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">p</span>.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>这里还有一个本地可以获取进程基地址的<code>tips</code>，因为程序如果开启了<code>PIE</code>，基地址就不再是<code>0x400000</code> or <code>0x8048000</code>了，而获取基地址每次都在<code>gdb</code>里<code>vmmap</code>看也太慢了，所以可以用这种方式：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">p</span> = process(<span class="string">'./elf'</span>)</span><br><span class="line"><span class="attr">proc_base</span> = p.libs()[elf_path]</span><br></pre></td></tr></table></figure>
+
+<p>这里的<code>elf_path</code>一定要是绝对路径的字符串，也就是从根目录开始的那种，<code>pwd</code>查看一下再加上二进制文件的文件名就好啦，比如：</p>
+<figure class="highlight tp"><table><tr><td class="code"><pre><span class="line"><span class="string">"/home/t1an5t/ctf/pwn1/elf"</span>    		√</span><br><span class="line"><span class="string">"./elf"</span>                        		<span class="keyword">X</span></span><br></pre></td></tr></table></figure>
+
+<p>后来写了一种更舒服的方法：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">proc_base = p.libs()[p.cwd + p.argv[<span class="number">0</span>].strip(<span class="string">'.'</span>)]</span><br></pre></td></tr></table></figure>
+
+<p><code>libc</code>的加载基地址也可以类似方式得到：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">libc_base</span> = p.libs()[libc_path]</span><br></pre></td></tr></table></figure>
+
+<p>由于只使用第一种方法的进程交互，所以<code>libc</code>一定是本地的，那么一般通过<code>ldd ./elf_name</code>就能找到路径了。</p>
+<hr>
+<h2 id="attach"><a href="#attach" class="headerlink" title="attach"></a>attach</h2><p>用<code>gdb</code>来<code>attach</code>的时候，一般会在对应的位置加一句：</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line">gdb.attach(p, <span class="keyword">cmd</span><span class="bash">)</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的<code>cmd</code>相当于你<code>attach</code>进程之后在<code>gdb</code>里下的命令，如果想下多条命令，要记得加<code>\n</code>模拟回车，比如：</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cmd</span><span class="bash"> = <span class="string">"b main\n"</span></span></span><br><span class="line"><span class="keyword">cmd</span><span class="bash"> += <span class="string">"set <span class="variable">$a</span> = 0x8048000\n"</span></span></span><br><span class="line">gdb.attach(p, <span class="keyword">cmd</span><span class="bash">)</span></span><br></pre></td></tr></table></figure>
+
+<p>但是要注意，其实<code>gdb attach</code>的时候，你的程序并不会按你想的那样停下来，它会继续往下执行代码。</p>
+<p>所以一般我的习惯是在<code>atatch</code>之后加一句<code>pause()</code> ，这样能保证<code>pause()</code>之后<strong><code>python</code>层面的接下来的代码</strong>的不会被调用。</p>
+<p>所以我一般会把调试的函数写成这样：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">debug</span><span class="params">(cmd=<span class="string">""</span>)</span>:</span></span><br><span class="line">    gdb.attach(p, cmd)</span><br><span class="line">    pause()</span><br></pre></td></tr></table></figure>
+
+<p>然后在交互的一开始就写下<code>debug()</code>，然后在对应需要停下的地方下面写一行<code>pause()</code></p>
+<p>这种加入了<code>pause()</code>的写法，想要向下执行，需要在已经<code>attach</code>的<code>gdb</code>终端里执行<code>c</code>命令，然后再回到程序运行的终端按回车，回车的次数决定了你想要向下执行几个<code>pause()</code>，不想继续了，就在<code>gdb</code>的终端里<code>ctrl+C</code>断下来。然后想继续就重复这个流程就行了。（<strong>如果手抖在程序运行终端<code>ctrl+C</code>了，那么请重新开始</strong>）</p>
+<p>这里推荐一种配置终端的方式，爽到飞起：</p>
+<blockquote>
+<p>先下载<code>tmux</code>，一款非常好用的终端分屏程序。</p>
+<p>然后配置<code>tmux</code>的识别鼠标模式，因为每次想切换终端需要<code>ctrl+b</code> and <code>ctrl+方向键</code>的操作很多人会不习惯，包括我。</p>
+<p>具体的配置的方法：<code>vim ~/.tmux.conf</code> 然后输入<code>set-g option -g mouse on</code>，保存退出。</p>
+<p>然后如果是其他终端输入<code>tmux</code>进入<code>tmux</code>终端 ，<code>tmux</code>终端的话不用这一步。</p>
+<p>然后再<code>ctrl+B</code>进入<code>tmux</code>终端，然后<code>shift+:</code><strong>（就是<code>L</code>右边那个键）</strong> 就可以进入<code>tmux</code>终端的命令模式</p>
+<p>这个时候输入内容，最下行会有一个冒号显示，然后输入<code>source ~/.tmux.conf</code> 配置完毕</p>
+<p><del>如果还不成功，那就去问百度把</del></p>
+</blockquote>
+<p>有了上述的配置后，在你的<code>exp</code>文件前需要加上这么一句：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">context.terminal = [<span class="string">'tmux'</span>, <span class="string">'splitw'</span>, <span class="string">'-h'</span>]</span><br></pre></td></tr></table></figure>
+
+<p>然后在<code>tmux</code>终端里运行你的<code>exp.py</code>，运行到<code>gdb.attach()</code>时就可以分左右两屏，左边跑程序，右边跑<code>gdb</code>了，然后鼠标点点点就可以切换屏幕。然后在<code>gdb</code>那边输入<code>q</code>命令就可以退出调试。</p>
+<blockquote>
+<p>有的时候会突然发现无法输入内容，这时候对应屏幕右上角有一个  <strong><code>[1/1024]</code></strong>  类似的显示，这个时候在对应屏幕摁<code>q</code>就可以解决。</p>
+</blockquote>
+<hr>
+<h2 id="debug里的技巧"><a href="#debug里的技巧" class="headerlink" title="debug里的技巧"></a>debug里的技巧</h2><p>主要针对上述的<code>debug()</code>函数里面的一些技巧：</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line">def debug(<span class="keyword">cmd</span><span class="bash">=<span class="string">""</span>):</span></span><br><span class="line">    gdb.attach(p, <span class="keyword">cmd</span><span class="bash">)</span></span><br><span class="line">    pause()</span><br></pre></td></tr></table></figure>
+
+<p><code>cmd</code>里可以下任何<code>gdb</code>的命令，一般都是下一些断点命令，还有设置一些变量来方便查看内存。</p>
+<p>下断点命令时，用上述<code>process</code>中的获取程序基地址的方式，然后就可以对开了<code>PIE</code>的程序下断点了。</p>
+<p>一般构造方式：</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cmd</span><span class="bash"> = <span class="string">"b *%d\n"</span> %(proc_base+breakaddr)</span></span><br></pre></td></tr></table></figure>
+
+<p><code>breakaddr</code>为想要下断点的地址，从<code>IDA</code>里可以很容易找到，<code>IDA</code>里的可是16进制，不要忘了<code>0x</code>前缀。</p>
+<p>设置某些变量时，一般都会用<code>set $a=...</code>这种，然后在<code>gdb</code>里查看内存可以用<code>x/(numbs)(type) $a</code>这种:</p>
+<figure class="highlight lasso"><table><tr><td class="code"><pre><span class="line">x/<span class="number">32</span>gx $a</span><br><span class="line">x/<span class="number">24</span>wx $a</span><br><span class="line">x/<span class="number">16</span>b $a</span><br><span class="line">x/<span class="number">8</span>c $a</span><br><span class="line"><span class="params">...</span> <span class="params">...</span></span><br></pre></td></tr></table></figure>
+
+<p>正常的堆题目，会把堆块指针，也许还有其他信息存放到<code>bss</code>段上的，假设<code>IDA</code>显示为<code>0x202010</code>，那么我们可以设置：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">cmd</span> = <span class="string">'''set $a=%d'''</span> %(proc_base+<span class="number">0</span>x202010)</span><br></pre></td></tr></table></figure>
+
+<p>稍复杂一点的堆题目，可能会在初始化的时候开辟一块存储堆块指针的空间，然后把指向这个空间的指针存到<code>bss</code>，这个时候可以采用这种方式来设置：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">cmd</span> = <span class="string">'''set $a=*(long*)(%s)'''</span> % hex(proc_base+<span class="number">0</span>x202110)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="shellcraft"><a href="#shellcraft" class="headerlink" title="shellcraft"></a>shellcraft</h2><p>一般在<code>exp</code>的开头指定本次的<code>os</code>和<code>arch</code>会好一点，比如这样：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="title">context</span><span class="params">(arch = <span class="string">'amd64'</span> , os = <span class="string">'linux'</span>, log_level=<span class="string">"debug"</span>)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>在<code>context</code>中指定了<code>os</code>和<code>arch</code>才可以像下面一样调用，要不然你    得写成<code>shellcraft.amd64.linux.sh()</code>。</p>
+<p><strong><code>shellcraft.sh()</code></strong>：</p>
+<p>生成针对当前<code>os</code>和<code>arch</code>的一段可以<code>getshell</code>的<code>shellcode</code>，这个功能用途不大，所以直接找<code>shellcode</code>还是建议去<code>exploitdb</code>去找。</p>
+<p>但其实<code>exploitdb</code>上那些<code>shellcode</code>写的也都一般，你自己完全可以写，比如<code>64</code>位时，只需要让<code>rdi</code>指向一个指针，指针里存着<code>&quot;/bin/sh\x00&quot;</code>，然后<code>rsi</code>和<code>rdx</code>置<code>0</code>，然后让<code>rax</code>为<code>0x3b</code>，最后调用<code>syscall</code>就可以了。。</p>
+<p><strong><code>shellcraft.pushstr()</code></strong>：</p>
+<p>生成可以<code>push</code>指定字符串的<code>shellcode</code>，因为你自己写<code>push</code>字符串其实是一个很复杂的操作，比如想要<code>push</code>一段<code>&quot;/home/t1an5t/pwn/flag&quot;</code>这种，就需要对栈空间很熟悉，多次调整才可以，所以有轮子就直接用把。</p>
+<p><strong><code>shellcraft.cat()</code></strong>：</p>
+<p>生成可以直接读取指定文件的<code>shellcode</code>。</p>
+<p>这个自己手写<code>shellcode</code>的时候一般都会用<code>open()</code>-&gt;<code>read()</code>-&gt;<code>write()</code>来进行读取打印。</p>
+<p>而这个<code>cat()</code>命令帮助你简化了这个操作，不过它调用的其实是<code>open()</code>-&gt;<code>sendfileto()</code>这种组合。</p>
+<p><strong><code>其他</code></strong>：</p>
+<p>其他的暂时我也没怎么用到过。</p>
+<p>…待续</p>
+
+      
+
+    </div>
+
+
+
+
+
+    <footer class="article-footer">
+      
+        <a data-url="http://tianstcht.github.io/pwntools的使用技巧/" data-id="cjx2x1kkw0001s8vgpocnua23" class="article-share-link" data-share="baidu" data-title="pwntools的使用技巧">分享到</a>
+      
+
+      
+        <a href="http://tianstcht.github.io/pwntools的使用技巧/#gitalk-container" class="article-comment-link">评论</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwnable/">pwnable</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwntools/">pwntools</a></li></ul>
+
+
+    </footer>
   </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/pwnab13-7w/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">← 上一篇</strong>
+      <div class="article-nav-title">pwnab13.7w</div>
+    </a>
+  
+  
+    <a href="/t1an5t的2020/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇 →</strong>
+      <div class="article-nav-title">
+        
+          t1an5t的2020
+        
+      </div>
+    </a>
+  
+</nav>
+
+
+  
 </article>
 
-  
-    
-    
-      
-        </div></section>
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap"  data-scroll-reveal="enter left and over 0.7s">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div  class="archive-article-inner">
-    <header class="archive-article-header">
-      <a  href="/pwntools的使用技巧/" class="archive-article-date">
-  <i class="fa fa-calendar"></i>
-  <time  datetime="2019-06-19T07:26:27.000Z" itemprop="datePublished">6月 19</time>
-</a>
-
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/pwntools的使用技巧/">
-        <i class="fa fa-pencil-square-o  article-title-icon"></i>pwntools的使用技巧</a>
-    </h1>
-  
 
 
-    </header>
-  </div>
-</article>
 
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div  class="archive-article-inner">
-    <header class="archive-article-header">
-      <a  href="/pwnab13-7w/" class="archive-article-date">
-  <i class="fa fa-calendar"></i>
-  <time  datetime="2019-06-19T07:14:30.000Z" itemprop="datePublished">6月 19</time>
-</a>
-
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/pwnab13-7w/">
-        <i class="fa fa-pencil-square-o  article-title-icon"></i>pwnab13.7w</a>
-    </h1>
-  
+  <section class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section> 
 
 
-    </header>
-  </div>
-</article>
 
-  
-  
-    </div></section>
-  
+
+  <div id="gitalk-container"></div>
 
 
 </section>
@@ -792,13 +890,13 @@ $(document).on("click", "ul.archive-list li.archive-list-item", function () {
   <script>
     var disqus_shortname = 'rapcoder';
     if (page.permalink){ 
-      var disqus_url = '';
+      var disqus_url = 'http://tianstcht.github.io/pwntools的使用技巧/';
      } 
     (function(){
       var dsq = document.createElement('script');
       dsq.type = 'text/javascript';
       dsq.async = true;
-      dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
   </script>
