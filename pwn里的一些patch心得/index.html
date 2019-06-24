@@ -8,20 +8,21 @@
 
   
 
-  <title>t1an5t的2020 | t1an5t&#39;s Treasure</title>
+  <title>pwn里的一些patch心得 | t1an5t&#39;s Treasure</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="2019.6.2总是想写点东西，也总是忘记，希望这次能坚持下去，就算它是第一次了！最近准备回归源码去学习知识，跳出pwn只能玩ctf这个思维去思考，去理解内存，源码，调试这些，这样才能以不变应万变。">
+  <meta name="description" content="前言最近刚参加完国赛东北赛区的线下赛，觉得patch是个很重要的技巧，所以这里记录一下我自己的patch经验和心得。毕竟如果只靠各种危险代码为nop这种方式梭哈，也太没意思了。">
+<meta name="keywords" content="pwnable">
 <meta property="og:type" content="article">
-<meta property="og:title" content="t1an5t的2020">
-<meta property="og:url" content="http://tianstcht.github.io/t1an5t的2020/index.html">
+<meta property="og:title" content="pwn里的一些patch心得">
+<meta property="og:url" content="http://tianstcht.github.io/pwn里的一些patch心得/index.html">
 <meta property="og:site_name" content="t1an5t&#39;s Treasure">
-<meta property="og:description" content="2019.6.2总是想写点东西，也总是忘记，希望这次能坚持下去，就算它是第一次了！最近准备回归源码去学习知识，跳出pwn只能玩ctf这个思维去思考，去理解内存，源码，调试这些，这样才能以不变应万变。">
+<meta property="og:description" content="前言最近刚参加完国赛东北赛区的线下赛，觉得patch是个很重要的技巧，所以这里记录一下我自己的patch经验和心得。毕竟如果只靠各种危险代码为nop这种方式梭哈，也太没意思了。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-24T15:33:29.288Z">
+<meta property="og:updated_time" content="2019-06-24T15:30:35.038Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="t1an5t的2020">
-<meta name="twitter:description" content="2019.6.2总是想写点东西，也总是忘记，希望这次能坚持下去，就算它是第一次了！最近准备回归源码去学习知识，跳出pwn只能玩ctf这个思维去思考，去理解内存，源码，调试这些，这样才能以不变应万变。">
+<meta name="twitter:title" content="pwn里的一些patch心得">
+<meta name="twitter:description" content="前言最近刚参加完国赛东北赛区的线下赛，觉得patch是个很重要的技巧，所以这里记录一下我自己的patch经验和心得。毕竟如果只靠各种危险代码为nop这种方式梭哈，也太没意思了。">
 
   
 
@@ -151,11 +152,11 @@
 </header>
 
     <div class="outer">
-      <section id="main"><article   id="post-t1an5t的2020" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main"><article   id="post-pwn里的一些patch心得" class="article article-type-post" itemscope itemprop="blogPost">
   <div data-scroll-reveal="enter top and over 0.7s"  class="article-meta">
-    <a  href="/t1an5t的2020/" class="article-date">
+    <a  href="/pwn里的一些patch心得/" class="article-date">
   <i class="fa fa-calendar"></i>
-  <time  datetime="1999-01-01T07:13:07.000Z" itemprop="datePublished">1999-01-01</time>
+  <time  datetime="2019-06-23T13:13:57.000Z" itemprop="datePublished">2019-06-23</time>
 </a>
 
     
@@ -170,7 +171,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      <i class="fa fa-pencil-square-o  article-title-icon"></i>t1an5t的2020
+      <i class="fa fa-pencil-square-o  article-title-icon"></i>pwn里的一些patch心得
     </h1>
   
 
@@ -185,37 +186,86 @@
         <span id="busuanzi_container_page_pv">
           阅读次数<span id="busuanzi_value_page_pv"></span>
         </span>
-        <h2 id="2019-6-2"><a href="#2019-6-2" class="headerlink" title="2019.6.2"></a>2019.6.2</h2><p>总是想写点东西，也总是忘记，希望这次能坚持下去，就算它是第一次了！最近准备回归源码去学习知识，跳出<code>pwn</code>只能玩<code>ctf</code>这个思维去思考，去理解内存，源码，调试这些，这样才能以不变应万变。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近刚参加完国赛东北赛区的线下赛，觉得<code>patch</code>是个很重要的技巧，所以这里记录一下我自己的<code>patch</code>经验和心得。毕竟如果只靠各种危险代码为<code>nop</code>这种方式梭哈，也太没意思了。</p>
 <a id="more"></a>
 
-<p>想想自己真的菜，一直也因为没什么压力也没什么小伙伴一起学，所以一直学得很佛系，学得很慢，后悔后悔。</p>
-<p>还有半个月国赛东北赛区决赛了，难受啊，怕是打不过。</p>
-<p>立个<code>flag</code>吧，明年要争取打进一次强网杯线下，今年的国赛决赛争取比原来强一点，今年争取湖湘杯要恰到钱。</p>
-<h2 id="2019-6-3"><a href="#2019-6-3" class="headerlink" title="2019.6.3"></a>2019.6.3</h2><p>今天准备学一下<code>SROP</code>，<code>babyheap</code>和<code>syscall_interface</code>都用到了类似的技巧，额，<code>syscall_interaface</code>搞懂了收获其实很大，然后仔细学了一下<code>house of orange</code>，还有点<code>vtable</code>的小问题，然后正在学不泄露堆的操作，不得不佩服，这群神仙是真的猛，这个构造思路简直妖孽。</p>
-<h2 id="2019-6-4"><a href="#2019-6-4" class="headerlink" title="2019.6.4"></a>2019.6.4</h2><p>学会了<code>house of orange</code>的通杀，也对<code>io</code>有了更深的认识。参考了一些文章，发现了一些师傅写好的<code>house of orange</code>的一些函数，然后自己鼓捣鼓捣给封装成了一个生成<code>payload</code>的函数，然后顺手搞了个<code>tpwn</code>的模块，争取把这个库慢慢积累起来留给学弟学妹们当宝藏-.-</p>
-<p>学了点<code>global_max_fast</code>的骚操作，可以往<code>main_arena</code>的地址后面的任意地址打进去一个堆指针，跟<code>unsortedbin</code>差不多，但是后续利用会更容易一些，准备想办法解决<code>starctf2019</code>的<code>heap_master</code>。</p>
-<h2 id="2019-6-5"><a href="#2019-6-5" class="headerlink" title="2019.6.5"></a>2019.6.5</h2><p>把<code>heap_master</code>做上了，不过发现对<code>io</code>理解很粗糙，比如我在写进<code>io</code>结构的时候，发现了写入顺序不同其实就没办法泄露，很坑，如果有一天想起来的话，可能会考虑去看看源代码。然后学了下<code>house of roman</code>，不过感觉用途不大，虽然在刻意避免<code>aslr</code>的碰撞，不过总感觉需要爆破的概率有点低奥。</p>
-<p>快下班的时候学长丢过来两道题，回去花了将近两个小时做完了，一道是魔改的原题，因为<code>tcache</code>不熟，所以有<code>exp</code>也改了好久，这个如果是自己写的其实就完全不用担心了，所以准备搞一下<code>tcache</code>来深入学习一下。</p>
-<h2 id="2019-6-6"><a href="#2019-6-6" class="headerlink" title="2019.6.6"></a>2019.6.6</h2><p>做了几道<code>tcache</code>，对布局掌握了一下，对一些操作还不太熟练，比如<code>bctf2018-three</code>这种布局方式我就觉得非常强，我自己做不到<code>wp</code>那么精简。<code>tcache</code>混着固定长度<code>off-by-one</code>的布局手法需要熟练掌握啊。</p>
-<h2 id="2019-6-7"><a href="#2019-6-7" class="headerlink" title="2019.6.7"></a>2019.6.7</h2><p>端午节了，给自己放一天假，在床上躺尸恰外卖，对我来说就已经达到人生巅峰了，真的没追求。</p>
-<p>看了两部番，灵能百分百和灵能百分百2，还追了一下贤者之孙。</p>
-<h2 id="2019-6-8"><a href="#2019-6-8" class="headerlink" title="2019.6.8"></a>2019.6.8</h2><p>又歇了一天，看了好多番，很爽， 约定的梦幻岛，欢迎来到实力主义至上的教室。还找到了一首石头门里特别好听的歌，收藏啦。</p>
-<h2 id="2019-6-9"><a href="#2019-6-9" class="headerlink" title="2019.6.9"></a>2019.6.9</h2><p>继续鸽就完事了。</p>
-<h2 id="2019-6-10"><a href="#2019-6-10" class="headerlink" title="2019.6.10"></a>2019.6.10</h2><p>终于上班了，不然放假感觉实在是空虚。继续开始学习修行！本来在看<code>tcache</code>，然后发现<code>kctf</code>就去做了</p>
-<h2 id="2019-6-11"><a href="#2019-6-11" class="headerlink" title="2019.6.11"></a>2019.6.11</h2><p>看雪的破题耽误了我一天，结果发现是因为<code>libc</code>用错了，本地的时候以为<code>2.23</code>就是<code>2.23</code>，所以一直用的本地库，<code>mdzz~</code>。</p>
-<h2 id="2019-6-13"><a href="#2019-6-13" class="headerlink" title="2019.6.13"></a>2019.6.13</h2><p>竟然忘记写日记了，好懒啊。 又开始刷<code>tw</code>了，不得不说，这上面的题目还是很经典。</p>
-<h2 id="2019-6-17"><a href="#2019-6-17" class="headerlink" title="2019.6.17"></a>2019.6.17</h2><p>浏览器搞不动了，配了两次环境全崩掉了，<code>google</code>,<code>nmsl</code></p>
-<p>做了几道<code>tw</code>，<code>de-aslr</code>这个题还没做，没搞过这种思路的题目，感觉很厉害。</p>
-<h2 id="2019-6-18"><a href="#2019-6-18" class="headerlink" title="2019.6.18"></a>2019.6.18</h2><p>开始入门内核，照着<code>muhe</code>师傅的资料配好了环境，复现了一个简单的洞。</p>
-<p>学<code>slub</code>算法搜到一个特别牛逼的博文，也想像他这样总结一下知识。</p>
-<h2 id="2019-6-19"><a href="#2019-6-19" class="headerlink" title="2019.6.19"></a>2019.6.19</h2><p>把<code>blog</code>又搭好了，传上去了点文章，当然还是有别的文章的，<code>slub</code>算法也了解的差不多了，明天看<code>Anciety</code>大佬的文章。</p>
-<h2 id="2019-6-20"><a href="#2019-6-20" class="headerlink" title="2019.6.20"></a>2019.6.20</h2><p>接着完善<code>off-by-one</code>的总结笔记，那个画图软件是真的好用，回学校。</p>
-<h2 id="2019-6-22"><a href="#2019-6-22" class="headerlink" title="2019.6.22"></a>2019.6.22</h2><p>国赛的第一天，四道<code>pwn</code>，本来能做上三道，结果最后只做出两道。<code>fix</code>环节的话个人认为是全部很好地修复了，等待明天的结果把，明天进不了前四没进去总决赛那就好玩了。</p>
-<h2 id="2019-6-23"><a href="#2019-6-23" class="headerlink" title="2019.6.23"></a>2019.6.23</h2><p>国赛的第二天，两道<code>pwn</code>和学弟一人搞了一道，然后安卓也稀里糊涂的做出来了，因为跟安卓没什么关系。</p>
-<p><code>fix</code>的话发现第一天分数巨低，最后发现是<code>pwn</code>的权限给的有问题，我修好的服务全都跑不起来，全部宕机，可以说很坑很坑了。</p>
-<p>今天的两道<code>pwn</code>全都修复了，然后直接<code>777</code>就好了，可惜了我第一天认真修复的4道题目了，虽然其实只有三道修复上了。</p>
-<p>最后因为第二天<code>A</code>了所有题，总排名也达到了第一，很开心，可以去总决赛挨打了。</p>
-<h2 id="2019-6-24"><a href="#2019-6-24" class="headerlink" title="2019.6.24"></a>2019.6.24</h2><p>坐了一天车回北京，真的是累死。又可以继续回公司自闭了。</p>
+<p>这里先介绍一下万恶之源：</p>
+<p><a href="http://p4nda.top/2018/07/02/patch-in-pwn/" target="_blank" rel="noopener">p4nda师傅的blog</a>提到了一种用<code>.eh_frame</code>段来写代码<code>patch</code>的手法，被我偷学来了，这种方法比较有效而且对文件来说改动较小。</p>
+<p>这里我觉得<code>64</code>位的<code>patch</code>难度是要小于<code>32位</code>的，因为<code>32</code>位还需要自己手动调整栈空间，感觉很麻烦。所以主要针对<code>64位</code>程序做一下心得总结。</p>
+<p><strong>注：以下关于各类<code>opcode</code>的说法都是基于猜测，并没有手册作为依据。只不过对我自己来说暂时够用而已。</strong></p>
+<h2 id="跳转指令与call命令"><a href="#跳转指令与call命令" class="headerlink" title="跳转指令与call命令"></a>跳转指令与call命令</h2><p>跳转指令就是如<code>jmp</code>, <code>jg</code>,<code>jle</code>等等这些。</p>
+<p><code>call</code>的本质也是跳转，只不过多了一步保存栈结构和保存下一条指令地址入栈而已。</p>
+<p>它们的性质都差不多，所以汇编的<code>opcode</code>形式也是极其类似的，都是以指定的操作<code>opcode</code>+<code>offset</code>构成。</p>
+<p>只针对地址而言，<code>call</code>的固定长度为5个字节，</p>
+<p>而跳转指令若目的地址大于当前地址且为近地址跳转的时候，为2个字节，否则为5个字节。</p>
+<p>有两种偏移地址<code>offset</code>，下面介绍分别如何计算：</p>
+<p>一种是要到达的地址高于当前地址，这种比较好计算：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">offset = target - (start + <span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+
+<p>另一种是要到达的地址低于当前地址，计算如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">offset = <span class="number">0xffffffff</span> - (start - target) + <span class="number">1</span> - <span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<p>如果是<code>printf</code>和<code>scanf</code>等这类的库函数，并且在程序中有它的<code>PLT和GOT</code>结构，那么把对应的<code>PLT</code>当作<code>target</code>进行计算即可。</p>
+<p>跳转指令因为都是单字节的<code>opcode</code>加偏移的形式，所以有一种情况可以对跳转指令进行替换以实现程序的修复，也就是无符号数有符号数使用不当，导致某些整数型错误的情况：</p>
+<p>比如这种情况下，如果输入<code>readNum</code>的时候输入<code>-1</code>也可以满足跳转条件，但是在<code>read</code>的时候便会造成溢出：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">call    readNum</span><br><span class="line">add     esp, 10h</span><br><span class="line">cmp     eax, 20h</span><br><span class="line">jle     short loc_8048777</span><br><span class="line">......</span><br><span class="line">loc_8048777:</span><br><span class="line">mov     edi, eax</span><br><span class="line">sub     esp, 4</span><br><span class="line">push    eax</span><br><span class="line">lea     eax, (aNowSayPassword - 804A000h)[ebx] ; &quot;Now, Say password(%u):&quot;</span><br><span class="line">push    eax</span><br><span class="line">push    1</span><br><span class="line">call    ___printf_chk</span><br><span class="line">add     esp, 0Ch</span><br><span class="line">push    edi             ; nbytes</span><br><span class="line">lea     eax, [ebp+buf]</span><br><span class="line">push    eax             ; buf</span><br><span class="line">push    0               ; fd</span><br><span class="line">call    _read</span><br></pre></td></tr></table></figure>
+
+<p>当然修复也非常简单：</p>
+<figure class="highlight x86asm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">jle</span> --&gt; <span class="keyword">jbe</span></span><br></pre></td></tr></table></figure>
+
+<p>下面是拜托学弟收集的很多跳转指令：</p>
+<blockquote>
+<p>无符号跳转：</p>
+<p>JA  ;无符号大于则跳转<br>JNA ;无符号不大于则跳转<br>JAE ;无符号大于等于则跳转 同JNB<br>JNAE ;无符号不大于等于则跳转 同JB<br>JB  ;无符号小于则跳转<br>JNB ;无符号不小于则跳转<br>JBE ;无符号小于等于则跳转 同JNA<br>JNBE ;无符号不小于等于则跳转 同JA</p>
+<p>有符号跳转：</p>
+<p>JG  ;有符号大于则跳转<br>JNG ;有符号不大于则跳转<br>JGE ;有符号大于等于则跳转 同JNL<br>JNGE ;有符号不大于等于则跳转 同JL<br>JL  ;有符号小于则跳转<br>JNL ;有符号不小于则跳转<br>JLE ;有符号小于等于则跳转 同JNG<br>JNLE ;有符号不小于等于则跳转 同JG</p>
+</blockquote>
+<p>&nbsp;</p>
+<h2 id="修复UAF问题"><a href="#修复UAF问题" class="headerlink" title="修复UAF问题"></a>修复UAF问题</h2><p>一般来说，<code>pwn</code>里面出现的<code>UAF</code>问题都会很明显，就是<code>free</code>的时候没把预留的指针清除掉，在<code>F5</code>大法下很容易发现，那么如何<code>patch</code>呢。</p>
+<p>我的思路是改对应位置的<code>call free</code>为<code>call</code> <code>.eh_frame</code>的起始地址，然后在<code>.eh_frame</code>节区的部分写我们自定义的函数，然后最后写上<code>ret</code>跳回去。不要忘记要先为<code>.eh_frame</code>节区<strong>赋予可执行的权限</strong>，这点在<code>IDA</code>里就能做到。</p>
+<p>自定义函数部分，先写一句<code>call free</code>，注意因为这里偏移值都变化了，<strong>所以要自己计算偏移然后写<code>opcode</code></strong>，有的时候<code>keypatch</code>可能会出现错误。</p>
+<p>然后去<code>gdb</code>里动态调试一下，观察<strong>此时<code>free</code>的堆指针所在的位置</strong>，模仿之前的逻辑，找到指针然后将它置0。</p>
+<p>比如国赛碰到的这道题：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.text:0000000000001647                 lea     rdx, ds:0[rax*8]</span><br><span class="line">.text:000000000000164F                 lea     rax, qword_2032A0</span><br><span class="line">.text:0000000000001656                 mov     rax, [rdx+rax]</span><br><span class="line">.text:000000000000165A                 mov     rdi, rax        ; ptr</span><br><span class="line">.text:000000000000165D                 call    _free</span><br></pre></td></tr></table></figure>
+
+<p>可以看到一开始<code>rdx</code>作为指针数组的偏移值，<code>rax</code>作为指针数组的基地址。</p>
+<p>所以可以在自定义函数里这么写：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">call free;</span><br><span class="line">lea rax, qword_2032A0;</span><br><span class="line">add rax, rdx;</span><br><span class="line">mov qword ptr [rax], 0;</span><br><span class="line">ret;</span><br></pre></td></tr></table></figure>
+
+<p>这里说一句<code>lea rax, xxxx</code>是一个有七个<code>opcode</code>构成的，其中<code>lea rax</code>部分由三字节构成：<code>48 8d 05</code>。</p>
+<p>后面接四字节的偏移值，计算方式类似于之前的<code>call</code>：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">offset = target - (start + <span class="number">7</span>)</span><br></pre></td></tr></table></figure>
+
+<p>然后<code>call free</code>这里也是自己计算偏移写进去，剩下的用<code>keypatch</code>搞定即可。</p>
+<p>&nbsp;</p>
+<h2 id="控制if包含范围"><a href="#控制if包含范围" class="headerlink" title="控制if包含范围"></a>控制if包含范围</h2><p>这个也是这次比赛中瞎鼓捣出来的，感觉很好玩。</p>
+<p>比如这道<code>pwn</code>题漏洞点在这里：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">unsigned __int64 sub_12B8()</span><br><span class="line">&#123;</span><br><span class="line">  signed int idx; // [rsp+Ch] [rbp-14h]</span><br><span class="line">  void *ptr; // [rsp+10h] [rbp-10h]</span><br><span class="line">  unsigned __int64 v3; // [rsp+18h] [rbp-8h]</span><br><span class="line"></span><br><span class="line">  v3 = __readfsqword(0x28u);</span><br><span class="line">  printf(&quot;index:&quot;);</span><br><span class="line">  idx = sub_D5D();</span><br><span class="line">  if ( idx &gt;= 0 &amp;&amp; idx &lt;= 9 )</span><br><span class="line">  &#123;</span><br><span class="line">    ptr = *(void **)(16LL * idx + chunk_bss + 8);</span><br><span class="line">    *(_QWORD *)(16LL * idx + chunk_bss) = 0LL;</span><br><span class="line">    *(_QWORD *)(16LL * idx + chunk_bss + 8) = 0LL;</span><br><span class="line">  &#125;</span><br><span class="line">  if ( ptr )</span><br><span class="line">    free(ptr);</span><br><span class="line">  return __readfsqword(0x28u) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为虽然检查了<code>idx</code>的合法性，缺没检查<code>ptr</code>是怎么来的，所以可以与之前的某些输入一起形成一个任意地址的<code>free</code>。</p>
+<p>&nbsp;</p>
+<p>所以我的修复逻辑便是把<code>if(ptr) free(ptr)</code>这段想办法放到上面的<code>if</code>里面。所以去观察上面的<code>if</code>的反汇编：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.text:00000000000012ED                 cmp     [rbp+idx], 0</span><br><span class="line">.text:00000000000012F1                 js      short loc_135B</span><br><span class="line">.text:00000000000012F3                 cmp     [rbp+idx], 9</span><br><span class="line">.text:00000000000012F7                 jg      short loc_135B</span><br></pre></td></tr></table></figure>
+
+<p>如果把<code>js short loc_135B</code>和<code>jg short loc_135B</code>的偏移值更改，让它把<code>call free</code>也包括进来就行了！</p>
+<p>&nbsp;</p>
+<p>这里通过查看<code>ida</code>显示的<code>opcode</code>可知，跳转指令只有两字节，所以我们也写两字节，改为了：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.text:00000000000012ED                 cmp     [rbp+var_14], 0</span><br><span class="line">.text:00000000000012F1                 js      short loc_136F</span><br><span class="line">.text:00000000000012F3                 cmp     [rbp+var_14], 9</span><br><span class="line">.text:00000000000012F7                 jg      short loc_136F</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;</p>
+<p><code>135B</code>和<code>136F</code>分别对应：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.text:000000000000135B loc_135B:                               ; CODE XREF: sub_12B8+39↑j</span><br><span class="line">.text:000000000000135B                                         ; sub_12B8+3F↑j</span><br><span class="line">.text:000000000000135B                 cmp     [rbp+ptr], 0</span><br><span class="line">.text:0000000000001360                 jz      short loc_136F</span><br><span class="line">.text:0000000000001362                 mov     rax, [rbp+ptr]</span><br><span class="line">.text:0000000000001366                 mov     rdi, rax        ; ptr</span><br><span class="line">.text:0000000000001369                 call    free</span><br><span class="line">.text:000000000000136E                 nop</span><br><span class="line">.text:000000000000136F</span><br><span class="line">.text:000000000000136F loc_136F:                               ; CODE XREF: sub_12B8+A8↑j</span><br><span class="line">.text:000000000000136F                 nop</span><br><span class="line">.text:0000000000001370                 mov     rax, [rbp+var_8]</span><br><span class="line">.text:0000000000001374                 xor     rax, fs:28h</span><br><span class="line">.text:000000000000137D                 jz      short locret_1384</span><br><span class="line">.text:000000000000137F                 call    __stack_chk_fail</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;</p>
+<p>修复好之后的<code>f5</code>显示为：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __<span class="function">int64 <span class="title">sub_12B8</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">signed</span> <span class="keyword">int</span> idx; <span class="comment">// [rsp+Ch] [rbp-14h]</span></span><br><span class="line">  <span class="keyword">void</span> *ptr; <span class="comment">// [rsp+10h] [rbp-10h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v3; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v3 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"index:"</span>);</span><br><span class="line">  idx = read_int();</span><br><span class="line">  <span class="keyword">if</span> ( idx &gt;= <span class="number">0</span> &amp;&amp; idx &lt;= <span class="number">9</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    ptr = *(<span class="keyword">void</span> **)(<span class="number">16L</span>L * idx + chunk_bss + <span class="number">8</span>);</span><br><span class="line">    *(_QWORD *)(<span class="number">16L</span>L * idx + chunk_bss) = <span class="number">0L</span>L;</span><br><span class="line">    *(_QWORD *)(<span class="number">16L</span>L * idx + chunk_bss + <span class="number">8</span>) = <span class="number">0L</span>L;</span><br><span class="line">    <span class="keyword">if</span> ( ptr )</span><br><span class="line">      <span class="built_in">free</span>(ptr);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同理其实我推测也可以扩展<code>for</code>的范围，这个有时间测试一下。</p>
+<h2 id="read，gets，printf等"><a href="#read，gets，printf等" class="headerlink" title="read，gets，printf等"></a>read，gets，printf等</h2><p>这种<code>patch</code>起来相对简单了.</p>
+<p><code>read</code>只需要改变<code>rdx</code>值也就是<code>nbytes</code>的传参值大小，控制为不会栈溢出即可。</p>
+<p><code>gets</code>的话按照<code>uaf</code>的方式修复，改成<code>read</code>来执行。如果程序中没有<code>read</code>也可以通过系统调用的形式起<code>read</code>。</p>
+<p><code>printf</code>的话问题就是格式化字符串漏洞嘛，修的话按照上述方法改成<code>puts</code>。其实比较怕的就是程序里没有<code>puts</code>，暂时想不到太完美的<code>patch</code>方式。</p>
+<p>。。。待续</p>
 
       
 
@@ -227,14 +277,16 @@
 
     <footer class="article-footer">
       
-        <a data-url="http://tianstcht.github.io/t1an5t的2020/" data-id="cjx8zg4nm000e7ovg5jr3vj0y" class="article-share-link" data-share="baidu" data-title="t1an5t的2020">分享到</a>
+        <a data-url="http://tianstcht.github.io/pwn里的一些patch心得/" data-id="cjx8zg4nm000g7ovg1d9ritll" class="article-share-link" data-share="baidu" data-title="pwn里的一些patch心得">分享到</a>
       
 
       
-        <a href="http://tianstcht.github.io/t1an5t的2020/#gitalk-container" class="article-comment-link">评论</a>
+        <a href="http://tianstcht.github.io/pwn里的一些patch心得/#gitalk-container" class="article-comment-link">评论</a>
       
 
       
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwnable/">pwnable</a></li></ul>
+
 
     </footer>
   </div>
@@ -242,15 +294,11 @@
     
 <nav id="article-nav">
   
-  
-    <a href="/pwnab13-7w/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">下一篇 →</strong>
-      <div class="article-nav-title">
-        
-          pwnab13.7w
-        
-      </div>
+    <a href="/CISCN2019-东北赛区线下赛-pwn/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">← 上一篇</strong>
+      <div class="article-nav-title">CISCN2019-东北赛区线下赛-pwn</div>
     </a>
+  
   
 </nav>
 
@@ -825,7 +873,7 @@ $(document).on("click", "ul.archive-list li.archive-list-item", function () {
   <script>
     var disqus_shortname = 'rapcoder';
     if (page.permalink){ 
-      var disqus_url = 'http://tianstcht.github.io/t1an5t的2020/';
+      var disqus_url = 'http://tianstcht.github.io/pwn里的一些patch心得/';
      } 
     (function(){
       var dsq = document.createElement('script');
