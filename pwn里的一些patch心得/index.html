@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="t1an5t&#39;s Treasure">
 <meta property="og:description" content="前言最近刚参加完国赛东北赛区的线下赛，觉得patch是个很重要的技巧，所以这里记录一下我自己的patch经验和心得。毕竟如果只靠各种危险代码为nop这种方式梭哈，也太没意思了。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-24T15:30:35.038Z">
+<meta property="og:updated_time" content="2019-06-24T15:41:47.313Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwn里的一些patch心得">
 <meta name="twitter:description" content="前言最近刚参加完国赛东北赛区的线下赛，觉得patch是个很重要的技巧，所以这里记录一下我自己的patch经验和心得。毕竟如果只靠各种危险代码为nop这种方式梭哈，也太没意思了。">
@@ -211,7 +211,7 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">call    readNum</span><br><span class="line">add     esp, 10h</span><br><span class="line">cmp     eax, 20h</span><br><span class="line">jle     short loc_8048777</span><br><span class="line">......</span><br><span class="line">loc_8048777:</span><br><span class="line">mov     edi, eax</span><br><span class="line">sub     esp, 4</span><br><span class="line">push    eax</span><br><span class="line">lea     eax, (aNowSayPassword - 804A000h)[ebx] ; &quot;Now, Say password(%u):&quot;</span><br><span class="line">push    eax</span><br><span class="line">push    1</span><br><span class="line">call    ___printf_chk</span><br><span class="line">add     esp, 0Ch</span><br><span class="line">push    edi             ; nbytes</span><br><span class="line">lea     eax, [ebp+buf]</span><br><span class="line">push    eax             ; buf</span><br><span class="line">push    0               ; fd</span><br><span class="line">call    _read</span><br></pre></td></tr></table></figure>
 
 <p>当然修复也非常简单：</p>
-<figure class="highlight x86asm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">jle</span> --&gt; <span class="keyword">jbe</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">jle --&gt; jbe</span><br></pre></td></tr></table></figure>
 
 <p>下面是拜托学弟收集的很多跳转指令：</p>
 <blockquote>
@@ -265,6 +265,9 @@
 <p><code>read</code>只需要改变<code>rdx</code>值也就是<code>nbytes</code>的传参值大小，控制为不会栈溢出即可。</p>
 <p><code>gets</code>的话按照<code>uaf</code>的方式修复，改成<code>read</code>来执行。如果程序中没有<code>read</code>也可以通过系统调用的形式起<code>read</code>。</p>
 <p><code>printf</code>的话问题就是格式化字符串漏洞嘛，修的话按照上述方法改成<code>puts</code>。其实比较怕的就是程序里没有<code>puts</code>，暂时想不到太完美的<code>patch</code>方式。</p>
+<h2 id="计算偏移地址的函数"><a href="#计算偏移地址的函数" class="headerlink" title="计算偏移地址的函数"></a>计算偏移地址的函数</h2><p>我实现了两个计算低地址和高地址偏移的函数，省得以后总是手算起来麻烦：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">offset_to_opcode</span><span class="params">(offset)</span>:</span></span><br><span class="line">    opcode = <span class="string">""</span></span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">4</span>):</span><br><span class="line">        opcode += (hex(offset &amp; <span class="number">0xff</span>)[<span class="number">2</span>:]).strip(<span class="string">'L'</span>).rjust(<span class="number">2</span>, <span class="string">"0"</span>) + <span class="string">" "</span></span><br><span class="line">        offset = offset &gt;&gt; <span class="number">8</span></span><br><span class="line">    <span class="keyword">return</span> opcode</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generate_high_addr_opcode</span><span class="params">(start, target)</span>:</span></span><br><span class="line">    offset = target - (start + <span class="number">5</span>)</span><br><span class="line">    opcode = offset_to_opcode(offset)</span><br><span class="line">    <span class="keyword">return</span> opcode</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generate_low_addr_opcode</span><span class="params">(start, target)</span>:</span></span><br><span class="line">    offset = <span class="number">0xffffffff</span> - (start - target) + <span class="number">1</span> - <span class="number">5</span></span><br><span class="line">    opcode = offset_to_opcode(offset)</span><br><span class="line">    <span class="keyword">return</span> opcode</span><br></pre></td></tr></table></figure>
+
 <p>。。。待续</p>
 
       
@@ -277,7 +280,7 @@
 
     <footer class="article-footer">
       
-        <a data-url="http://tianstcht.github.io/pwn里的一些patch心得/" data-id="cjx8zg4nm000g7ovg1d9ritll" class="article-share-link" data-share="baidu" data-title="pwn里的一些patch心得">分享到</a>
+        <a data-url="http://tianstcht.github.io/pwn里的一些patch心得/" data-id="cjxajubnl000ao0vg8oe1blso" class="article-share-link" data-share="baidu" data-title="pwn里的一些patch心得">分享到</a>
       
 
       
