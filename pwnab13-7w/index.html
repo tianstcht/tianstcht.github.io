@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="t1an5t&#39;s Treasure">
 <meta property="og:description" content="tcache tear分析有UAF但是没有泄露，libc是2.27的，考虑用tcache打到stdout来造成泄露。然后写free_hook">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-19T07:22:16.318Z">
+<meta property="og:updated_time" content="2019-07-11T03:11:40.171Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwnab13.7w">
 <meta name="twitter:description" content="tcache tear分析有UAF但是没有泄露，libc是2.27的，考虑用tcache打到stdout来造成泄露。然后写free_hook">
@@ -245,6 +245,7 @@
 <h2 id="bash"><a href="#bash" class="headerlink" title="bash"></a>bash</h2><h3 id="分析-9"><a href="#分析-9" class="headerlink" title="分析"></a>分析</h3><p>从网上找对<code>bash</code>的分析。</p>
 <p><a href="https://peanut7379.github.io/2017/03/16/bash命令行处理步骤及源码解析/" target="_blank" rel="noopener">https://peanut7379.github.io/2017/03/16/bash%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%A4%84%E7%90%86%E6%AD%A5%E9%AA%A4%E5%8F%8A%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</a></p>
 <p><code>bash</code>这么多年就那么一个洞，你让我怎么顶得住。</p>
+<p><a href="https://coolshell.cn/articles/11973.html" target="_blank" rel="noopener">https://coolshell.cn/articles/11973.html</a></p>
 <h2 id="3x17"><a href="#3x17" class="headerlink" title="3x17"></a>3x17</h2><p>静态编译的程序所以看着很烦，通过运行，搜索关键字符串找到<code>main</code>的位置。</p>
 <p>任意地址的写。</p>
 <h2 id="secret-of-my-heart"><a href="#secret-of-my-heart" class="headerlink" title="secret of my heart"></a>secret of my heart</h2><h3 id="分析-10"><a href="#分析-10" class="headerlink" title="分析"></a>分析</h3><p>有个后门函数泄露地址，但是没什么用。</p>
@@ -268,6 +269,17 @@
 <p>还有一个技巧就是<code>opcode</code>的<code>01</code>和其他东西容易凑出来一些加法<code>gadget</code>，且这个东西是<code>ROPgadget</code>搜不到的</p>
 <p>比如<code>01</code>后面接的是<code>rep retn</code>，实际上是<code>add ebx, esi; ret</code>，那就舒服了。</p>
 <p>所以只要我想办法把一个<code>libc</code>的地址丢到<code>rbx</code>上，然后加上偏移，就行了。</p>
+<h2 id="kidding"><a href="#kidding" class="headerlink" title="kidding"></a>kidding</h2><h2 id="分析-12"><a href="#分析-12" class="headerlink" title="分析"></a>分析</h2><p>栈溢出，静态编译，反向<code>shell</code>绕过，还未解决：</p>
+<p><a href="https://github.com/ntu-homeworks/ctf-final/tree/master/pwn/kidding" target="_blank" rel="noopener">https://github.com/ntu-homeworks/ctf-final/tree/master/pwn/kidding</a></p>
+<p><a href="http://m4x.fun/post/play-with-file-descriptor-3/#reverse-shell-原理" target="_blank" rel="noopener">http://m4x.fun/post/play-with-file-descriptor-3/#reverse-shell-%E5%8E%9F%E7%90%86</a></p>
+<p>主要是打不通。</p>
+<h2 id="calc"><a href="#calc" class="headerlink" title="calc"></a>calc</h2><h3 id="分析-13"><a href="#分析-13" class="headerlink" title="分析"></a>分析</h3><p>一看700多k就知道是静态编译的了，先输入个<code>+</code>就会有问题。</p>
+<h2 id="printable"><a href="#printable" class="headerlink" title="printable"></a>printable</h2><h3 id="分析-14"><a href="#分析-14" class="headerlink" title="分析"></a>分析</h3><p>感觉超级难的一道题，有明显的格式化字符串利用，但是并不知道该往什么地方写入。</p>
+<p>而且<code>close(1)</code>之后<code>printf</code>还会不会有漏洞我也表示很迷。</p>
+<h2 id="CAOV"><a href="#CAOV" class="headerlink" title="CAOV"></a>CAOV</h2><h3 id="分析-15"><a href="#分析-15" class="headerlink" title="分析"></a>分析</h3><p><code>C++</code>，技术盲区？</p>
+<p>给了源代码，在<code>IDA</code>里看过程其实更清晰</p>
+<h2 id="Ghost-Party"><a href="#Ghost-Party" class="headerlink" title="Ghost Party"></a>Ghost Party</h2><h3 id="分析-16"><a href="#分析-16" class="headerlink" title="分析"></a>分析</h3><p>这道看着人做的多一点，后来发现估计是因为网上有一份现成的<code>exp</code>。</p>
+<p>依然是给了源代码，极其嚣张。代码将近800行，写了400多行的类。</p>
 
       
 
@@ -279,7 +291,7 @@
 
     <footer class="article-footer">
       
-        <a data-url="http://tianstcht.github.io/pwnab13-7w/" data-id="cjxajubnd0001o0vg9c86l4z9" class="article-share-link" data-share="baidu" data-title="pwnab13.7w">分享到</a>
+        <a data-url="http://tianstcht.github.io/pwnab13-7w/" data-id="cjy6z78ku0002ekvgronze4xm" class="article-share-link" data-share="baidu" data-title="pwnab13.7w">分享到</a>
       
 
       
@@ -344,6 +356,10 @@
       <ul>
         
           <li onclick="javascript:document.getElementById('recentpost_item').click();">
+            <a id="recentpost_item" href="/glibc-malloc-c源码阅读笔记/">glibc-malloc.c源码阅读笔记</a>
+          </li>
+        
+          <li onclick="javascript:document.getElementById('recentpost_item').click();">
             <a id="recentpost_item" href="/pwn里的一些patch心得/">pwn里的一些patch心得</a>
           </li>
         
@@ -359,10 +375,6 @@
             <a id="recentpost_item" href="/造轮子/">造轮子</a>
           </li>
         
-          <li onclick="javascript:document.getElementById('recentpost_item').click();">
-            <a id="recentpost_item" href="/pwntools的使用技巧/">pwntools的使用技巧</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -373,7 +385,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-tasks"></i>分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ctf/">ctf</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kernel/">kernel</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwnable/">pwnable</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ctf/">ctf</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/glibc/">glibc</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kernel/">kernel</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwnable/">pwnable</a><span class="category-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -389,7 +401,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-cloud"></i>标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ctf/" style="font-size: 10px;">ctf</a> <a href="/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/tags/pwnable/" style="font-size: 20px;">pwnable</a> <a href="/tags/pwnable-tw/" style="font-size: 10px;">pwnable.tw</a> <a href="/tags/pwntools/" style="font-size: 10px;">pwntools</a>
+      <a href="/tags/ctf/" style="font-size: 10px;">ctf</a> <a href="/tags/glibc/" style="font-size: 10px;">glibc</a> <a href="/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/pwnable/" style="font-size: 20px;">pwnable</a> <a href="/tags/pwnable-tw/" style="font-size: 10px;">pwnable.tw</a> <a href="/tags/pwntools/" style="font-size: 10px;">pwntools</a>
     </div>
   </div>
 
@@ -399,8 +411,8 @@
   <div class="widget-wrap">
     <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-archive"></i>归档</h3>
     <div class="widget">
-      <!-- <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1999/01/">一月 1999</a><span class="archive-list-count">1</span></li></ul> -->
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">2019年06月</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1999/01/">1999年01月</a><span class="archive-list-count">1</span></li></ul>
+      <!-- <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1999/01/">一月 1999</a><span class="archive-list-count">1</span></li></ul> -->
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">2019年07月</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">2019年06月</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1999/01/">1999年01月</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

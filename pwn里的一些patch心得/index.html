@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="t1an5t&#39;s Treasure">
 <meta property="og:description" content="前言最近刚参加完国赛东北赛区的线下赛，觉得patch是个很重要的技巧，所以这里记录一下我自己的patch经验和心得。毕竟如果只靠各种危险代码为nop这种方式梭哈，也太没意思了。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-24T15:41:47.313Z">
+<meta property="og:updated_time" content="2019-06-24T15:42:32.458Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pwn里的一些patch心得">
 <meta name="twitter:description" content="前言最近刚参加完国赛东北赛区的线下赛，觉得patch是个很重要的技巧，所以这里记录一下我自己的patch经验和心得。毕竟如果只靠各种危险代码为nop这种方式梭哈，也太没意思了。">
@@ -280,7 +280,7 @@
 
     <footer class="article-footer">
       
-        <a data-url="http://tianstcht.github.io/pwn里的一些patch心得/" data-id="cjxajubnl000ao0vg8oe1blso" class="article-share-link" data-share="baidu" data-title="pwn里的一些patch心得">分享到</a>
+        <a data-url="http://tianstcht.github.io/pwn里的一些patch心得/" data-id="cjy6z78le000bekvgefiq8q6u" class="article-share-link" data-share="baidu" data-title="pwn里的一些patch心得">分享到</a>
       
 
       
@@ -302,6 +302,15 @@
       <div class="article-nav-title">CISCN2019-东北赛区线下赛-pwn</div>
     </a>
   
+  
+    <a href="/glibc-malloc-c源码阅读笔记/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇 →</strong>
+      <div class="article-nav-title">
+        
+          glibc-malloc.c源码阅读笔记
+        
+      </div>
+    </a>
   
 </nav>
 
@@ -336,6 +345,10 @@
       <ul>
         
           <li onclick="javascript:document.getElementById('recentpost_item').click();">
+            <a id="recentpost_item" href="/glibc-malloc-c源码阅读笔记/">glibc-malloc.c源码阅读笔记</a>
+          </li>
+        
+          <li onclick="javascript:document.getElementById('recentpost_item').click();">
             <a id="recentpost_item" href="/pwn里的一些patch心得/">pwn里的一些patch心得</a>
           </li>
         
@@ -351,10 +364,6 @@
             <a id="recentpost_item" href="/造轮子/">造轮子</a>
           </li>
         
-          <li onclick="javascript:document.getElementById('recentpost_item').click();">
-            <a id="recentpost_item" href="/pwntools的使用技巧/">pwntools的使用技巧</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -365,7 +374,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-tasks"></i>分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ctf/">ctf</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kernel/">kernel</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwnable/">pwnable</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ctf/">ctf</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/glibc/">glibc</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kernel/">kernel</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwnable/">pwnable</a><span class="category-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -381,7 +390,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-cloud"></i>标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ctf/" style="font-size: 10px;">ctf</a> <a href="/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/tags/pwnable/" style="font-size: 20px;">pwnable</a> <a href="/tags/pwnable-tw/" style="font-size: 10px;">pwnable.tw</a> <a href="/tags/pwntools/" style="font-size: 10px;">pwntools</a>
+      <a href="/tags/ctf/" style="font-size: 10px;">ctf</a> <a href="/tags/glibc/" style="font-size: 10px;">glibc</a> <a href="/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/pwnable/" style="font-size: 20px;">pwnable</a> <a href="/tags/pwnable-tw/" style="font-size: 10px;">pwnable.tw</a> <a href="/tags/pwntools/" style="font-size: 10px;">pwntools</a>
     </div>
   </div>
 
@@ -391,8 +400,8 @@
   <div class="widget-wrap">
     <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-archive"></i>归档</h3>
     <div class="widget">
-      <!-- <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1999/01/">一月 1999</a><span class="archive-list-count">1</span></li></ul> -->
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">2019年06月</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1999/01/">1999年01月</a><span class="archive-list-count">1</span></li></ul>
+      <!-- <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1999/01/">一月 1999</a><span class="archive-list-count">1</span></li></ul> -->
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">2019年07月</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">2019年06月</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1999/01/">1999年01月</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
