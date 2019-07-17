@@ -19,13 +19,13 @@
 <meta property="og:site_name" content="t1an5t&#39;s Treasure">
 <meta property="og:description" content="glibc-malloc.c源代码阅读笔记0x00. 前言对malloc.c其中重要的源代码进行部分精读，部分通读的学习。主要作用还是用来自我学习，如有不当之处请多批评。-.- 选择了2.23版本的作为基础，后续可能会进行磕磕绊绊的版本补充。 未完结，长期更新中 鸽不鸽看心情">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://tianstcht.github.io/glibc-malloc-c源码阅读笔记/glibc-malloc-c%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/1563332705266.png">
-<meta property="og:image" content="http://tianstcht.github.io/glibc-malloc-c源码阅读笔记/glibc-malloc-c%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/1563333888713.png">
-<meta property="og:updated_time" content="2019-07-17T08:22:18.518Z">
+<meta property="og:image" content="http://tianstcht.github.io/glibc-malloc-c%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/1563332705266.png">
+<meta property="og:image" content="http://tianstcht.github.io/glibc-malloc-c%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/1563333888713.png">
+<meta property="og:updated_time" content="2019-07-17T08:25:19.911Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="glibc-malloc.c源码阅读笔记">
 <meta name="twitter:description" content="glibc-malloc.c源代码阅读笔记0x00. 前言对malloc.c其中重要的源代码进行部分精读，部分通读的学习。主要作用还是用来自我学习，如有不当之处请多批评。-.- 选择了2.23版本的作为基础，后续可能会进行磕磕绊绊的版本补充。 未完结，长期更新中 鸽不鸽看心情">
-<meta name="twitter:image" content="http://tianstcht.github.io/glibc-malloc-c源码阅读笔记/glibc-malloc-c%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/1563332705266.png">
+<meta name="twitter:image" content="http://tianstcht.github.io/glibc-malloc-c%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/1563332705266.png">
 
   
 
@@ -341,12 +341,12 @@
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">gdb-peda$ x/<span class="number">6</span>gx <span class="number">0x602000</span></span><br><span class="line"><span class="number">0x602000</span>:	<span class="number">0x0000000000000000</span>	<span class="number">0x0000000000000461</span></span><br><span class="line"><span class="number">0x602010</span>:	<span class="number">0x0000000000602910</span>	<span class="number">0x0000000000603200</span></span><br><span class="line"><span class="number">0x602020</span>:	<span class="number">0x0000000000602d90</span>	<span class="number">0x0000000000602480</span></span><br><span class="line">    </span><br><span class="line">gdb-peda$ x/<span class="number">6</span>gx <span class="number">0x602480</span></span><br><span class="line"><span class="number">0x602480</span>:	<span class="number">0x0000000000000000</span>	<span class="number">0x0000000000000471</span></span><br><span class="line"><span class="number">0x602490</span>:	<span class="number">0x0000000000603200</span>	<span class="number">0x00007ffff7dd1f78</span></span><br><span class="line"><span class="number">0x6024a0</span>:	<span class="number">0x0000000000602000</span>	<span class="number">0x0000000000602d90</span></span><br><span class="line">    </span><br><span class="line">gdb-peda$ x/<span class="number">6</span>gx <span class="number">0x602910</span></span><br><span class="line"><span class="number">0x602910</span>:	<span class="number">0x0000000000000000</span>	<span class="number">0x0000000000000461</span></span><br><span class="line"><span class="number">0x602920</span>:	<span class="number">0x0000000000602d90</span>	<span class="number">0x0000000000602000</span></span><br><span class="line"><span class="number">0x602930</span>:	<span class="number">0x0000000000000000</span>	<span class="number">0x0000000000000000</span></span><br><span class="line">    </span><br><span class="line">gdb-peda$ x/<span class="number">6</span>gx <span class="number">0x602d90</span></span><br><span class="line"><span class="number">0x602d90</span>:	<span class="number">0x0000000000000000</span>	<span class="number">0x0000000000000451</span></span><br><span class="line"><span class="number">0x602da0</span>:	<span class="number">0x00007ffff7dd1f78</span>	<span class="number">0x0000000000602910</span></span><br><span class="line"><span class="number">0x602db0</span>:	<span class="number">0x0000000000602480</span>	<span class="number">0x0000000000602000</span></span><br><span class="line">    </span><br><span class="line">gdb-peda$ x/<span class="number">6</span>gx <span class="number">0x603200</span></span><br><span class="line"><span class="number">0x603200</span>:	<span class="number">0x0000000000000000</span>	<span class="number">0x0000000000000471</span></span><br><span class="line"><span class="number">0x603210</span>:	<span class="number">0x0000000000602000</span>	<span class="number">0x0000000000602480</span></span><br><span class="line"><span class="number">0x603220</span>:	<span class="number">0x0000000000000000</span>	<span class="number">0x0000000000000000</span></span><br></pre></td></tr></table></figure>
 
 <p>只画出<code>bk</code>是这个样子的：</p>
-<p><img src="glibc-malloc-c%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/1563332705266.png" alt="1563332705266"></p>
+<p><img src="/glibc-malloc-c%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/1563332705266.png" alt="1563332705266"></p>
 <p><code>fd</code>没有画，其实就是<code>bk</code>反向指回去。</p>
 <p>可以看到每个小链上存着同大小的堆块，先<code>free</code>的在前面(<code>bk</code>索引的话在后面)，整个大链上的小链按由小到大的顺序连接</p>
 <p><code>fd</code>和<code>bk</code>相当于记录了所有堆块的顺序关系。</p>
 <p><code>fd_nextsize</code>和<code>bk_nextsize</code>单独画出来：</p>
-<p><img src="glibc-malloc-c%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/1563333888713.png" alt="1563333888713"></p>
+<p><img src="/glibc-malloc-c%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/1563333888713.png" alt="1563333888713"></p>
 <p>看着有点乱，但其实就是<code>fd_nextsize</code>指向<code>size</code>比自己小的小链的第一个成员，<code>bk_nextsize</code>指向<code>size</code>比自己大的小链的第一个成员，最大<code>size</code>的<code>bk_nextsize</code>指向最小链第一个成员，同理最小的<code>fd_nextsize</code>指向最大链第一个成员，</p>
 <p>所以可以知道<code>fd_nextsize</code>和<code>bk_nextsize</code>是用来记录链与链之间大小关系的。</p>
 <p>再回到源代码：</p>
@@ -426,7 +426,7 @@
 
     <footer class="article-footer">
       
-        <a data-url="http://tianstcht.github.io/glibc-malloc-c源码阅读笔记/" data-id="cjy6z78kn0000ekvgjvh53bku" class="article-share-link" data-share="baidu" data-title="glibc-malloc.c源码阅读笔记">分享到</a>
+        <a data-url="http://tianstcht.github.io/glibc-malloc-c源码阅读笔记/" data-id="cjy6zdhcu0005ygvgvx8zbq4c" class="article-share-link" data-share="baidu" data-title="glibc-malloc.c源码阅读笔记">分享到</a>
       
 
       
