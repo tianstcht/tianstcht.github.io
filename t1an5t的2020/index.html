@@ -18,7 +18,7 @@
 <meta property="og:site_name" content="t1an5t&#39;s Treasure">
 <meta property="og:description" content="2019.6.2总是想写点东西，也总是忘记，希望这次能坚持下去，就算它是第一次了！最近准备回归源码去学习知识，跳出pwn只能玩ctf这个思维去思考，去理解内存，源码，调试这些，这样才能以不变应万变。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-04T03:26:36.180Z">
+<meta property="og:updated_time" content="2019-08-16T07:42:02.291Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="t1an5t的2020">
 <meta name="twitter:description" content="2019.6.2总是想写点东西，也总是忘记，希望这次能坚持下去，就算它是第一次了！最近准备回归源码去学习知识，跳出pwn只能玩ctf这个思维去思考，去理解内存，源码，调试这些，这样才能以不变应万变。">
@@ -230,6 +230,19 @@
 <h2 id="2019-7-3"><a href="#2019-7-3" class="headerlink" title="2019.7.3"></a>2019.7.3</h2><p>实习总结被我编到4500多字了，快完事了，ppt也搞了一半，混就完事了。</p>
 <p>给某赛的决赛题也出完了，感觉想到的这个思路很好，极度自恋。。</p>
 <h2 id="2019-7-4"><a href="#2019-7-4" class="headerlink" title="2019.7.4"></a>2019.7.4</h2><p>感觉今天没什么事，题目的文档乱七八糟的搞好了，先把<code>kctf</code>的<code>pwn</code>题目复现了把。</p>
+<h2 id="2019-7-28"><a href="#2019-7-28" class="headerlink" title="2019.7.28"></a>2019.7.28</h2><p>好久没写这个东西了，其实这个也是后补的hhh，国赛决赛12，拿了一等奖还搞了两道一血，确实是挺开心的。</p>
+<h2 id="2019-7-31"><a href="#2019-7-31" class="headerlink" title="2019.7.31"></a>2019.7.31</h2><p>成都北京双向下暴雨，被困了好几天，多请了一天假，最后做了一天火车回的北京，差点累死。</p>
+<h2 id="2019-8-13"><a href="#2019-8-13" class="headerlink" title="2019.8.13"></a>2019.8.13</h2><p>下了个低版本的ubuntu1604，顺手把pwn的环境也都配了进去，还换了个特别杀马特的字体，准备开学培训一波学弟学妹，正好直接把虚拟机给他们。</p>
+<h2 id="2019-8-15"><a href="#2019-8-15" class="headerlink" title="2019.8.15"></a>2019.8.15</h2><p>在公司打了一天的某春秋的比赛，虽然全程客服都很耐心解答问题，不过体验不是很好，做了一道pwn，本来能前三，结果远端环境疯狂出问题中午我才打过去。最后pwn2没去看，去看的逆向3，这个类型的题我之前接触过不过当时别人做了所以我就没去管，结果这次出了，赛后才在学弟的帮助下解出来，都是债啊，tcl。</p>
+<p>最后排名好像是39，跟前20其实就差这一道题，可惜可惜，希望接下来的第五空间和xnuca能混个线下。不过说实话，这个比赛互相py的是真的多。</p>
+<h2 id="2019-8-16"><a href="#2019-8-16" class="headerlink" title="2019.8.16"></a>2019.8.16</h2><p>在华为摸鱼的实习要结束了，慢慢总结kernel rootkit，这周末准备做个ppt，下周总个结，差不多就可以回家啦。</p>
+<p>实习结束，接下来，有以下flag：</p>
+<ul>
+<li>准备按照国赛决赛那个虚拟机pwn的思路，以及<code>david942j</code>大神博客上的出题思路仿写一个虚拟机相关的东西研究研究，算是提高一下自己的正向编程能力。</li>
+<li>然后开始接着研究内核利用，继续变成萌新。</li>
+<li>关于应用层pwn这里就慢慢去刷tw把，有生之年希望可以刷到前30 -。-</li>
+<li>闲暇之余写点总结资料。</li>
+</ul>
 
       
 
@@ -241,7 +254,7 @@
 
     <footer class="article-footer">
       
-        <a data-url="http://tianstcht.github.io/t1an5t的2020/" data-id="cjy70m7lp0005cwvg5pptldlr" class="article-share-link" data-share="baidu" data-title="t1an5t的2020">分享到</a>
+        <a data-url="http://tianstcht.github.io/t1an5t的2020/" data-id="ck0cifuvg000axsvg6u3polee" class="article-share-link" data-share="baidu" data-title="t1an5t的2020">分享到</a>
       
 
       
@@ -299,6 +312,10 @@
       <ul>
         
           <li onclick="javascript:document.getElementById('recentpost_item').click();">
+            <a id="recentpost_item" href="/ByteCTF2019/">ByteCTF2019-PWN</a>
+          </li>
+        
+          <li onclick="javascript:document.getElementById('recentpost_item').click();">
             <a id="recentpost_item" href="/glibc-malloc-c源码阅读笔记/">glibc-malloc.c源码阅读笔记</a>
           </li>
         
@@ -314,10 +331,6 @@
             <a id="recentpost_item" href="/KERNEL-CSAW-2010-kernel/">KERNEL-CSAW-2010-kernel</a>
           </li>
         
-          <li onclick="javascript:document.getElementById('recentpost_item').click();">
-            <a id="recentpost_item" href="/造轮子/">造轮子</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -328,7 +341,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-tasks"></i>分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ctf/">ctf</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/glibc/">glibc</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kernel/">kernel</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwnable/">pwnable</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ctf/">ctf</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/glibc/">glibc</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kernel/">kernel</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwnable/">pwnable</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -344,7 +357,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-cloud"></i>标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/ctf/" style="font-size: 10px;">ctf</a> <a href="/tags/glibc/" style="font-size: 10px;">glibc</a> <a href="/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/pwnable/" style="font-size: 20px;">pwnable</a> <a href="/tags/pwnable-tw/" style="font-size: 10px;">pwnable.tw</a> <a href="/tags/pwntools/" style="font-size: 10px;">pwntools</a>
+      <a href="/tags/2019/" style="font-size: 10px;">2019</a> <a href="/tags/ctf/" style="font-size: 15px;">ctf</a> <a href="/tags/glibc/" style="font-size: 10px;">glibc</a> <a href="/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/pwnable/" style="font-size: 20px;">pwnable</a> <a href="/tags/pwnable-tw/" style="font-size: 10px;">pwnable.tw</a> <a href="/tags/pwntools/" style="font-size: 10px;">pwntools</a>
     </div>
   </div>
 
@@ -354,8 +367,8 @@
   <div class="widget-wrap">
     <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-archive"></i>归档</h3>
     <div class="widget">
-      <!-- <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1999/01/">一月 1999</a><span class="archive-list-count">1</span></li></ul> -->
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">2019年07月</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">2019年06月</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1999/01/">1999年01月</a><span class="archive-list-count">1</span></li></ul>
+      <!-- <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1999/01/">一月 1999</a><span class="archive-list-count">1</span></li></ul> -->
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">2019年09月</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">2019年07月</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">2019年06月</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1999/01/">1999年01月</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
