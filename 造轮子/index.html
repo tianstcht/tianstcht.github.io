@@ -6,51 +6,23 @@
   <meta name="keywords" content=" pwnable ">
   <meta name="description" content="造轮子 | t1an5t&#39;s Treasure">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="前言所有pwn题目的源代码都开源在了：https://github.com/NEU-NEX/NEXCTF2019 本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。 &amp;nbsp;">
-<meta name="keywords" content="pwnable,ctf">
+<meta name="description" content="前言只做上了三道题，mheap赛后看了别人的wp才知道怎么做，不过因为环境还开着，所以还打了一下。 剩下两道虚拟机和js就算了，搞不定。">
+<meta name="keywords" content="ctf,pwnable,2019">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NEX招新赛-pwn-writeup">
-<meta property="og:url" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/index.html">
+<meta property="og:title" content="ByteCTF2019-PWN">
+<meta property="og:url" content="http://tianstcht.github.io/ByteCTF2019/index.html">
 <meta property="og:site_name" content="t1an5t&#39;s Treasure">
-<meta property="og:description" content="前言所有pwn题目的源代码都开源在了：https://github.com/NEU-NEX/NEXCTF2019 本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。 &amp;nbsp;">
+<meta property="og:description" content="前言只做上了三道题，mheap赛后看了别人的wp才知道怎么做，不过因为环境还开着，所以还打了一下。 剩下两道虚拟机和js就算了，搞不定。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175200901.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175241566.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175347034.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175559665.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572176002336.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572178490824.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572178611753.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572178915409.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572179252871.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180018548.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180229624.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180347956.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180378962.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180479536.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180556328.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180706224.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572181008846.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180018548.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572181528850.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572181798790.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182436773.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182460813.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182651474.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182716206.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182777854.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572183021319.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572183525405.png">
-<meta property="og:updated_time" content="2020-02-05T12:50:39.465Z">
+<meta property="og:updated_time" content="2020-02-05T12:50:55.888Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="NEX招新赛-pwn-writeup">
-<meta name="twitter:description" content="前言所有pwn题目的源代码都开源在了：https://github.com/NEU-NEX/NEXCTF2019 本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。 &amp;nbsp;">
-<meta name="twitter:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175200901.png">
+<meta name="twitter:title" content="ByteCTF2019-PWN">
+<meta name="twitter:description" content="前言只做上了三道题，mheap赛后看了别人的wp才知道怎么做，不过因为环境还开着，所以还打了一下。 剩下两道虚拟机和js就算了，搞不定。">
 
 <link rel="alternate" href="/atom.xml" title="t1an5t&#39;s Treasure" type="application/atom+xml">
 
 
-<link rel="icon" href="/img/head.jpg">
+<link rel="icon" href="/img/djcx.jpg">
 
 <link href="/css/style.css?v=1.0.1" rel="stylesheet">
 
@@ -86,7 +58,7 @@
 <aside class="nav">
     <div class="nav-left">
         <a href="/" class="avatar_target">
-    <img class="avatar" src="/img/head.jpg" />
+    <img class="avatar" src="/img/djcx.jpg" />
 </a>
 <div class="author">
     <span>t1an5t</span>
@@ -142,14 +114,6 @@
     
         
             
-            <li><div data-rel="TIPS">TIPS<small>(3)</small></div>
-                
-            </li>
-            
-        
-    
-        
-            
             <li><div data-rel="PWN">PWN<small>(2)</small></div>
                 
             </li>
@@ -159,6 +123,14 @@
         
             
             <li><div data-rel="NOTES">NOTES<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="TIPS">TIPS<small>(3)</small></div>
                 
             </li>
             
@@ -329,11 +301,11 @@
     <div class="tags-list">
     
     <li class="article-tag-list-item">
-        <a class="color3">pwnable</a>
+        <a class="color4">ctf</a>
     </li>
     
     <li class="article-tag-list-item">
-        <a class="color4">ctf</a>
+        <a class="color3">pwnable</a>
     </li>
     
     <li class="article-tag-list-item">
@@ -345,7 +317,7 @@
     </li>
     
     <li class="article-tag-list-item">
-        <a class="color3">tw</a>
+        <a class="color1">glibc</a>
     </li>
     
     <li class="article-tag-list-item">
@@ -353,7 +325,7 @@
     </li>
     
     <li class="article-tag-list-item">
-        <a class="color1">glibc</a>
+        <a class="color3">tw</a>
     </li>
     
     <div class="clearfix"></div>
@@ -363,35 +335,19 @@
     <nav id="title-list-nav">
         
         <a  class="CTF "
-           href="/ByteCTF2019/"
-           data-tag="pwnable,ctf,2019"
-           data-author="" >
-            <span class="post-title" title="ByteCTF2019-PWN">ByteCTF2019-PWN</span>
-            <span class="post-date" title="2019-09-19 22:33:33">2019/09/19</span>
-        </a>
-        
-        <a  class="CTF "
            href="/CISCN2019-东北赛区线下赛-pwn/"
-           data-tag="pwnable,ctf"
+           data-tag="ctf,pwnable"
            data-author="" >
             <span class="post-title" title="CISCN2019-东北赛区线下赛-pwn">CISCN2019-东北赛区线下赛-pwn</span>
             <span class="post-date" title="2019-06-23 21:13:37">2019/06/23</span>
         </a>
         
         <a  class="CTF "
-           href="/NEX招新赛-pwn-writeup/"
-           data-tag="pwnable,ctf"
+           href="/ByteCTF2019/"
+           data-tag="ctf,pwnable,2019"
            data-author="" >
-            <span class="post-title" title="NEX招新赛-pwn-writeup">NEX招新赛-pwn-writeup</span>
-            <span class="post-date" title="2019-10-27 21:52:33">2019/10/27</span>
-        </a>
-        
-        <a  class="TIPS "
-           href="/pwn里的一些patch心得/"
-           data-tag="pwnable"
-           data-author="" >
-            <span class="post-title" title="pwn里的一些patch心得">pwn里的一些patch心得</span>
-            <span class="post-date" title="2019-06-23 21:13:57">2019/06/23</span>
+            <span class="post-title" title="ByteCTF2019-PWN">ByteCTF2019-PWN</span>
+            <span class="post-date" title="2019-09-19 22:33:33">2019/09/19</span>
         </a>
         
         <a  class="PWN "
@@ -400,6 +356,30 @@
            data-author="" >
             <span class="post-title" title="KERNEL-CSAW-2010-kernel">KERNEL-CSAW-2010-kernel</span>
             <span class="post-date" title="2019-06-20 19:42:11">2019/06/20</span>
+        </a>
+        
+        <a  class="CTF "
+           href="/NEX招新赛-pwn-writeup/"
+           data-tag="ctf,pwnable"
+           data-author="" >
+            <span class="post-title" title="NEX招新赛-pwn-writeup">NEX招新赛-pwn-writeup</span>
+            <span class="post-date" title="2019-10-27 21:52:33">2019/10/27</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/glibc-malloc-c源码阅读笔记/"
+           data-tag="glibc"
+           data-author="" >
+            <span class="post-title" title="glibc-malloc.c源码阅读笔记">glibc-malloc.c源码阅读笔记</span>
+            <span class="post-date" title="2019-07-17 16:18:02">2019/07/17</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/pwntools的使用技巧/"
+           data-tag="pwnable,pwntools"
+           data-author="" >
+            <span class="post-title" title="pwntools的使用技巧">pwntools的使用技巧</span>
+            <span class="post-date" title="2019-06-19 15:26:27">2019/06/19</span>
         </a>
         
         <a  class="PWN "
@@ -411,27 +391,11 @@
         </a>
         
         <a  class="TIPS "
-           href="/pwntools的使用技巧/"
-           data-tag="pwnable,pwntools"
-           data-author="" >
-            <span class="post-title" title="pwntools的使用技巧">pwntools的使用技巧</span>
-            <span class="post-date" title="2019-06-19 15:26:27">2019/06/19</span>
-        </a>
-        
-        <a  class="TIPS "
-           href="/造轮子/"
+           href="/pwn里的一些patch心得/"
            data-tag="pwnable"
            data-author="" >
-            <span class="post-title" title="造轮子">造轮子</span>
-            <span class="post-date" title="2019-06-19 15:40:33">2019/06/19</span>
-        </a>
-        
-        <a  class="NOTES "
-           href="/glibc-malloc-c源码阅读笔记/"
-           data-tag="glibc"
-           data-author="" >
-            <span class="post-title" title="glibc-malloc.c源码阅读笔记">glibc-malloc.c源码阅读笔记</span>
-            <span class="post-date" title="2019-07-17 16:18:02">2019/07/17</span>
+            <span class="post-title" title="pwn里的一些patch心得">pwn里的一些patch心得</span>
+            <span class="post-date" title="2019-06-23 21:13:57">2019/06/23</span>
         </a>
         
         <a  class="ME "
@@ -440,6 +404,14 @@
            data-author="" >
             <span class="post-title" title="t1an5t的2020">t1an5t的2020</span>
             <span class="post-date" title="1999-01-01 15:13:07">1999/01/01</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/造轮子/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="造轮子">造轮子</span>
+            <span class="post-date" title="2019-06-19 15:40:33">2019/06/19</span>
         </a>
         
     </nav>
@@ -680,7 +652,7 @@ def house_of_orange_payload(libc, libc_base):
     /*作者、标签的自动补全*/
     $(function () {
         $('.search').AutoComplete({
-            'data': ['#pwnable','#ctf','#2019','#kernel','#tw','#pwntools','#glibc',],
+            'data': ['#ctf','#pwnable','#2019','#kernel','#glibc','#pwntools','#tw',],
             'itemHeight': 20,
             'width': 418
         }).AutoComplete('show');
