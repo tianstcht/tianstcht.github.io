@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <title>2020-网络安全公益赛-writeup-RE | t1an5t&#39;s Treasure</title>
+  <meta name="keywords" content=" reverse , writeup ">
+  <meta name="description" content="2020-网络安全公益赛-writeup-RE | t1an5t&#39;s Treasure">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="easyvm虚拟机，虽然并不难，不过还是用angr直接秒了 import angr  proj = angr.Project(&amp;quot;./vm&amp;quot;,auto_load_libs=False)  st = proj.factory.entry_state() sm = proj.factory.simulation_manager(st) sm.explore(find=0x400b73">
+<meta name="keywords" content="reverse,writeup">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2020-网络安全公益赛-writeup-RE">
+<meta property="og:url" content="http://tianstcht.github.io/2020-网络安全公益赛-writeup-RE/index.html">
+<meta property="og:site_name" content="t1an5t&#39;s Treasure">
+<meta property="og:description" content="easyvm虚拟机，虽然并不难，不过还是用angr直接秒了 import angr  proj = angr.Project(&amp;quot;./vm&amp;quot;,auto_load_libs=False)  st = proj.factory.entry_state() sm = proj.factory.simulation_manager(st) sm.explore(find=0x400b73">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582515771061.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582515660580.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582516740847.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582516899907.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582515976960.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582523576885.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582555736774.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582555751576.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582636148648.png">
+<meta property="og:updated_time" content="2020-02-29T13:52:39.766Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2020-网络安全公益赛-writeup-RE">
+<meta name="twitter:description" content="easyvm虚拟机，虽然并不难，不过还是用angr直接秒了 import angr  proj = angr.Project(&amp;quot;./vm&amp;quot;,auto_load_libs=False)  st = proj.factory.entry_state() sm = proj.factory.simulation_manager(st) sm.explore(find=0x400b73">
+<meta name="twitter:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582515771061.png">
+
+<link rel="alternate" href="/atom.xml" title="t1an5t&#39;s Treasure" type="application/atom+xml">
+
+
+<link rel="icon" href="/img/djcx.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-dark.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1"></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+<script src="/js/iconfont.js?v=1.0.1"></script>
+
+</head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value>
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/djcx.jpg" />
+</a>
+<div class="author">
+    <span>t1an5t</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/tianstcht" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:1037178204@qq.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="qq" href="http://wpa.qq.com/msgrd?v=3&uin=1037178204&site=qq&menu=yes" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-qq"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(17)</small></div></li>
+    
+        
+            
+            <li><div data-rel="CTF">CTF<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="PWN">PWN<small>(6)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="RE">RE<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="NOTES">NOTES<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="TIPS">TIPS<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="ME">ME<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/">关于</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="17">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="/帅">0</a></li>
+            
+            <li><a target="_blank" href="/帅">1</a></li>
+            
+            <li><a target="_blank" href="/狗">2</a></li>
+            
+            <li><a target="_blank" href="/学">3</a></li>
+            
+            <li><a target="_blank" href="/弟">4</a></li>
+            
+            <li><a target="_blank" href="/:">5</a></li>
+            
+            <li><a target="_blank" href="/h">6</a></li>
+            
+            <li><a target="_blank" href="/t">7</a></li>
+            
+            <li><a target="_blank" href="/t">8</a></li>
+            
+            <li><a target="_blank" href="/p">9</a></li>
+            
+            <li><a target="_blank" href="/:">10</a></li>
+            
+            <li><a target="_blank" href="/">11</a></li>
+            
+            <li><a target="_blank" href="/">12</a></li>
+            
+            <li><a target="_blank" href="/h">13</a></li>
+            
+            <li><a target="_blank" href="/a">14</a></li>
+            
+            <li><a target="_blank" href="/n">15</a></li>
+            
+            <li><a target="_blank" href="/d">16</a></li>
+            
+            <li><a target="_blank" href="/s">17</a></li>
+            
+            <li><a target="_blank" href="/o">18</a></li>
+            
+            <li><a target="_blank" href="/m">19</a></li>
+            
+            <li><a target="_blank" href="/e">20</a></li>
+            
+            <li><a target="_blank" href="/d">21</a></li>
+            
+            <li><a target="_blank" href="/o">22</a></li>
+            
+            <li><a target="_blank" href="/g">23</a></li>
+            
+            <li><a target="_blank" href="/.">24</a></li>
+            
+            <li><a target="_blank" href="/t">25</a></li>
+            
+            <li><a target="_blank" href="/o">26</a></li>
+            
+            <li><a target="_blank" href="/p">27</a></li>
+            
+            <li><a target="_blank" href="/">28</a></li>
+            
+            <li><a target="_blank" href="/ ">29</a></li>
+            
+            <li><a target="_blank" href="/磊">30</a></li>
+            
+            <li><a target="_blank" href="/子">31</a></li>
+            
+            <li><a target="_blank" href="/哥">32</a></li>
+            
+            <li><a target="_blank" href="/:">33</a></li>
+            
+            <li><a target="_blank" href="/h">34</a></li>
+            
+            <li><a target="_blank" href="/t">35</a></li>
+            
+            <li><a target="_blank" href="/t">36</a></li>
+            
+            <li><a target="_blank" href="/p">37</a></li>
+            
+            <li><a target="_blank" href="/:">38</a></li>
+            
+            <li><a target="_blank" href="/">39</a></li>
+            
+            <li><a target="_blank" href="/">40</a></li>
+            
+            <li><a target="_blank" href="/h">41</a></li>
+            
+            <li><a target="_blank" href="/t">42</a></li>
+            
+            <li><a target="_blank" href="/t">43</a></li>
+            
+            <li><a target="_blank" href="/p">44</a></li>
+            
+            <li><a target="_blank" href="/:">45</a></li>
+            
+            <li><a target="_blank" href="/">46</a></li>
+            
+            <li><a target="_blank" href="/">47</a></li>
+            
+            <li><a target="_blank" href="/i">48</a></li>
+            
+            <li><a target="_blank" href="/g">49</a></li>
+            
+            <li><a target="_blank" href="/m">50</a></li>
+            
+            <li><a target="_blank" href="/l">51</a></li>
+            
+            <li><a target="_blank" href="/.">52</a></li>
+            
+            <li><a target="_blank" href="/t">53</a></li>
+            
+            <li><a target="_blank" href="/o">54</a></li>
+            
+            <li><a target="_blank" href="/p">55</a></li>
+            
+            <li><a target="_blank" href="/">56</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text" placeholder="Search..." />
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none" />
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color3">pwnable</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">ctf</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">2019</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">reverse</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">writeup</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">elf</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color2">kernel</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">glibc</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">pwntools</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">tw</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a  class="CTF "
+           href="/2019-ByteCTF-writeup-PWN/"
+           data-tag="pwnable,ctf,2019"
+           data-author="" >
+            <span class="post-title" title="2019-ByteCTF-writeup-PWN">2019-ByteCTF-writeup-PWN</span>
+            <span class="post-date" title="2019-09-19 22:33:33">2019/09/19</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-easy_heap/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-ROAR-CTF-easy_heap">2019-ROAR-CTF-easy_heap</span>
+            <span class="post-date" title="2020-02-06 10:52:00">2020/02/06</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-ez_op/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-ROAR-CTF-ez_op">2019-ROAR-CTF-ez_op</span>
+            <span class="post-date" title="2020-02-07 11:02:00">2020/02/07</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-DEFCON-CTF-babyheap/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-DEFCON-CTF-babyheap">2019-DEFCON-CTF-babyheap</span>
+            <span class="post-date" title="2020-02-09 11:19:00">2020/02/09</span>
+        </a>
+        
+        <a  class="CTF "
+           href="/2019-CISCN-东北赛区线下赛-writeup-PWN/"
+           data-tag="pwnable,ctf"
+           data-author="" >
+            <span class="post-title" title="2019-CISCN-东北赛区线下赛-writeup-PWN">2019-CISCN-东北赛区线下赛-writeup-PWN</span>
+            <span class="post-date" title="2019-06-23 21:13:37">2019/06/23</span>
+        </a>
+        
+        <a  class="CTF "
+           href="/2019-NEX招新赛-writeup-PWN/"
+           data-tag="pwnable,ctf"
+           data-author="" >
+            <span class="post-title" title="2019-NEX招新赛-writeup-PWN">2019-NEX招新赛-writeup-PWN</span>
+            <span class="post-date" title="2019-10-27 21:52:33">2019/10/27</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-realloc_magic/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-roarCTF-realloc_magic">2019-roarCTF-realloc_magic</span>
+            <span class="post-date" title="2020-02-07 11:02:00">2020/02/07</span>
+        </a>
+        
+        <a  class="RE "
+           href="/2020-网络安全公益赛-writeup-RE/"
+           data-tag="reverse,writeup"
+           data-author="" >
+            <span class="post-title" title="2020-网络安全公益赛-writeup-RE">2020-网络安全公益赛-writeup-RE</span>
+            <span class="post-date" title="2020-02-26 23:01:00">2020/02/26</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/ELF文件在加载过程中需要关注的部分/"
+           data-tag="elf"
+           data-author="" >
+            <span class="post-title" title="ELF文件在加载过程中需要关注的部分">ELF文件在加载过程中需要关注的部分</span>
+            <span class="post-date" title="2020-02-06 18:01:20">2020/02/06</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/KERNEL-CSAW-2010-kernel/"
+           data-tag="pwnable,kernel"
+           data-author="" >
+            <span class="post-title" title="KERNEL-CSAW-2010-kernel">KERNEL-CSAW-2010-kernel</span>
+            <span class="post-date" title="2019-06-20 19:42:11">2019/06/20</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/glibc-malloc-c源码阅读笔记/"
+           data-tag="glibc"
+           data-author="" >
+            <span class="post-title" title="glibc-malloc.c源码阅读笔记">glibc-malloc.c源码阅读笔记</span>
+            <span class="post-date" title="2019-07-17 16:18:02">2019/07/17</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/pwntools的使用技巧/"
+           data-tag="pwnable,pwntools"
+           data-author="" >
+            <span class="post-title" title="pwntools的使用技巧">pwntools的使用技巧</span>
+            <span class="post-date" title="2019-06-19 15:26:27">2019/06/19</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/pwnab13-7w/"
+           data-tag="pwnable,tw"
+           data-author="" >
+            <span class="post-title" title="pwnab13.7w">pwnab13.7w</span>
+            <span class="post-date" title="2019-06-19 15:14:30">2019/06/19</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/pwn里的一些patch心得/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="pwn里的一些patch心得">pwn里的一些patch心得</span>
+            <span class="post-date" title="2019-06-23 21:13:57">2019/06/23</span>
+        </a>
+        
+        <a  class="ME "
+           href="/t1an5t的2020/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="t1an5t的2020">t1an5t的2020</span>
+            <span class="post-date" title="1999-01-01 15:13:07">1999/01/01</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/造轮子/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="造轮子">造轮子</span>
+            <span class="post-date" title="2019-06-19 15:40:33">2019/06/19</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/glibc2.30代码阅读/"
+           data-tag="glibc"
+           data-author="" >
+            <span class="post-title" title="glibc2.30代码阅读笔记">glibc2.30代码阅读笔记</span>
+            <span class="post-date" title="2020-02-14 20:26:20">2020/02/14</span>
+        </a>
+        
+    </nav>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-2020-网络安全公益赛-writeup-RE" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">2020-网络安全公益赛-writeup-RE</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="RE">RE</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color3">reverse</a>
+            
+            <a class="color3">writeup</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2020-02-29 21:52:39'>2020-02-26 23:01</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#easyvm"><span class="toc-text">easyvm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#easyencrypt"><span class="toc-text">easyencrypt</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#吃鸡神器"><span class="toc-text">吃鸡神器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Code2"><span class="toc-text">Code2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Analysis-of-viruses"><span class="toc-text">Analysis of viruses</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#奇怪的安装包"><span class="toc-text">奇怪的安装包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#42"><span class="toc-text">42</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#veryeasyRE"><span class="toc-text">veryeasyRE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#babymac"><span class="toc-text">babymac</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#factory"><span class="toc-text">factory</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="easyvm"><a href="#easyvm" class="headerlink" title="easyvm"></a>easyvm</h2><p>虚拟机，虽然并不难，不过还是用angr直接秒了</p>
+<pre><code class="python">import angr
+
+proj = angr.Project(&quot;./vm&quot;,auto_load_libs=False)
+
+st = proj.factory.entry_state()
+sm = proj.factory.simulation_manager(st)
+sm.explore(find=0x400b73, avoid=0x400b81)
+
+print(sm.found[0].posix.dumps(0))</code></pre>
+<p><img src="/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582515771061.png" alt="1582515771061"></p>
+<blockquote>
+<p>flag{vm_is_not_easy}</p>
+</blockquote>
+<h2 id="easyencrypt"><a href="#easyencrypt" class="headerlink" title="easyencrypt"></a>easyencrypt</h2><p>ollvm混淆，不过找关键字符串就能找到地方，AES-ECB加密，key在内存中就有，只能加密十六个字节，后面全是明文，flag是个png文件，前16个字节恢复过来就行。</p>
+<pre><code class="python">from Crypto.Cipher import AES
+
+with open(&quot;flag.lck&quot;) as f:
+    tmp = f.read()
+
+end = tmp[16:]
+tmp = tmp[:16]
+print len(end), len(tmp)
+
+key = &#39;thisisthekey!!!!&#39;
+cipher = AES.new(key, AES.MODE_ECB)
+res = cipher.decrypt(tmp)
+
+with open(&quot;res&quot;, &quot;a+&quot;) as r:
+    r.write(res+end)
+
+#print cipher.decrypt()</code></pre>
+<p><img src="/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582515660580.png" alt="1582515660580"></p>
+<blockquote>
+<p>flag{3ff32148-e229-41fd-b7b9-d09e76d35daf}</p>
+</blockquote>
+<h2 id="吃鸡神器"><a href="#吃鸡神器" class="headerlink" title="吃鸡神器"></a>吃鸡神器</h2><p>QT程序，这个我是在ida里一个个函数找，发现<code>0x402150</code>是关键函数。然后OD调到对应位置，输入<code>lubenwei</code>，“abcd”，在经过一些处理后有加密结果，怎么加密的并不用关注，只要看到最后的比较过程就可以了。看到此时EDI是我们的输入转化而成，EAX就是对应的结果，直接输入这段结果就行。</p>
+<p><img src="/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582516740847.png" alt="1582516740847"></p>
+<p><img src="/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582516899907.png" alt="1582516899907"></p>
+<blockquote>
+<p>flag{41d26f00}</p>
+</blockquote>
+<h2 id="Code2"><a href="#Code2" class="headerlink" title="Code2"></a>Code2</h2><p>程序逻辑大致为把输入进行处理作为key，然后对一段密文进行xxtea解密。其他的部分并不用关心，因为这些本来就不是我们控制的。</p>
+<p><code>sub_7FF6E5231890</code>找到对key进行判断的算法，只要让其绕过<code>you are wrong!</code>这里就行了，后面的不用关注。</p>
+<p>对算法模拟，爆破找到key</p>
+<pre><code class="python"># from pwn import *
+# import struct
+
+a = &quot;AB AA AA 3E 39 8E E3 3D 39 8E 63 3E 39 8E E3 3D 39 8E E3 3D 39 8E E3 3D&quot;
+a2 = &quot;00 00 00 00 AB AA AA 3E 39 8E E3 3E AB AA 2A 3F 72 1C 47 3F 39 8E 63 3F&quot;
+
+
+xmm1 = [&#39;0x3eaaaaab&#39;, &#39;0x3de38e39&#39;, &#39;0x3e638e39&#39;, &#39;0x3de38e39&#39;, &#39;0x3de38e39&#39;, &#39;0x3de38e39&#39;]
+xmm2 = [&#39;0x0&#39;, &#39;0x3eaaaaab&#39;, &#39;0x3ee38e39&#39;, &#39;0x3f2aaaab&#39;, &#39;0x3f471c72&#39;, &#39;0x3f638e39&#39;]
+f1, f2 = [], []
+
+f1 = [0.33333334326744, 0.11111111193895, 0.22222222387791, 0.11111111193895, 0.11111111193895, 0.11111111193895]
+f2 = [0.0, 0.33333334326744, 0.44444444775581, 0.66666668653488,0.77777779102325, 0.88888889551163]
+print(f1)
+print(f2)
+
+t = &quot;8ab697&quot;
+
+def calc(ctx):
+    res = 0.0
+    v1 = 1.0
+    for i in ctx:
+        tmp = v1
+        #v1 = v1 * f1[t.index(i)-1]
+        #res += tmp * f2[t.index(i)-1]
+        v1 = v1 * f1[t.index(i)]
+        res += tmp * f2[t.index(i)]
+    return res
+
+def find_key():
+    res = 0.0
+    ctx = &quot;&quot;
+    for i1 in t:
+        for i2 in t:
+            for i3 in t:
+                for i4 in t:
+                    for i5 in t:
+                        for i6 in t:
+                            for i7 in t:
+                                for i8 in t:
+                                    for i9 in t:
+                                        ctx = i1+i2+i3+i4+i5+i6+i7+i8+i9
+                                        ctx = ctx.replace(&quot; &quot;, &quot;&quot;)
+                                        res = calc(ctx)
+                                        if abs(res-0.129556) &lt;= 0.000001:
+                                            print ctx
+
+find_key()</code></pre>
+<p>其实有好多结果，在最后输出结果之后下断点，一个一个尝试，最后发现<code>8ab86897</code>是正确的</p>
+<p><img src="/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582515976960.png" alt="1582515976960"></p>
+<blockquote>
+<p>flag{8ab86897-25c9-811a-ce9a-18547ae6801e}</p>
+</blockquote>
+<h2 id="Analysis-of-viruses"><a href="#Analysis-of-viruses" class="headerlink" title="Analysis of viruses"></a>Analysis of viruses</h2><p>模拟DNA序列的一些操作，其实是在做简单的单表替换。最后的结果都是在堆里面用单向链表连接的。</p>
+<p>最后三个字符一组会产生固定的字符串，但是固定的字符串对应的输入可能有多个，这里需要爆破。</p>
+<pre><code class="python">from hashlib import md5
+
+b = &quot;Met Cys Leu Ala Arg Leu Phe Ser Ile Leu Asn Val Cys Gly Lys Leu&quot;
+def re2(c):
+    l1 = &quot;AUGC&quot;
+    l2 = &quot;UACG&quot;
+    res = &quot;&quot;
+    for i in c:
+        res += l1[l2.index(i)]
+    return res
+
+def ap(a):
+    res = []
+    res.append(a+&quot;A&quot;)
+    res.append(a+&quot;U&quot;)
+    res.append(a+&quot;C&quot;)
+    res.append(a+&quot;G&quot;)
+    return res
+
+r = []
+r.append([&quot;UAC&quot;])
+r.append([&quot;ACA&quot;,&quot;ACG&quot;])
+r.append(ap(&quot;GA&quot;)+[&quot;AAC&quot;, &quot;AAU&quot;])
+r.append(ap(&quot;CG&quot;))
+r.append(ap(&quot;GC&quot;))
+r.append(ap(&quot;GA&quot;)+[&quot;AAC&quot;, &quot;AAU&quot;])
+r.append([&quot;AAA&quot;,&quot;AAG&quot;])
+r.append(ap(&quot;AG&quot;))
+r.append([&quot;UAA&quot;, &quot;UAG&quot;, &quot;UAU&quot;])
+r.append(ap(&quot;GA&quot;)+[&quot;AAC&quot;, &quot;AAU&quot;])
+r.append([&quot;UUA&quot;,&quot;UUG&quot;])
+r.append(ap(&quot;CA&quot;))
+r.append([&quot;ACA&quot;, &quot;ACG&quot;])
+r.append(ap(&quot;CC&quot;))
+r.append([&quot;UUU&quot;, &quot;UUC&quot;])
+r.append(ap(&quot;GA&quot;)+[&quot;AAC&quot;, &quot;AAU&quot;])
+r.append([&quot;UAA&quot;, &quot;UAG&quot;, &quot;UGA&quot;])
+
+# brute
+# for i0 in r[0]:
+# ...
+# if md5(xxx).hexdigest()[0:8] == &quot;e03657e0&quot;:
+#</code></pre>
+<p>这个写得有点粗糙，可能有的情况被不小心遗漏了，而且速度很慢了，反正我是没爆破出来，不过确实是这么做的，因为一开始题目给前6位md5的时候，可以爆出来好多组结果。。</p>
+<blockquote>
+<p>flag{AUGUGCCUUGCAAGACUUUUCUCGAUACUUAACGUCUGUGGAAAACUUUAA}</p>
+</blockquote>
+<h2 id="奇怪的安装包"><a href="#奇怪的安装包" class="headerlink" title="奇怪的安装包"></a>奇怪的安装包</h2><p>安装过程中会要求输入密码，不过即使错误也可以解压，解压后的文件是NES模拟器，就是PC机上模拟FC游戏的，还带了个赤色要塞文件hhh，应该是在安装包里搞了一些操作，有点难调。</p>
+<p>后来发现这个东西叫NSIS，file命令可查，用1505的7zip就可以提出来脚本，</p>
+<p>key是明文，不过也没啥用：</p>
+<pre><code>NSIISSOEASY</code></pre><p>脚本跟汇编很像，所以没那么难理解：</p>
+<pre><code class="nsis">Function func_429
+  Pop $9
+  StrCpy $3 &quot;&quot;
+  StrCpy $0 $9
+  StrCpy $1 0
+label_433:
+  StrCpy $2 $0 1 $1
+  StrCmp $2 &quot;&quot; label_443
+  Push $2
+  Call func_445
+  Pop $2
+  IntOp $2 $2 ^ 1
+  IntFmt $2 %c $2
+  IntOp $1 $1 + 1
+  StrCpy $3 $3$2
+  Goto label_433
+label_443:
+  Push $3
+FunctionEnd
+
+
+Function func_445
+  Exch $0
+    ; Push $0
+    ; Exch
+    ; Pop $0
+  Push $1
+  Push $2
+  StrCpy $2 1
+label_451:
+  IntFmt $1 %c $2
+  StrCmpS $1 $0 0 label_455
+  StrCpy $0 $2
+  Goto label_458
+label_455:
+  IntOp $2 $2 + 1
+  StrCmp $2 255 0 label_451
+  StrCpy $0 0
+label_458:
+  Pop $2
+  Pop $1
+  Exch $0
+    ; Push $0
+    ; Exch
+    ; Pop $0
+FunctionEnd</code></pre>
+<p>第二个函数在我眼里基本啥也没干，应该是想实现字符转ascii码把，所以其实就是简单的异或1而已：</p>
+<pre><code>a = &#39;&#39;&#39;gm`fzd787`7bb,g72d,592b,8`g1,cg96813e8d``|&#39;&#39;&#39;
+flag = &quot;&quot;
+for i in a:
+    flag += chr((ord(i))^1)
+print flag</code></pre><blockquote>
+<p>flag{e696a6cc-f63e-483c-9af0-bf87902d9eaa}</p>
+</blockquote>
+<h2 id="42"><a href="#42" class="headerlink" title="42"></a>42</h2><p>因为SEH的机制，IDA的F5会显示得很奇怪：</p>
+<p><img src="/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582523576885.png" alt="1582523576885"></p>
+<p>不过看反汇编的代码可以看到代码的逻辑，<code>loc_4154A1</code>应该是函数的主要逻辑，OD里可以调试，注意这里会先弹出hook再跳转到这里。</p>
+<p>说实话，逆了很久才逆明白，程序要求输入格式是：flag{xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx}，里面是uuid格式，第一部分和第二部分各少一个字节。</p>
+<p>我把算法还原了，这里处理的是uuid格式识别之后的数据：</p>
+<pre><code class="python">magic = &quot;3nder5tandf10@t&quot;
+mem = []
+
+# s is input
+# s = &quot;bd60d0456d311ea93f497358c3c6bc&quot;
+
+i, j = 0, 0
+s_len = len(s)
+print s_len
+for i in range(0, s_len, 2):
+    mem.append(int(s[i:i+2], 16)^ord(magic[j]))
+    # i += 2
+    j += 1
+
+print map(hex, mem), len(mem)
+
+num = []
+
+def g1(i, ax, cx):
+    tmp = mem[i:i+5]
+    tmp.reverse()
+    a = tmp[0]+(tmp[1]&lt;&lt;8)+(tmp[2]&lt;&lt;16)+(tmp[3]&lt;&lt;24)
+    b = tmp[4]
+    num.append(a ^ ax)
+    num.append(b ^ cx)
+
+g1(0, 0x76BDF08F, 0x0FEE1DEAF)
+g1(5, 0x846F5F42, 0x11DC37D)
+g1(10, 0x14031D68, 0x2cc5d9)
+
+print map(hex, num)
+
+r = ((num[0]+(num[1]&lt;&lt;32))**3)&amp;0xffffffffffffffff
+r += ((num[2]+(num[3]&lt;&lt;32))**3)&amp;0xffffffffffffffff
+r += ((num[4]+(num[5]&lt;&lt;32))**3)&amp;0xffffffffffffffff
+r = r&amp;0xffffffffffffffff
+
+print r
+if r == 42:
+    print &quot;right&quot;
+else:
+    print &quot;error&quot;
+</code></pre>
+<p>我这个是按照它这个32位逻辑一点点逆的，还原的时候直接按照64位处理就行。</p>
+<p>关于42立方和问题，早就被玩烂了：</p>
+<p><code>42=（-80538738812075974）^3 + 80435758145817515^3 + 12602123297335631^3</code></p>
+<p>写出最终脚本：</p>
+<pre><code class="python">a = -80538738812075974&amp;0xffffffffffffffff
+b = 80435758145817515&amp;0xffffffffffffffff
+c = 12602123297335631&amp;0xffffffffffffffff
+
+
+a = a^0x0FEE1DEAF76BDF08F
+b = b^0x11DC37D846F5F42
+c = c^0x2cc5d914031D68
+
+a = hex(a)[2:-1].decode(&quot;hex&quot;)
+b = hex(b)[2:-1].decode(&quot;hex&quot;)
+c = hex(c)[2:-1].decode(&quot;hex&quot;)
+
+magic = &quot;3nder5tandf10@t&quot;
+flag = &quot;&quot;
+j = 0
+
+for i in a:
+    flag += chr(ord(i)^ord(magic[j]))
+    j += 1
+for i in b:
+    flag += chr(ord(i)^ord(magic[j]))
+    j += 1
+for i in c:
+    flag += chr(ord(i)^ord(magic[j]))
+    j += 1
+
+flag = flag.encode(&quot;hex&quot;)
+res =  &quot;flag{&quot;+flag[:7]+&quot;-&quot;+flag[7:11]+&quot;-&quot;+flag[11:15]
+res += &quot;-&quot;+flag[15:19]+&quot;-&quot;+flag[19:]+&quot;}&quot;
+print res</code></pre>
+<blockquote>
+<p>flag{ed82ab5-5c7a-da78-b7a8-d2f5fbef453}</p>
+</blockquote>
+<h2 id="veryeasyRE"><a href="#veryeasyRE" class="headerlink" title="veryeasyRE"></a>veryeasyRE</h2><p>输入长度为0x35</p>
+<pre><code>28163746738936845178453226739434617961829429853594162
+
+abcdef12345612345611118888888888</code></pre><p>首先会进行插入，插入规则：</p>
+<pre><code class="python">mem = dword_427000[0x50]
+aa = &quot;&quot; # 输入
+j = 0
+for i in range(0x50):
+    if mem[i] == 0:
+        mem[i] = ord(aa[j]) - 0x30
+        j += 1
+</code></pre>
+<p>之后每九个字符进行一次检测，分析完可以确定输入只能是0-9数字，且每九个字符不重复，这应该是数独把。找了个解数独的程序一跑，非常快：</p>
+<pre><code class="python">import time
+t0=time.time()
+class point:
+    def __init__(self,x,y):
+        self.x=x
+        self.y=y
+        self.available=[]
+        self.value=0
+
+def rowNum(p,sudoku):
+    row=set(sudoku[p.y*9:(p.y+1)*9])
+    row.remove(0)
+    return row #set type
+
+def colNum(p,sudoku):
+    col=[]
+    length=len(sudoku)
+    for i in range(p.x,length,9):
+        col.append(sudoku[i])
+    col=set(col)
+    col.remove(0)
+    return col #set type
+
+def blockNum(p,sudoku):
+    block_x=p.x//3
+    block_y=p.y//3
+    block=[]
+    start=block_y*3*9+block_x*3
+    for i in range(start,start+3):
+        block.append(sudoku[i])
+    for i in range(start+9,start+9+3):
+        block.append(sudoku[i])
+    for i in range(start+9+9,start+9+9+3):
+        block.append(sudoku[i])
+    block=set(block)
+    block.remove(0)
+    return block #set type
+
+def initPoint(sudoku):
+    pointList=[]
+    length=len(sudoku)
+    for i in range(length):
+        if sudoku[i]==0:
+            p=point(i%9,i//9)
+            for j in range(1,10):
+                if j not in rowNum(p,sudoku) and j not in colNum(p,sudoku) and j not in blockNum(p,sudoku):
+                    p.available.append(j)
+            pointList.append(p)
+    return pointList
+
+
+def tryInsert(p,sudoku):
+    availNum=p.available
+    for v in availNum:
+        p.value=v
+        if check(p,sudoku):
+            sudoku[p.y*9+p.x]=p.value
+            if len(pointList)&lt;=0:
+                t1=time.time()
+                useTime=t1-t0
+                showSudoku(sudoku)
+                print(&#39;\nuse Time: %f s&#39;%(useTime))
+                exit()
+            p2=pointList.pop()
+            tryInsert(p2,sudoku)
+            sudoku[p2.y*9+p2.x]=0
+            sudoku[p.y*9+p.x]=0
+            p2.value=0
+            pointList.append(p2)
+        else:
+            pass    
+
+def check(p,sudoku):
+    if p.value==0:
+        print(&#39;not assign value to point p!!&#39;)
+        return False
+    if p.value not in rowNum(p,sudoku) and p.value not in colNum(p,sudoku) and p.value not in blockNum(p,sudoku):
+        return True
+    else:
+        return False
+
+def showSudoku(sudoku):
+    for j in range(9):
+        for i in range(9):
+            print(&#39;%d &#39;%(sudoku[j*9+i]),end=&#39;&#39;)
+        print(&#39;&#39;)    
+
+if __name__==&#39;__main__&#39;:
+    sudoku = [0, 0, 5, 0, 9, 4, 0, 0, 0,\
+        0, 0, 1, 5, 0, 0, 2, 0, 9,\
+        0, 7, 0, 2, 0, 0, 0, 0, 1,\
+        0, 9, 0, 0, 0, 0, 0, 0, 6,\
+        8, 0, 0, 0, 0, 0, 1, 0, 5,\
+        5, 0, 0, 0, 2, 0, 0, 0, 8,\
+        0, 0, 0, 3, 5, 0, 0, 7, 0,\
+        7, 4, 0, 0, 0, 6, 0, 1, 0,\
+        3, 0, 0, 0, 0, 7, 8, 0, 0]
+    pointList=initPoint(sudoku)
+    showSudoku(sudoku)
+    print(&#39;\n&#39;)
+    p=pointList.pop()
+    tryInsert(p,sudoku)
+</code></pre>
+<p>输入结果，还真通过了。所以第一部分的结果为：</p>
+<blockquote>
+<p>28163746738936845178453226739434617961829429853594162</p>
+</blockquote>
+<h2 id="babymac"><a href="#babymac" class="headerlink" title="babymac"></a>babymac</h2><p>虽然买不起mac，不过程序逻辑还是挺清晰的。处理一下基本等于源代码：</p>
+<p><img src="/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582555736774.png" alt="1582555736774"></p>
+<p><img src="/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582555751576.png" alt="1582555751576"></p>
+<p>写爆破脚本就完事了，等就硬等：</p>
+<pre><code class="python">a = [0x0000000000000001, 0x00000000000001FE, 0x0000000000001A79, 0x0000000000004940, 0x000000000000712F, 0x000000000000E1C5, 0x000000000001E866, 0x000000000003B85C, 0x00000000000760B0, 0x00000000000ED95D, 0x00000000001DB360, 0x00000000003B4D46, 0x000000000076A007, 0x0000000000ED528C, 0x0000000001DA9434, 0x0000000003B51CEA, 0x00000000076A592D, 0x000000000ED4AA88, 0x000000001DA951A4, 0x000000003B529EF7, 0x0000000076A55442, 0x00000000ED4AB07B, 0x00000001DA9560A0, 0x00000003B52AACC4, 0x000000076A5553D9, 0x0000000ED4AA997D, 0x0000001DA9553387, 0x0000003B52AA7EED, 0x00000076A554F324, 0x000000ED4AA9E5D7, 0x000001DA9553C9B2, 0x000003B52AA79A0C]
+res = [0x00030970372813D2, 0x0002D3A89BCA52AC, 0x00031551E79154A2, 0x0002C522E9A5298A, 0x0002A61367C5C698, 0x000264491C01CAFD, 0x00026CA3A06C98B3, 0x0002DACBD12FB903, 0x0002E470707574E1, 0x000309E5DC39A9A7]
+
+
+for i in range(32):
+    a[i]*=0x10A9FC70042
+    a[i]%=0x682669BC19DB
+
+print map(hex, a)
+
+def enc(b):
+    res = 0
+    for i in range(32):
+        res += a[31-i]*(b&amp;1)
+        b = b &gt;&gt; 1
+    return res
+
+flag = &quot;flag&quot;
+
+import string
+
+d1 = string.letters + string.digits + &quot;_-{}&quot;
+d1 = string.printable
+#j = 0
+
+def brute(idx):
+    for i1 in d1:
+        for i2 in d1:
+            for i3 in d1:
+                for i4 in d1:
+                    n = int((i1+i2+i3+i4).encode(&quot;hex&quot;), 16)
+                    if enc(n) == res[idx]:
+                        #print i1+i2+i3+i4
+                        return i4+i3+i2+i1
+                    else:
+                        continue
+
+for i in range(1, len(res)):
+    flag += brute(i)
+    print flag
+</code></pre>
+<blockquote>
+<p>flag{m3Rkl3_h3LLMaN_KNaPsacK_Al90R17Hm!}</p>
+</blockquote>
+<h2 id="factory"><a href="#factory" class="headerlink" title="factory"></a>factory</h2><p>关键函数都通过多进程信号传递来处理，前面有hash的调试检测，所以不能直接调试，不过可以attach上去。慢慢看出来这是个虚拟机，不过还是逆了很久，IDA里可以做这样的结构体处理：</p>
+<p><img src="/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582636148648.png" alt="1582636148648"></p>
+<p>甚至把它的逻辑用python写出来了，可以辅助分析，直接用效果并不好。</p>
+<pre><code class="python">ops = [17, 52, 0, 42, 5, 16, 20, 9, 23, 0, \
+    32, 5, 3, 17, 29, 6, 0, 0, 5, 3,\
+    17, 64, 6, 0, 64, 5, 17, 29, 23, 14,\
+     1, 21, 4, 15, 1, 22, 2, 0, 0, 4, \
+ 3, 5, 16, 20, 50, 5, 9, 2, 19, 29,\
+  5, 18, 21, 4, 16, 20, 61, 10, 1, 19,\
+   52, 3, 4, 18, 14, 1, 21, 4, 7, 1,\
+   22, 2, 0, 0, 4, 3, 5, 16, 20, 85, 5, 9, 1, 19, 64, 5, 18]
+
+# 0x7fffffffddec: sign [rbp-0x14]
+# 0x7ffff7ff7100  stack
+# 0x7ffff7ff7000  input
+# 0x7ffff7ff7790: arg1
+# 0x7ffff7ff7791: arg2
+# 0x7ffff7ff7792: arg3
+# 0x7ffff7ff7793: sp   [rax+0x13] 
+# 0x7ffff7ff7794: rip  [rax+0x14]
+# 0x7ffff7ff7795: res  [rax+0x15] 
+class VM:
+    def __init__(self):
+        self.stack = [0]*0x300
+        self.flag = [72]*42 + [0]
+        self.arg = [0, 0, 0]
+        self.sp = 0
+        self.ip = 0
+        self.res = 0
+
+    def push(self, numb):
+        self.stack[self.sp] = numb
+        self.sp += 1
+        #print &quot;push %d&quot; %numb
+
+    def pop(self, numb):
+        self.sp -= 1
+        self.arg[numb] = self.stack[self.sp]
+        #print self.stack
+        print &quot;pop %d to arg%d&quot; %(self.arg[numb], numb+1)
+
+    def Call(self):
+        self.stack[self.sp] = self.ip
+        self.sp += 1
+        self.ip = tmp
+        print &quot;call %d&quot; %self.ip
+        #print self.ip
+
+    def Ret(self):
+        self.sp -= 1
+        self.ip = self.stack[self.sp]
+        print &quot;ret to %d&quot; %self.ip
+
+    def flag2stack(self):
+        self.stack[self.sp] = self.flag[self.arg[2]]
+        self.sp += 1
+        print &quot;push flag[%d]&quot; %self.arg[2]
+        #print self.flag[0]
+
+    def stack2flag(self):
+        self.sp -= 1
+        self.flag[self.arg[2]] = self.stack[self.sp]
+        print &quot;pop to flag[%d]&quot;%self.arg[2]
+
+two_op = [0, 8, 9, 10, 12, 13, 14, 17, 19, 20]
+
+global tmp
+vm = VM()
+
+from time import sleep
+while True:
+    #sleep(0.2)
+    op = ops[vm.ip]
+    if op == 23:
+        print &quot;end&quot;
+        break
+    vm.ip += 1
+    if op in two_op:
+        op2 = ops[vm.ip]
+        vm.ip += 1
+        tmp = op2
+
+    if op == 0:
+        vm.push(tmp)
+        print &quot;push %d&quot;%tmp
+    elif op==1:
+        vm.push(vm.arg[0])
+        print &quot;push arg1 ==&gt; %d&quot;%vm.arg[0]
+    elif op==2:
+        vm.push(vm.arg[1])
+        print &quot;push arg2 ==&gt; %d&quot;%vm.arg[1]
+    elif op==3:
+        vm.push(vm.arg[2])
+        print &quot;push idx ==&gt; %d&quot;%vm.arg[2]
+    elif op==4:
+        vm.pop(0)
+    elif op==5:
+        vm.pop(1)
+    elif op==6:
+        vm.pop(2)
+
+    elif op==7:
+        vm.arg[0] += vm.arg[1]
+        print &quot;arg1 = arg1+arg2&quot;
+    elif op==8:
+        vm.arg[0] += tmp
+        print &quot;arg1 += %d&quot; %tmp
+    elif op==9:
+        vm.arg[1] += tmp
+        print &quot;arg2 += %d&quot; %tmp
+    elif op==10:
+        vm.arg[2] += tmp
+        print &quot;idx += %d&quot; %tmp
+    elif op==11:
+        vm.arg[0] -= vm.arg[1]
+        print &quot;arg1 = arg1-arg2&quot;
+    elif op==12:
+        vm.arg[0] -= tmp
+        print &quot;arg1 -= %d&quot; %tmp
+    elif op==13:
+        vm.arg[1] -= tmp
+        print &quot;arg2 -= %d&quot; %tmp
+    elif op==14:
+        vm.arg[2] -= tmp
+        print &quot;idx -= %d&quot; %tmp
+    elif op==15:
+        vm.arg[0] ^= vm.arg[1]
+        print &quot;arg1 = arg1^arg2&quot;
+    elif op==16:
+        vm.res = (vm.arg[0]==vm.arg[1])
+        print &quot;if arg1==arg2:res=1&quot;
+        #print vm.res
+    elif op==17:
+        vm.Call()
+    elif op==18:
+        vm.Ret()
+    elif op==19:  # jmp
+        vm.ip = tmp
+        print &quot;jmp %d&quot; %tmp
+    elif op==20:  # if jmp
+        if vm.res == 1 :
+            vm.ip = tmp
+            print &quot;if res: jmp %d&quot; %tmp
+        else:
+            print &quot;else&quot;
+    elif op==21:
+        vm.flag2stack()
+    elif op==22:
+        vm.stack2flag()
+    else:
+        print &quot;illegal&quot;
+        break</code></pre>
+<p>逆了很久的过程，主要是没什么经验，中间走了点弯路：</p>
+<pre><code>a = [17, 52, 0, 42, 5, 16, 20, 9, 23, 0, \
+    32, 5, 3, 17, 29, 6, 0, 0, 5, 3,\
+    17, 64, 6, 0, 64, 5, 17, 29, 23, 14,\
+     1, 21, 4, 15, 1, 22, 2, 0, 0, 4, \
+ 3, 5, 16, 20, 50, 5, 9, 2, 19, 29,\
+  5, 18, 21, 4, 16, 20, 61, 10, 1, 19,\
+   52, 3, 4, 18, 14, 1, 21, 4, 7, 1,\
+   22, 2, 0, 0, 4, 3, 5, 16, 20, 85, 5, 9, 1, 19, 64, 5, 18]
+
+#0: 
+# 17, 52,
+call 52, 
+
+# 长度等于42，跳到9，否则结束
+#2:
+# 0, 42, 5, 16, 20, 9, 23
+arg2 = 42
+if arg1==arg2: jmp 9, 
+else:end
+
+# Main 函数，调用了三段加密函数
+#9: 
+# 0,32, 5, 3, 17, 29, 
+# 6, 0, 0, 5, 3, 17, 64, 
+# 6, 0, 64, 5, 17, 29, 23,
+arg2 = 32
+push idx
+call 29
+
+pop idx
+arg2 = 0
+push idx
+call 64
+
+pop idx
+arg2 = 64
+call 29
+end
+
+# 异或处理，传入的arg2需要有初值，每次+2
+#29: 
+# 14,1, 21, 4, 15, 1, 22, 
+# 2, 0, 0, 4, 3, 5, 16, 20, 50, 
+# 5, 9, 2, 19, 29
+idx -= 1
+arg1 = flag[idx]
+flag[idx] = arg1 ^ arg2
+
+push arg2
+if idx=0:jmp 50
+
+pop arg2
+arg2 += 2
+jmp 29
+
+
+#50:
+# 5, 18
+pop arg2
+ret
+
+# 可以计算出输入的长度
+#52:
+# 21, 4, 16, 20, 61, 10, 1, 19, 52, 
+arg1 = flag[idx]
+
+if arg1==arg2:
+   jmp 61
+idx += 1
+jmp 52
+
+# arg1获得idx，返回2
+#61:
+# 3, 4, 18, 
+arg1 = idx
+ret
+
+# 相减处理，arg2有初值，每次+1
+#64:
+# 14, 1, 21, 4, 7, 1, 22, 2, 0, 0, 4, 3, 5, 
+# 16, 20, 85, 5, 9, 1, 19, 64
+idx -= 1
+arg1 = flag[idx]
+arg1 += arg2
+flag[idx] = arg1
+
+push arg2
+arg1 = 0
+arg2 = idx
+
+if arg1 == arg2:
+    jmp 85
+
+pop to arg2
+arg2 += 1
+jmp 64
+
+
+#85:
+# 5, 18
+pop arg2
+ret
+</code></pre><p>根据加密规则实现解密即可：</p>
+<pre><code>res = [0xAF, 0xD4, 0xB8, 0xBD, 0xBC, 0xB9, 0xFC, 0xF1, 0xF6, 0xA1, 0xF5, 0xFE, 0xF1, 0xE9, 0x0B, 0xF3, 0x22, 0x0F, 0x14, 0xE2, 0xED, 0xE5, 0xE2, 0x1F, 0x56, 0x54, 0x4B, 0x3A, 0x7E, 0x3E, 0x5A, 0x5A, 0x5D, 0x0B, 0x6B, 0x68, 0x54, 0x54, 0x64, 0x07, 0x51, 0x1D, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+
+def enc(flag):
+    j = 0
+    for i in range(0, 42, 1)[::-1]:
+        ord(flag[i])^(32+j)
+        j += 2
+
+    k = 0
+    for i in range(0, 42, 1)[::-1]:
+        ord(flag[i])+k
+        k += 1
+
+    m = 0
+    for i in range(0, 42, 1)[::-1]:
+        ord(flag[i])^(64+m)
+        m += 2
+
+def dec(res):
+    flag = res
+
+    m = 0
+    for i in range(0, 42, 1)[::-1]:
+        flag[i] = flag[i]^(64+m)
+        m += 2
+
+    k = 0
+    for i in range(0, 42, 1)[::-1]:
+        flag[i] = flag[i]-k
+        k += 1
+
+    j = 0
+    for i in range(0, 42, 1)[::-1]:
+        flag[i] = flag[i]^(32+j)
+        j += 2
+    return flag
+
+l = dec(res)
+print &quot;&quot;.join([chr(i) for i in l])
+</code></pre><blockquote>
+<p>flag{e171a284-49e7-4817-ad8d-b704c02309e0}</p>
+</blockquote>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 1037178204@qq.com </span>
+    </div>
+</article>
+
+
+
+<div class="article_copyright">
+    <p><span class="copy-title">文章标题:</span>2020-网络安全公益赛-writeup-RE</p>
+    
+    <p><span class="copy-title">本文作者:</span><a  title="t1an5t">t1an5t</a></p>
+    <p><span class="copy-title">发布时间:</span>2020-02-26, 23:01:00</p>
+    <p><span class="copy-title">最后更新:</span>2020-02-29, 21:52:39</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020-网络安全公益赛-writeup-RE/" title="2020-网络安全公益赛-writeup-RE">http://tianstcht.github.io/2020-网络安全公益赛-writeup-RE/</a>
+    <p>
+        <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+    </p>
+</div>
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©2019-2020 t1an5t</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#pwnable','#ctf','#2019','#reverse','#writeup','#elf','#kernel','#glibc','#pwntools','#tw',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+    .nav-right:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        background: url("");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

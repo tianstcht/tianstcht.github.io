@@ -6,46 +6,28 @@
   <meta name="keywords" content>
   <meta name="description" content="t1an5t的2020 | t1an5t&#39;s Treasure">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="前言所有pwn题目的源代码都开源在了：https://github.com/NEU-NEX/NEXCTF2019 本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。 &amp;nbsp;">
-<meta name="keywords" content="pwnable,ctf">
+<meta name="description" content="easyvm虚拟机，虽然并不难，不过还是用angr直接秒了 import angr  proj = angr.Project(&amp;quot;./vm&amp;quot;,auto_load_libs=False)  st = proj.factory.entry_state() sm = proj.factory.simulation_manager(st) sm.explore(find=0x400b73">
+<meta name="keywords" content="reverse,writeup">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NEX招新赛-pwn-writeup">
-<meta property="og:url" content="http://tianstcht.github.io/NEX招新赛-pwn-writeup/index.html">
+<meta property="og:title" content="2020-网络安全公益赛-writeup-RE">
+<meta property="og:url" content="http://tianstcht.github.io/2020-网络安全公益赛-writeup-RE/index.html">
 <meta property="og:site_name" content="t1an5t&#39;s Treasure">
-<meta property="og:description" content="前言所有pwn题目的源代码都开源在了：https://github.com/NEU-NEX/NEXCTF2019 本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。 &amp;nbsp;">
+<meta property="og:description" content="easyvm虚拟机，虽然并不难，不过还是用angr直接秒了 import angr  proj = angr.Project(&amp;quot;./vm&amp;quot;,auto_load_libs=False)  st = proj.factory.entry_state() sm = proj.factory.simulation_manager(st) sm.explore(find=0x400b73">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175200901.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175241566.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175347034.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175559665.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572176002336.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572178490824.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572178611753.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572178915409.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572179252871.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180018548.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180229624.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180347956.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180378962.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180479536.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180556328.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180706224.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572181008846.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572180018548.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572181528850.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572181798790.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182436773.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182460813.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182651474.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182716206.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572182777854.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572183021319.png">
-<meta property="og:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572183525405.png">
-<meta property="og:updated_time" content="2020-02-05T12:50:39.465Z">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582515771061.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582515660580.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582516740847.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582516899907.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582515976960.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582523576885.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582555736774.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582555751576.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582636148648.png">
+<meta property="og:updated_time" content="2020-02-29T13:52:39.766Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="NEX招新赛-pwn-writeup">
-<meta name="twitter:description" content="前言所有pwn题目的源代码都开源在了：https://github.com/NEU-NEX/NEXCTF2019 本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。 &amp;nbsp;">
-<meta name="twitter:image" content="http://tianstcht.github.io/NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-pwn-writeup/1572175200901.png">
+<meta name="twitter:title" content="2020-网络安全公益赛-writeup-RE">
+<meta name="twitter:description" content="easyvm虚拟机，虽然并不难，不过还是用angr直接秒了 import angr  proj = angr.Project(&amp;quot;./vm&amp;quot;,auto_load_libs=False)  st = proj.factory.entry_state() sm = proj.factory.simulation_manager(st) sm.explore(find=0x400b73">
+<meta name="twitter:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582515771061.png">
 
 <link rel="alternate" href="/atom.xml" title="t1an5t&#39;s Treasure" type="application/atom+xml">
 
@@ -130,7 +112,7 @@
 
 
 <ul>
-    <li><div class="all active">全部文章<small>(10)</small></div></li>
+    <li><div class="all active">全部文章<small>(17)</small></div></li>
     
         
             
@@ -142,7 +124,7 @@
     
         
             
-            <li><div data-rel="PWN">PWN<small>(2)</small></div>
+            <li><div data-rel="PWN">PWN<small>(6)</small></div>
                 
             </li>
             
@@ -150,7 +132,15 @@
     
         
             
-            <li><div data-rel="NOTES">NOTES<small>(1)</small></div>
+            <li><div data-rel="RE">RE<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="NOTES">NOTES<small>(3)</small></div>
                 
             </li>
             
@@ -182,7 +172,7 @@
     </div>
     <div><a class="about  site_url"  href="/">关于</a></div>
 </div>
-<input type="hidden" id="yelog_site_posts_number" value="10">
+<input type="hidden" id="yelog_site_posts_number" value="17">
 
 <div style="display: none">
     <span id="busuanzi_value_site_uv"></span>
@@ -341,6 +331,18 @@
     </li>
     
     <li class="article-tag-list-item">
+        <a class="color3">reverse</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">writeup</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">elf</a>
+    </li>
+    
+    <li class="article-tag-list-item">
         <a class="color2">kernel</a>
     </li>
     
@@ -363,11 +365,75 @@
     <nav id="title-list-nav">
         
         <a  class="CTF "
-           href="/ByteCTF2019/"
+           href="/2019-ByteCTF-writeup-PWN/"
            data-tag="pwnable,ctf,2019"
            data-author="" >
-            <span class="post-title" title="ByteCTF2019-PWN">ByteCTF2019-PWN</span>
+            <span class="post-title" title="2019-ByteCTF-writeup-PWN">2019-ByteCTF-writeup-PWN</span>
             <span class="post-date" title="2019-09-19 22:33:33">2019/09/19</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-easy_heap/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-ROAR-CTF-easy_heap">2019-ROAR-CTF-easy_heap</span>
+            <span class="post-date" title="2020-02-06 10:52:00">2020/02/06</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-ez_op/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-ROAR-CTF-ez_op">2019-ROAR-CTF-ez_op</span>
+            <span class="post-date" title="2020-02-07 11:02:00">2020/02/07</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-DEFCON-CTF-babyheap/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-DEFCON-CTF-babyheap">2019-DEFCON-CTF-babyheap</span>
+            <span class="post-date" title="2020-02-09 11:19:00">2020/02/09</span>
+        </a>
+        
+        <a  class="CTF "
+           href="/2019-CISCN-东北赛区线下赛-writeup-PWN/"
+           data-tag="pwnable,ctf"
+           data-author="" >
+            <span class="post-title" title="2019-CISCN-东北赛区线下赛-writeup-PWN">2019-CISCN-东北赛区线下赛-writeup-PWN</span>
+            <span class="post-date" title="2019-06-23 21:13:37">2019/06/23</span>
+        </a>
+        
+        <a  class="CTF "
+           href="/2019-NEX招新赛-writeup-PWN/"
+           data-tag="pwnable,ctf"
+           data-author="" >
+            <span class="post-title" title="2019-NEX招新赛-writeup-PWN">2019-NEX招新赛-writeup-PWN</span>
+            <span class="post-date" title="2019-10-27 21:52:33">2019/10/27</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-realloc_magic/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-roarCTF-realloc_magic">2019-roarCTF-realloc_magic</span>
+            <span class="post-date" title="2020-02-07 11:02:00">2020/02/07</span>
+        </a>
+        
+        <a  class="RE "
+           href="/2020-网络安全公益赛-writeup-RE/"
+           data-tag="reverse,writeup"
+           data-author="" >
+            <span class="post-title" title="2020-网络安全公益赛-writeup-RE">2020-网络安全公益赛-writeup-RE</span>
+            <span class="post-date" title="2020-02-26 23:01:00">2020/02/26</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/ELF文件在加载过程中需要关注的部分/"
+           data-tag="elf"
+           data-author="" >
+            <span class="post-title" title="ELF文件在加载过程中需要关注的部分">ELF文件在加载过程中需要关注的部分</span>
+            <span class="post-date" title="2020-02-06 18:01:20">2020/02/06</span>
         </a>
         
         <a  class="PWN "
@@ -376,22 +442,6 @@
            data-author="" >
             <span class="post-title" title="KERNEL-CSAW-2010-kernel">KERNEL-CSAW-2010-kernel</span>
             <span class="post-date" title="2019-06-20 19:42:11">2019/06/20</span>
-        </a>
-        
-        <a  class="CTF "
-           href="/NEX招新赛-pwn-writeup/"
-           data-tag="pwnable,ctf"
-           data-author="" >
-            <span class="post-title" title="NEX招新赛-pwn-writeup">NEX招新赛-pwn-writeup</span>
-            <span class="post-date" title="2019-10-27 21:52:33">2019/10/27</span>
-        </a>
-        
-        <a  class="CTF "
-           href="/CISCN2019-东北赛区线下赛-pwn/"
-           data-tag="pwnable,ctf"
-           data-author="" >
-            <span class="post-title" title="CISCN2019-东北赛区线下赛-pwn">CISCN2019-东北赛区线下赛-pwn</span>
-            <span class="post-date" title="2019-06-23 21:13:37">2019/06/23</span>
         </a>
         
         <a  class="NOTES "
@@ -410,20 +460,20 @@
             <span class="post-date" title="2019-06-19 15:26:27">2019/06/19</span>
         </a>
         
-        <a  class="TIPS "
-           href="/pwn里的一些patch心得/"
-           data-tag="pwnable"
-           data-author="" >
-            <span class="post-title" title="pwn里的一些patch心得">pwn里的一些patch心得</span>
-            <span class="post-date" title="2019-06-23 21:13:57">2019/06/23</span>
-        </a>
-        
         <a  class="PWN "
            href="/pwnab13-7w/"
            data-tag="pwnable,tw"
            data-author="" >
             <span class="post-title" title="pwnab13.7w">pwnab13.7w</span>
             <span class="post-date" title="2019-06-19 15:14:30">2019/06/19</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/pwn里的一些patch心得/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="pwn里的一些patch心得">pwn里的一些patch心得</span>
+            <span class="post-date" title="2019-06-23 21:13:57">2019/06/23</span>
         </a>
         
         <a  class="ME "
@@ -440,6 +490,14 @@
            data-author="" >
             <span class="post-title" title="造轮子">造轮子</span>
             <span class="post-date" title="2019-06-19 15:40:33">2019/06/19</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/glibc2.30代码阅读/"
+           data-tag="glibc"
+           data-author="" >
+            <span class="post-title" title="glibc2.30代码阅读笔记">glibc2.30代码阅读笔记</span>
+            <span class="post-date" title="2020-02-14 20:26:20">2020/02/14</span>
         </a>
         
     </nav>
@@ -472,7 +530,7 @@
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-02-05 21:32:05'>1999-01-01 15:13</time>
+        创建时间:<time class="date" title='更新时间: 2020-02-26 23:16:14'>1999-01-01 15:13</time>
         
     </div>
     <div class="article-meta">
@@ -494,7 +552,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-2"><span class="toc-text">2019.6.2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-3"><span class="toc-text">2019.6.3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-4"><span class="toc-text">2019.6.4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-5"><span class="toc-text">2019.6.5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-6"><span class="toc-text">2019.6.6</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-7"><span class="toc-text">2019.6.7</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-8"><span class="toc-text">2019.6.8</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-9"><span class="toc-text">2019.6.9</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-10"><span class="toc-text">2019.6.10</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-11"><span class="toc-text">2019.6.11</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-13"><span class="toc-text">2019.6.13</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-17"><span class="toc-text">2019.6.17</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-18"><span class="toc-text">2019.6.18</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-19"><span class="toc-text">2019.6.19</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-20"><span class="toc-text">2019.6.20</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-22"><span class="toc-text">2019.6.22</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-23"><span class="toc-text">2019.6.23</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-24"><span class="toc-text">2019.6.24</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-25"><span class="toc-text">2019.6.25</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-26"><span class="toc-text">2019.6.26</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-27"><span class="toc-text">2019.6.27</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-28"><span class="toc-text">2019.6.28</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-31"><span class="toc-text">2019.6.31</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-7-1"><span class="toc-text">2019.7.1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-7-2"><span class="toc-text">2019.7.2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-7-3"><span class="toc-text">2019.7.3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-7-4"><span class="toc-text">2019.7.4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-7-28"><span class="toc-text">2019.7.28</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-7-31"><span class="toc-text">2019.7.31</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-8-13"><span class="toc-text">2019.8.13</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-8-15"><span class="toc-text">2019.8.15</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-8-16"><span class="toc-text">2019.8.16</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2020-2-5"><span class="toc-text">2020.2.5</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-2"><span class="toc-text">2019.6.2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-3"><span class="toc-text">2019.6.3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-4"><span class="toc-text">2019.6.4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-5"><span class="toc-text">2019.6.5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-6"><span class="toc-text">2019.6.6</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-7"><span class="toc-text">2019.6.7</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-8"><span class="toc-text">2019.6.8</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-9"><span class="toc-text">2019.6.9</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-10"><span class="toc-text">2019.6.10</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-11"><span class="toc-text">2019.6.11</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-13"><span class="toc-text">2019.6.13</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-17"><span class="toc-text">2019.6.17</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-18"><span class="toc-text">2019.6.18</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-19"><span class="toc-text">2019.6.19</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-20"><span class="toc-text">2019.6.20</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-22"><span class="toc-text">2019.6.22</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-23"><span class="toc-text">2019.6.23</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-24"><span class="toc-text">2019.6.24</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-25"><span class="toc-text">2019.6.25</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-26"><span class="toc-text">2019.6.26</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-27"><span class="toc-text">2019.6.27</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-28"><span class="toc-text">2019.6.28</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-6-31"><span class="toc-text">2019.6.31</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-7-1"><span class="toc-text">2019.7.1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-7-2"><span class="toc-text">2019.7.2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-7-3"><span class="toc-text">2019.7.3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-7-4"><span class="toc-text">2019.7.4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-7-28"><span class="toc-text">2019.7.28</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-7-31"><span class="toc-text">2019.7.31</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-8-13"><span class="toc-text">2019.8.13</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-8-15"><span class="toc-text">2019.8.15</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-8-16"><span class="toc-text">2019.8.16</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2020-2-5"><span class="toc-text">2020.2.5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2020-2-6"><span class="toc-text">2020.2.6</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2020-2-7"><span class="toc-text">2020.2.7</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2020-2-25"><span class="toc-text">2020.2.25</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2020-2-26"><span class="toc-text">2020.2.26</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -570,6 +628,12 @@
 </ul>
 <h2 id="2020-2-5"><a href="#2020-2-5" class="headerlink" title="2020.2.5"></a>2020.2.5</h2><p>脑子抽风，又捡起了博客，换了个看起来简约舒服的主题。</p>
 <p>化身成毕设狗，论文不会写，嗯。</p>
+<h2 id="2020-2-6"><a href="#2020-2-6" class="headerlink" title="2020.2.6"></a>2020.2.6</h2><p>发现pwn不会做了，都忘了，准备闲着的时候每天搞一搞。</p>
+<h2 id="2020-2-7"><a href="#2020-2-7" class="headerlink" title="2020.2.7"></a>2020.2.7</h2><p>残疾人恢复<code>pwn</code>手感中，明天准备/争取/也许不能把毕设的内存布局实现，再编点开题报告，越寻思写什么意义就越觉得nmd离谱</p>
+<h2 id="2020-2-25"><a href="#2020-2-25" class="headerlink" title="2020.2.25"></a>2020.2.25</h2><p>肝了好几天的逆向，挺爽的。给接下来的XCTF的高校联合赛出了道题，都2020年了，希望可以引领一下潮流把2.29引入到主流视线，别再玩那破2.23了。估计做上的应该不会多吧，希望能有点牌面。</p>
+<h2 id="2020-2-26"><a href="#2020-2-26" class="headerlink" title="2020.2.26"></a>2020.2.26</h2><p>最近感觉像一块大海绵一样，疯狂地想要吸收一些什么东西。每天两三点睡八九点起，然后对着电脑就待上一天，说实话，现在最大的遗憾就是没有一台好电脑，哎，以后除了mac再也不买什么商务本了。</p>
+<p>接下来的flag有很多，好好学Rust和RISCV然后尽快把毕设弄完，学密码学，学写个简单的编译器，总结pwn技术再深入一下IO部分看看能不能玩出点花的，分析一些实际的CVE，学C++，学LLVM，学unicore，学angr，还想搞一搞区块链安全。 玛德这也太多了。</p>
+<p>哎，写完flag想一想，我要是电脑好使的话，windows编程肯定也安排上，不爱在windows编程就是因为环境不好整，然后电脑还巨卡，唉唉唉。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 1037178204@qq.com </span>
@@ -583,7 +647,7 @@
     
     <p><span class="copy-title">本文作者:</span><a  title="t1an5t">t1an5t</a></p>
     <p><span class="copy-title">发布时间:</span>1999-01-01, 15:13:07</p>
-    <p><span class="copy-title">最后更新:</span>2020-02-05, 21:32:05</p>
+    <p><span class="copy-title">最后更新:</span>2020-02-26, 23:16:14</p>
     <span class="copy-title">原始链接:</span><a class="post-url" href="/t1an5t的2020/" title="t1an5t的2020">http://tianstcht.github.io/t1an5t的2020/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
@@ -628,7 +692,7 @@
     /*作者、标签的自动补全*/
     $(function () {
         $('.search').AutoComplete({
-            'data': ['#pwnable','#ctf','#2019','#kernel','#glibc','#pwntools','#tw',],
+            'data': ['#pwnable','#ctf','#2019','#reverse','#writeup','#elf','#kernel','#glibc','#pwntools','#tw',],
             'itemHeight': 20,
             'width': 418
         }).AutoComplete('show');

